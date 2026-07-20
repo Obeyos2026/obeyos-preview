@@ -10,8 +10,8 @@
 body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
 .screen{width:100%;max-width:430px;min-height:100dvh;position:relative;overflow:hidden;background:var(--bg);padding:14px 20px 96px;}
 /* dawn photo atmosphere */
-.bg{position:absolute;inset:0;z-index:0;background:url('atm-track-dawn-01.png') center top/cover no-repeat;opacity:.5;}
-.bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,13,18,.35) 0%,rgba(10,13,18,.55) 34%,rgba(10,13,18,.86) 60%,#0A0D12 82%);}
+.bg{position:absolute;inset:0;z-index:0;background:url('atm-track-dawn-01.png') center 20%/cover no-repeat;opacity:.9;}
+.bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,13,18,.18) 0%,rgba(10,13,18,.34) 30%,rgba(10,13,18,.72) 56%,rgba(10,13,18,.95) 74%,#0A0D12 88%);}
 .dg{position:absolute;inset:0;z-index:0;background-image:radial-gradient(rgba(200,255,0,.02) 1px,transparent 1px);background-size:28px 28px;}
 .screen>*{position:relative;z-index:2;}
 .vlabel{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:9;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;background:rgba(10,13,18,.7);padding:3px 12px;border-radius:20px;border:1px solid var(--hair);}
