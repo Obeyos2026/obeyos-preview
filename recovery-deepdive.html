@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Recovery deep-dive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--good:#22C55E;--sig:var(--lime);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 50% at 50% -6%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 60px;}
+.fade{opacity:0;transform:translateY(9px);transition:opacity .55s var(--ease),transform .55s var(--ease);}
+.screen.play .fade{opacity:1;transform:none;}
+.hd{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.hd .ico{width:16px;height:16px;stroke:var(--sig);fill:none;stroke-width:1.7;}
+.hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.hd .win{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);margin-left:auto;}
+
+/* VERDICT hero — editorial (word left, ring right) */
+.hero{display:grid;grid-template-columns:1fr auto;grid-template-areas:"eb ga" "vw ga" "fu fu";align-items:center;column-gap:14px;margin-top:18px;}
+.hero .eyebrow{grid-area:eb;align-self:end;font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.word-wrap{grid-area:vw;align-self:start;position:relative;display:inline-block;line-height:.8;margin-top:6px;}
+.vscan{position:absolute;inset:-18px -18px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);}
+.vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%, var(--sig) 0%, transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);}
+.screen.play .vscan::after{animation:sweep 5.5s linear .6s infinite;}
+@keyframes sweep{0%{opacity:0;transform:translateX(-58%);}6%{opacity:.85;}30%{opacity:.5;}44%{opacity:0;transform:translateX(58%);}100%{opacity:0;transform:translateX(58%);}}
+.word{position:relative;z-index:2;font-family:var(--head);font-size:60px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.hero .gauge{grid-area:ga;position:relative;width:120px;height:120px;}
+.hero .gauge .ring-cv{position:absolute;top:0;left:0;pointer-events:none;}
+.hero .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hero .gauge .rn{font-family:var(--head);font-size:44px;color:var(--white);line-height:.8;}
+.hero .gauge .ru{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.furn{grid-area:fu;display:flex;margin-top:16px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.fc{flex:1;padding:13px 4px;text-align:center;border-left:1px solid var(--hair);}
+.fc:first-child{border-left:none;}
+.fv{font-family:var(--head);font-size:23px;color:var(--white);}
+.fv small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:2px;}
+.fv.g{color:var(--sig);}
+.fk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+
+.card{margin-top:14px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
+.ch .kv{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.ch .kv b{color:var(--sig);font-weight:500;}
+
+/* trend */
+.trend{width:100%;height:104px;display:block;overflow:visible;}
+.trend .ln{fill:none;stroke:var(--sig);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--sig) 50%,transparent));stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset 1.8s var(--ease) .4s;}
+.screen.play .trend .ln{stroke-dashoffset:0;}
+.trend .ar{opacity:0;transition:opacity .5s ease 1.4s;}
+.screen.play .trend .ar{opacity:.15;}
+.trend .td{fill:var(--sig);filter:drop-shadow(0 0 7px var(--sig));}
+.taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
+.taxis .now{color:var(--sig);}
+
+/* drivers spec */
+.drv-sp .r{display:grid;grid-template-columns:14px 58px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--hair);}
+.drv-sp .r:first-child{border-top:none;}
+.drv-sp .dot{width:9px;height:9px;border-radius:3px;}
+.drv-sp .nm{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--white);text-transform:uppercase;}
+.drv-sp .mid{display:flex;align-items:baseline;gap:8px;}
+.drv-sp .val{font-family:var(--head);font-size:20px;color:var(--white);}
+.drv-sp .val small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:1px;}
+.drv-sp .base{font-family:var(--mono);font-size:8.5px;color:var(--dim);letter-spacing:.02em;}
+.drv-sp .st{font-family:var(--head);font-size:17px;text-align:right;}
+.drv-sp .st.up{color:var(--mint);}.drv-sp .st.dn{color:var(--amber);}
+
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:24px 0 4px;}
+.drv{margin-top:8px;padding:2px 0 2px 14px;border-left:2px solid var(--sig);}
+.drv .t{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);}
+.drv .t b{color:var(--white);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="hd">
+    <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.4-7 10-7 10z"/></svg>
+    <span class="tt">Recovery</span><span class="win">as of 06:31</span>
+  </div>
+
+  <!-- VERDICT hero -->
+  <div class="hero fade">
+    <div class="eyebrow">Today's recovery read</div>
+    <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn">84</div><div class="ru">Recovery</div></div></div>
+    <div class="word-wrap"><span class="vscan"></span><span class="word">PRIMED</span></div>
+    <div class="furn">
+      <div class="fc"><div class="fv g">68<small>MS</small></div><div class="fk">HRV</div></div>
+      <div class="fc"><div class="fv">55<small>BPM</small></div><div class="fk">Resting HR</div></div>
+      <div class="fc"><div class="fv">8.1<small>H</small></div><div class="fk">Sleep</div></div>
+    </div>
+  </div>
+
+  <!-- RECOVERY TREND -->
+  <div class="card fade" style="transition-delay:.1s">
+    <div class="ch"><span class="k">Recovery · 7 days</span><span class="kv">baseline <b>76</b></span></div>
+    <svg class="trend" id="trend" viewBox="0 0 380 104" preserveAspectRatio="none"></svg>
+    <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+  </div>
+
+  <!-- WHAT BUILT IT -->
+  <div class="card fade" style="transition-delay:.16s">
+    <div class="ch"><span class="k">What built your recovery</span><span class="kv">vs 30-day baseline</span></div>
+    <div class="drv-sp" id="drivers"></div>
+  </div>
+
+  <div class="sl fade">The read</div>
+  <div class="drv fade"><div class="t"><b>HRV is 6 ms above baseline and resting HR 2 below</b> — your nervous system is well-rested. Deep + REM sleep topped it off. That's the fuel behind today's <b style="color:var(--mint)">READY</b>.</div></div>
+</div>
+
+<script>
+(function(){
+  var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // hero dashed ring — recovery 84 (lime, PRIMED)
+  (function(){ var cv=document.getElementById('hring'); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.12,sa=150*Math.PI/180,sw=240*Math.PI/180,frac=0.84;
+    function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba(200,255,0,.72)';ctx.shadowColor='rgba(200,255,0,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
+    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
+  })();
+  // recovery 7-day trend
+  (function(){ var svg=document.getElementById('trend'),d7=[72,70,78,74,82,80,84],W=380,H=104,PL=6,PR=6,PT=14,PB=12,mn=60,mx=92;
+    function sm(p){if(p.length<2)return '';var d='M'+p[0][0]+','+p[0][1];for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;d+='C'+(p1[0]+(p2[0]-p0[0])/6)+','+(p1[1]+(p2[1]-p0[1])/6)+' '+(p2[0]-(p3[0]-p1[0])/6)+','+(p2[1]-(p3[1]-p1[1])/6)+' '+p2[0]+','+p2[1];}return d;}
+    var pts=d7.map(function(v,i){return [PL+(W-PL-PR)*(i/6),(H-PB)-(H-PT-PB)*((v-mn)/(mx-mn))];});
+    var line=sm(pts),area=line+' L'+pts[6][0]+','+(H-PB)+' L'+pts[0][0]+','+(H-PB)+' Z',last=pts[6];
+    svg.innerHTML='<defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sig)" stop-opacity=".45"/><stop offset="1" stop-color="var(--sig)" stop-opacity="0"/></linearGradient></defs><path class="ar" d="'+area+'" fill="url(#rg)"/><path class="ln" d="'+line+'"/><circle class="td" cx="'+last[0]+'" cy="'+last[1]+'" r="4.5"/>';
+  })();
+  // drivers spec
+  var D=[['HRV','#C8FF00','68','MS','baseline 62','+6','up'],['Resting HR','#22C55E','55','BPM','baseline 57','▼2','up'],['Sleep','#00E5A0','8.1','H','96% of need','+0.7','up'],['Resp rate','#F59E0B','13.4','RPM','baseline 14','steady','up']];
+  document.getElementById('drivers').innerHTML=D.map(function(d){
+    return '<div class="r"><span class="dot" style="background:'+d[1]+'"></span><span class="nm">'+d[0]+'</span><span class="mid"><span class="val">'+d[2]+'<small>'+d[3]+'</small></span><span class="base">'+d[4]+'</span></span><span class="st '+d[6]+'">'+d[5]+'</span></div>';
+  }).join('');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
+})();
+</script>
+</body>
+</html>
