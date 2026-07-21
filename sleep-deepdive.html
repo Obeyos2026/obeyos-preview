@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Sleep deep-dive (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--good:#22C55E;--sig:var(--mint);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 55% at 50% -6%,rgba(0,229,160,.06),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 60px;}
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.ht{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+
+/* hero */
+.top{position:relative;display:flex;flex-direction:column;align-items:center;margin-top:8px;}
+.gauge{position:relative;width:150px;height:150px;}
+.gauge canvas{position:absolute;top:0;left:0;}
+.gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.gauge .n{font-family:var(--head);font-size:50px;color:var(--white);line-height:.8;}
+.gauge .u{font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 11px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);margin-top:12px;}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+
+.card{margin-top:14px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
+.ch .go{color:var(--dim);font-size:15px;}
+.legend{display:flex;gap:14px;margin-bottom:10px;}
+.legend span{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:5px;}
+.legend i{width:8px;height:8px;border-radius:50%;}
+.axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--dim);margin-top:8px;letter-spacing:.02em;}
+.axis .now{color:var(--sig);}
+
+/* hours vs need chart */
+.hvn{width:100%;height:150px;display:block;overflow:visible;}
+.hvn .need{fill:none;stroke:var(--sig);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--sig) 40%,transparent));}
+.hvn .got{fill:none;stroke:#5C6679;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.hvn .pn{fill:#0A0D12;stroke:var(--sig);stroke-width:1.6;}
+.hvn .pg{fill:#0A0D12;stroke:#5C6679;stroke-width:1.6;}
+.hvn text{font-family:var(--mono);font-size:8px;}
+
+/* stages */
+.stbar{display:flex;height:14px;border-radius:5px;overflow:hidden;}
+.stbar span{height:100%;}
+.strows{margin-top:14px;}
+.strow{display:grid;grid-template-columns:14px 70px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--hair);}
+.strow:first-child{border-top:none;}
+.strow .dot{width:9px;height:9px;border-radius:3px;}
+.strow .nm{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.strow .track{height:4px;border-radius:2px;background:rgba(255,255,255,.06);position:relative;}
+.strow .fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px;}
+.strow .dur{font-family:var(--head);font-size:17px;color:var(--white);}
+
+/* metric mini-rows */
+.mrow{display:flex;align-items:baseline;justify-content:space-between;padding:12px 0;border-top:1px solid var(--hair);}
+.mrow:first-child{border-top:none;}
+.mrow .ml{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--mid);text-transform:uppercase;}
+.mrow .mv{font-family:var(--head);font-size:22px;color:var(--white);}
+.mrow .mv small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:2px;}
+.mrow .mv.g{color:var(--sig);}
+
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:24px 0 4px;}
+.drv{margin-top:8px;padding:2px 0 2px 14px;border-left:2px solid var(--sig);}
+.drv .t{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);}
+.drv .t b{color:var(--white);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="screen play" id="screen">
+  <div class="hd"><button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ht">Signal · Sleep · deep dive</span></div>
+
+  <div class="top">
+    <div class="gauge"><canvas id="ring"></canvas><div class="ctr"><div class="n">8.1</div><div class="u">Hours</div></div></div>
+    <span class="pill"><i></i>Strong · 0.7 h above need</span>
+  </div>
+
+  <!-- HOURS VS NEED -->
+  <div class="card">
+    <div class="ch"><span class="k">Hours vs need</span><span class="go">›</span></div>
+    <div class="legend"><span><i style="background:var(--sig)"></i>Slept</span><span><i style="background:#5C6679"></i>Needed</span></div>
+    <svg class="hvn" id="hvn" viewBox="0 0 380 150" preserveAspectRatio="none"></svg>
+    <div class="axis"><span>Tue 15</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+  </div>
+
+  <!-- SLEEP STAGES -->
+  <div class="card">
+    <div class="ch"><span class="k">Sleep stages · last night</span><span class="go">›</span></div>
+    <div class="stbar" id="stbar"></div>
+    <div class="strows" id="strows"></div>
+  </div>
+
+  <!-- EFFICIENCY / TIME IN BED -->
+  <div class="card">
+    <div class="ch"><span class="k">Efficiency</span><span class="go">›</span></div>
+    <div class="mrow"><span class="ml">Time asleep</span><span class="mv">8:01</span></div>
+    <div class="mrow"><span class="ml">Time in bed</span><span class="mv">8:34</span></div>
+    <div class="mrow"><span class="ml">Sleep efficiency</span><span class="mv g">94<small>%</small></span></div>
+    <div class="mrow"><span class="ml">Disturbances</span><span class="mv">7<small>× · 22 min</small></span></div>
+  </div>
+
+  <!-- CONSISTENCY + RESP -->
+  <div class="card">
+    <div class="ch"><span class="k">Timing &amp; body</span></div>
+    <div class="mrow"><span class="ml">Bed · wake</span><span class="mv" style="font-size:17px">00:51 · 06:20</span></div>
+    <div class="mrow"><span class="ml">Consistency</span><span class="mv g" style="font-size:17px">On rhythm</span></div>
+    <div class="mrow"><span class="ml">Resp rate (sleep)</span><span class="mv">13.4<small>rpm</small></span></div>
+  </div>
+
+  <div class="sl">The read</div>
+  <div class="drv"><div class="t"><b>You cleared your sleep need with 0.7 h to spare</b> — strong deep + REM, 94% efficient. This is the fuel behind today's <b style="color:var(--mint)">READY</b>.</div></div>
+</div>
+
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ring
+  (function(){ var cv=document.getElementById('ring'),host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.4),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.11,sa=150*Math.PI/180,sw=240*Math.PI/180,frac=0.72;
+    function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.6;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba(0,229,160,.72)';ctx.shadowColor='rgba(0,229,160,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
+    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
+  })();
+  // hours vs need dual line
+  (function(){ var svg=document.getElementById('hvn'),W=380,H=150,PL=20,PR=20,PT=26,PB=14,mn=4,mx=10;
+    var need=[8.27,8.53,9.45,8.97,8.87,8.53,8.87], got=[7.33,5.78,7.43,5.87,7.5,6.58,8.02];
+    function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
+    function X(i){return PL+(W-PL-PR)*(i/6);}
+    function line(a){var d='M'+X(0)+','+Y(a[0]);for(var i=1;i<a.length;i++)d+=' L'+X(i)+','+Y(a[i]);return d;}
+    function fmt(v){var h=Math.floor(v),m=Math.round((v-h)*60);return h+':'+(m<10?'0':'')+m;}
+    var g='<path class="got" d="'+line(got)+'"/><path class="need" d="'+line(need)+'"/>';
+    need.forEach(function(v,i){g+='<circle class="pn" cx="'+X(i)+'" cy="'+Y(v)+'" r="3.4"/><text x="'+X(i)+'" y="'+(Y(v)-9)+'" fill="var(--sig)" text-anchor="middle">'+fmt(v)+'</text>';});
+    got.forEach(function(v,i){g+='<circle class="pg" cx="'+X(i)+'" cy="'+Y(v)+'" r="3.4"/><text x="'+X(i)+'" y="'+(Y(v)+16)+'" fill="#747E8C" text-anchor="middle">'+fmt(v)+'</text>';});
+    svg.innerHTML=g;
+  })();
+  // stages
+  (function(){ var stages=[['Deep','var(--mint)','1:32',18],['REM','var(--cyan)','1:58',24],['Light','rgba(0,229,160,.45)','4:10',51],['Awake','#5C6679','0:22',7]];
+    document.getElementById('stbar').innerHTML=stages.map(function(s){return '<span style="width:'+s[3]+'%;background:'+s[1]+'"></span>';}).join('');
+    document.getElementById('strows').innerHTML=stages.map(function(s){return '<div class="strow"><span class="dot" style="background:'+s[1]+'"></span><span class="nm">'+s[0]+'</span><span class="track"><span class="fill" style="width:'+s[3]+'%;background:'+s[1]+'"></span></span><span class="dur">'+s[2]+'</span></div>';}).join('');
+  })();
+})();
+</script>
+</body>
+</html>
