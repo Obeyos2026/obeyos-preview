@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A0D12">
-<title>OBEY OS · Sleep deep-dive (mock)</title>
+<title>OBEY OS · Sleep deep-dive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -16,69 +16,63 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{background:#05070a;height:100%;}
 body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
-.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 55% at 50% -6%,rgba(0,229,160,.06),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 60px;}
-.hd{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
-.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 50% at 50% -6%,rgba(0,229,160,.06),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 60px;}
+.fade{opacity:0;transform:translateY(9px);transition:opacity .55s var(--ease),transform .55s var(--ease);}
+.screen.play .fade{opacity:1;transform:none;}
+.hd{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
 .back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
-.ht{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.hd .moon{width:16px;height:16px;stroke:var(--sig);fill:none;stroke-width:1.7;}
+.hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.hd .win{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);margin-left:auto;}
 
-/* hero — sleep performance */
-.perf{display:flex;flex-direction:column;align-items:center;margin-top:16px;}
-.perf .peye{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
-.perf .pct{font-family:var(--head);font-size:96px;line-height:.78;color:var(--white);margin-top:10px;text-shadow:0 0 34px rgba(0,229,160,.18);}
-.perf .pct small{font-size:38px;color:var(--muted);letter-spacing:.02em;}
-.perf .cmpwrap{position:relative;width:100%;max-width:320px;margin-top:4px;}
-.perf .conn{position:absolute;top:0;left:0;width:100%;height:30px;pointer-events:none;}
-.perf .conn path{fill:none;stroke-width:1;stroke-dasharray:3 4;}
-.perf .conn .a{stroke:color-mix(in srgb,var(--mid) 60%,transparent);}
-.perf .conn .b{stroke:color-mix(in srgb,var(--mint) 60%,transparent);}
-.perf .cmp{display:flex;justify-content:space-between;padding:36px 12px 0;}
-.perf .ccol{display:flex;flex-direction:column;align-items:center;gap:9px;}
-.perf .cv{font-family:var(--head);font-size:46px;line-height:.8;}
-.perf .ccol.l .cv{color:var(--mid);}
-.perf .ccol.r .cv{color:var(--mint);}
-.perf .cpill{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:6px 13px;border-radius:16px;border:1px solid;}
-.perf .ccol.l .cpill{color:var(--mid);border-color:color-mix(in srgb,var(--mid) 42%,transparent);}
-.perf .ccol.r .cpill{color:var(--mint);border-color:color-mix(in srgb,var(--mint) 45%,transparent);}
-.perf .pill{margin-top:24px;}
-.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 11px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);margin-top:12px;}
-.pill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+/* VERDICT hero */
+.hero{margin-top:16px;}
+.hero .eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.word-wrap{position:relative;display:inline-block;line-height:.8;margin-top:8px;}
+.vscan{position:absolute;inset:-16px -18px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent,#000 24%,#000 76%,transparent);mask:linear-gradient(180deg,transparent,#000 24%,#000 76%,transparent);}
+.vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,var(--sig) 0%,transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);}
+.screen.play .vscan::after{animation:sweep 3.6s var(--ease) .6s infinite;}
+@keyframes sweep{0%{opacity:0;transform:translateX(-58%)}10%{opacity:.8}55%{opacity:.4}100%{opacity:0;transform:translateX(58%)}}
+.word{position:relative;z-index:2;font-family:var(--head);font-size:70px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.furn{display:flex;margin-top:20px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.fc{flex:1;padding:13px 4px;text-align:center;border-left:1px solid var(--hair);}
+.fc:first-child{border-left:none;}
+.fv{font-family:var(--head);font-size:23px;color:var(--white);}
+.fv.g{color:var(--sig);}
+.fk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
 
 .card{margin-top:14px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
-.ch .go{color:var(--dim);font-size:15px;}
-.legend{display:flex;gap:14px;margin-bottom:10px;}
-.legend span{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:5px;}
-.legend i{width:8px;height:8px;border-radius:50%;}
-.axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--dim);margin-top:8px;letter-spacing:.02em;}
-.axis .now{color:var(--sig);}
+.ch .kv{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.ch .kv b{color:var(--white);font-weight:500;}
 
-/* hours vs need chart */
-.hvn{width:100%;height:150px;display:block;overflow:visible;}
-.hvn .need{fill:none;stroke:var(--sig);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--sig) 40%,transparent));}
-.hvn .got{fill:none;stroke:#5C6679;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.hvn .pn{fill:#0A0D12;stroke:var(--sig);stroke-width:1.6;}
-.hvn .pg{fill:#0A0D12;stroke:#5C6679;stroke-width:1.6;}
-.hvn text{font-family:var(--mono);font-size:8px;}
+/* overnight trace */
+.trace-wrap{position:relative;}
+.trace{width:100%;height:120px;display:block;overflow:visible;}
+.trace .ln{fill:none;stroke:var(--sig);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 35%,transparent));stroke-dasharray:2600;stroke-dashoffset:2600;transition:stroke-dashoffset 2.4s var(--ease) .4s;}
+.screen.play .trace .ln{stroke-dashoffset:0;}
+.trace .mk{stroke:rgba(255,255,255,.35);stroke-width:1;stroke-dasharray:3 3;}
+.trace .md{fill:var(--white);}
+.tx{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--white);margin-top:6px;letter-spacing:.04em;}
 
-/* stages */
-.stbar{display:flex;height:14px;border-radius:5px;overflow:hidden;}
-.stbar span{height:100%;}
-.strows{margin-top:14px;}
-.strow{display:grid;grid-template-columns:14px 70px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--hair);}
-.strow:first-child{border-top:none;}
-.strow .dot{width:9px;height:9px;border-radius:3px;}
-.strow .nm{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
-.strow .track{height:4px;border-radius:2px;background:rgba(255,255,255,.06);position:relative;}
-.strow .fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px;}
-.strow .dur{font-family:var(--head);font-size:17px;color:var(--white);}
+/* stage bars */
+.stage{margin-top:12px;}
+.stage .sh{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;}
+.stage .sn{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--white);text-transform:uppercase;}
+.stage .sp{font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--sc);font-weight:500;}
+.stage .sd{font-family:var(--head);font-size:19px;color:var(--white);margin-left:auto;}
+.stage .track{position:relative;height:16px;border-radius:6px;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 6px,transparent 6px 12px),rgba(255,255,255,.03);overflow:hidden;}
+.stage .fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:6px;background:var(--sc);box-shadow:0 0 10px color-mix(in srgb,var(--sc) 45%,transparent);transition:width 1.1s var(--ease) var(--d);}
+.screen.play .stage .fill{width:var(--w);}
+.stage .typ{position:absolute;top:-2px;bottom:-2px;border-left:1px dashed rgba(255,255,255,.5);border-right:1px dashed rgba(255,255,255,.5);background:rgba(255,255,255,.04);}
 
-/* metric mini-rows */
+/* mini rows */
 .mrow{display:flex;align-items:baseline;justify-content:space-between;padding:12px 0;border-top:1px solid var(--hair);}
 .mrow:first-child{border-top:none;}
 .mrow .ml{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--mid);text-transform:uppercase;}
-.mrow .mv{font-family:var(--head);font-size:22px;color:var(--white);}
+.mrow .mv{font-family:var(--head);font-size:21px;color:var(--white);}
 .mrow .mv small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:2px;}
 .mrow .mv.g{color:var(--sig);}
 
@@ -89,77 +83,74 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 </style>
 </head>
 <body>
-<div class="screen play" id="screen">
-  <div class="hd"><button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ht">Signal · Sleep · deep dive</span></div>
-
-  <div class="perf">
-    <div class="peye">Sleep performance</div>
-    <div class="pct">96<small>%</small></div>
-    <div class="cmpwrap">
-      <svg class="conn" viewBox="0 0 100 30" preserveAspectRatio="none"><path class="a" d="M20,30 L20,6 L47,6"/><path class="b" d="M80,30 L80,6 L53,6"/></svg>
-      <div class="cmp">
-        <div class="ccol l"><div class="cv">8:01</div><div class="cpill">Hours of sleep</div></div>
-        <div class="ccol r"><div class="cv">8:20</div><div class="cpill">Sleep needed</div></div>
-      </div>
-    </div>
-    <span class="pill"><i></i>Strong · 96% of need</span>
+<div class="screen" id="screen">
+  <div class="hd">
+    <button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M20 15a8 8 0 11-9-11 6.5 6.5 0 009 11z"/></svg>
+    <span class="tt">Sleep</span><span class="win">22:51 → 06:20</span>
   </div>
 
-  <!-- HOURS VS NEED -->
-  <div class="card">
-    <div class="ch"><span class="k">Hours vs need</span><span class="go">›</span></div>
-    <div class="legend"><span><i style="background:var(--sig)"></i>Needed</span><span><i style="background:#747E8C"></i>Slept</span></div>
-    <svg class="hvn" id="hvn" viewBox="0 0 380 150" preserveAspectRatio="none"></svg>
-    <div class="axis"><span>Tue 15</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+  <!-- VERDICT hero -->
+  <div class="hero fade">
+    <div class="eyebrow">Tonight's sleep read</div>
+    <div class="word-wrap"><span class="vscan"></span><span class="word">WELL<br>RESTED</span></div>
+    <div class="furn">
+      <div class="fc"><div class="fv g">96<span style="font-size:13px">%</span></div><div class="fk">of need</div></div>
+      <div class="fc"><div class="fv">8:01</div><div class="fk">slept</div></div>
+      <div class="fc"><div class="fv">8:20</div><div class="fk">needed</div></div>
+      <div class="fc"><div class="fv">94<span style="font-size:13px">%</span></div><div class="fk">efficient</div></div>
+    </div>
+  </div>
+
+  <!-- OVERNIGHT trace -->
+  <div class="card fade" style="transition-delay:.1s">
+    <div class="ch"><span class="k">Through the night</span><span class="kv">Duration <b>7:29</b></span></div>
+    <div class="trace-wrap"><svg class="trace" id="trace" viewBox="0 0 400 120" preserveAspectRatio="none"></svg></div>
+    <div class="tx"><span>22:51</span><span>06:20</span></div>
   </div>
 
   <!-- SLEEP STAGES -->
-  <div class="card">
-    <div class="ch"><span class="k">Sleep stages · last night</span><span class="go">›</span></div>
-    <div class="stbar" id="stbar"></div>
-    <div class="strows" id="strows"></div>
+  <div class="card fade" style="transition-delay:.16s">
+    <div class="ch"><span class="k">Sleep stages</span><span class="kv">restorative <b>41%</b></span></div>
+    <div id="stages"></div>
   </div>
 
-  <!-- EFFICIENCY / TIME IN BED -->
-  <div class="card">
-    <div class="ch"><span class="k">Efficiency</span><span class="go">›</span></div>
-    <div class="mrow"><span class="ml">Time asleep</span><span class="mv">8:01</span></div>
-    <div class="mrow"><span class="ml">Time in bed</span><span class="mv">8:34</span></div>
+  <!-- EFFICIENCY -->
+  <div class="card fade" style="transition-delay:.22s">
+    <div class="ch"><span class="k">Efficiency &amp; body</span></div>
+    <div class="mrow"><span class="ml">Time asleep · in bed</span><span class="mv" style="font-size:17px">8:01 · 8:34</span></div>
     <div class="mrow"><span class="ml">Sleep efficiency</span><span class="mv g">94<small>%</small></span></div>
     <div class="mrow"><span class="ml">Disturbances</span><span class="mv">7<small>× · 22 min</small></span></div>
-  </div>
-
-  <!-- CONSISTENCY + RESP -->
-  <div class="card">
-    <div class="ch"><span class="k">Timing &amp; body</span></div>
-    <div class="mrow"><span class="ml">Bed · wake</span><span class="mv" style="font-size:17px">00:51 · 06:20</span></div>
-    <div class="mrow"><span class="ml">Consistency</span><span class="mv g" style="font-size:17px">On rhythm</span></div>
     <div class="mrow"><span class="ml">Resp rate (sleep)</span><span class="mv">13.4<small>rpm</small></span></div>
   </div>
 
-  <div class="sl">The read</div>
-  <div class="drv"><div class="t"><b>You hit 96% of your sleep need</b> — strong deep + REM, 94% efficient. That's the fuel behind today's <b style="color:var(--mint)">READY</b>.</div></div>
+  <div class="sl fade">The read</div>
+  <div class="drv fade"><div class="t"><b>You hit 96% of your sleep need</b> — deep + REM made up 41% of the night, 94% efficient. That's the fuel behind today's <b style="color:var(--mint)">READY</b>.</div></div>
 </div>
 
 <script>
 (function(){
-  // hours vs need dual line
-  (function(){ var svg=document.getElementById('hvn'),W=380,H=150,PL=20,PR=20,PT=26,PB=14,mn=4,mx=10;
-    var need=[8.27,8.53,9.45,8.97,8.87,8.53,8.87], got=[7.33,5.78,7.43,5.87,7.5,6.58,8.02];
-    function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
-    function X(i){return PL+(W-PL-PR)*(i/6);}
-    function line(a){var d='M'+X(0)+','+Y(a[0]);for(var i=1;i<a.length;i++)d+=' L'+X(i)+','+Y(a[i]);return d;}
-    function fmt(v){var h=Math.floor(v),m=Math.round((v-h)*60);return h+':'+(m<10?'0':'')+m;}
-    var g='<path class="got" d="'+line(got)+'"/><path class="need" d="'+line(need)+'"/>';
-    need.forEach(function(v,i){g+='<circle class="pn" cx="'+X(i)+'" cy="'+Y(v)+'" r="3.4"/><text x="'+X(i)+'" y="'+(Y(v)-9)+'" fill="var(--sig)" text-anchor="middle">'+fmt(v)+'</text>';});
-    got.forEach(function(v,i){g+='<circle class="pg" cx="'+X(i)+'" cy="'+Y(v)+'" r="3.4"/><text x="'+X(i)+'" y="'+(Y(v)+16)+'" fill="#747E8C" text-anchor="middle">'+fmt(v)+'</text>';});
+  var scr=document.getElementById('screen');
+  // overnight trace — HR-ish signal through the night (deterministic noise)
+  (function(){ var svg=document.getElementById('trace'),W=400,H=120,PT=10,PB=10,N=150,seed=7;
+    function rnd(){ seed=(seed*9301+49297)%233280; return seed/233280; }
+    var base=[], v=58;
+    for(var i=0;i<N;i++){ var dip=Math.sin(i/N*Math.PI*3.4)*6; v += (rnd()-0.5)*8; v=Math.max(48,Math.min(96,v*0.82+ (58+dip)*0.18)); base.push(v); }
+    function Y(x){ return (H-PB)-(H-PT-PB)*((x-40)/60); }
+    var d='M0,'+Y(base[0]).toFixed(1);
+    base.forEach(function(val,i){ d+=' L'+(i/(N-1)*W).toFixed(1)+','+Y(val).toFixed(1); });
+    var g='<line class="mk" x1="1" y1="'+PT+'" x2="1" y2="'+(H-PB)+'"/><circle class="md" cx="1" cy="'+(H-PB)+'" r="3"/>';
+    g+='<line class="mk" x1="'+(W-1)+'" y1="'+PT+'" x2="'+(W-1)+'" y2="'+(H-PB)+'"/><circle class="md" cx="'+(W-1)+'" cy="'+(H-PB)+'" r="3"/>';
+    g+='<path class="ln" d="'+d+'"/>';
     svg.innerHTML=g;
   })();
   // stages
-  (function(){ var stages=[['Deep','var(--mint)','1:32',18],['REM','var(--cyan)','1:58',24],['Light','rgba(0,229,160,.45)','4:10',51],['Awake','#5C6679','0:22',7]];
-    document.getElementById('stbar').innerHTML=stages.map(function(s){return '<span style="width:'+s[3]+'%;background:'+s[1]+'"></span>';}).join('');
-    document.getElementById('strows').innerHTML=stages.map(function(s){return '<div class="strow"><span class="dot" style="background:'+s[1]+'"></span><span class="nm">'+s[0]+'</span><span class="track"><span class="fill" style="width:'+s[3]+'%;background:'+s[1]+'"></span></span><span class="dur">'+s[2]+'</span></div>';}).join('');
-  })();
+  var stages=[['Awake','#747E8C','7%',7,'0:32',5,10],['Light','rgba(0,229,160,.5)','52%',52,'3:37',45,58],['Deep (SWS)','#00E5A0','25%',25,'1:47',16,26],['REM','#00D4FF','16%',16,'1:09',18,25]];
+  document.getElementById('stages').innerHTML=stages.map(function(s,i){
+    return '<div class="stage" style="--sc:'+s[1]+'"><div class="sh"><span class="sn">'+s[0]+'</span><span class="sp">'+s[2]+'</span><span class="sd">'+s[4]+'</span></div>'+
+      '<div class="track"><span class="typ" style="left:'+s[5]+'%;width:'+(s[6]-s[5])+'%"></span><span class="fill" style="--w:'+s[3]+'%;--d:'+(0.3+i*0.12)+'s"></span></div></div>';
+  }).join('');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
 })();
 </script>
 </body>
