@@ -116,7 +116,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <body>
 <div class="screen" id="screen">
   <div class="hd">
-    <button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <svg class="moon" viewBox="0 0 24 24"><path d="M20 15a8 8 0 11-9-11 6.5 6.5 0 009 11z"/></svg>
     <span class="tt">Sleep</span><span class="win">22:51 → 06:20</span>
   </div>
