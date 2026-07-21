@@ -55,12 +55,15 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .ch .kv{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
 .ch .kv b{color:var(--sig);font-weight:500;}
 
-/* HYPNOGRAM — the night as an OBEYOS signal trace */
-.hyp-wrap{position:relative;padding-left:44px;}
-.hyp-lvls{position:absolute;left:0;top:0;bottom:16px;width:40px;display:flex;flex-direction:column;justify-content:space-between;}
-.hyp-lvls span{font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;}
-.hyp{width:100%;height:150px;display:block;}
-.tx{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--white);margin-top:6px;letter-spacing:.04em;padding-left:44px;}
+/* THE NIGHT — Lanes (stage timeline + duration, subtle) */
+.lanes .lane{display:grid;grid-template-columns:50px 1fr 46px;align-items:center;gap:10px;height:30px;}
+.lanes .ln{font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;}
+.lanes .track{position:relative;height:13px;border-radius:4px;background:rgba(255,255,255,.03);
+  background-image:linear-gradient(90deg,transparent 24.6%,rgba(255,255,255,.05) 25%,transparent 25.4%,transparent 49.6%,rgba(255,255,255,.05) 50%,transparent 50.4%,transparent 74.6%,rgba(255,255,255,.05) 75%,transparent 75.4%);}
+.lanes .blk{position:absolute;top:0;bottom:0;border-radius:3px;opacity:0;transition:opacity .5s var(--ease) var(--d);}
+.screen.play .lanes .blk{opacity:1;}
+.lanes .ld{font-family:var(--head);font-size:17px;color:var(--sc);text-align:right;line-height:.8;}
+.tax{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--white);margin-top:11px;letter-spacing:.02em;padding:0 46px 0 50px;}
 
 /* STAGE MIX — single composition bar + mono readout */
 .stack{display:flex;height:12px;border-radius:6px;overflow:hidden;background:rgba(255,255,255,.04);}
@@ -112,21 +115,11 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     </div>
   </div>
 
-  <!-- THE NIGHT — hypnogram signal trace -->
+  <!-- THE NIGHT — Lanes: stage timeline + duration -->
   <div class="card fade" style="transition-delay:.1s">
-    <div class="ch"><span class="k">The night · stage flow</span><span class="kv">restorative <b>41%</b></span></div>
-    <div class="hyp-wrap">
-      <div class="hyp-lvls"><span>Awake</span><span>REM</span><span>Light</span><span>Deep</span></div>
-      <canvas class="hyp" id="hyp"></canvas>
-    </div>
-    <div class="tx"><span>22:51</span><span>06:20</span></div>
-  </div>
-
-  <!-- STAGE MIX -->
-  <div class="card fade" style="transition-delay:.16s">
-    <div class="ch"><span class="k">Stage mix</span><span class="kv">7:29 asleep</span></div>
-    <div class="stack" id="stack"></div>
-    <div class="mix" id="mix"></div>
+    <div class="ch"><span class="k">The night · stage flow</span><span class="kv">7:29 asleep · restorative <b>41%</b></span></div>
+    <div class="lanes" id="lanes"></div>
+    <div class="tax"><span>22:51</span><span>00:30</span><span>02:15</span><span>04:00</span><span>06:20</span></div>
   </div>
 
   <!-- EFFICIENCY -->
@@ -145,7 +138,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <script>
 (function(){
   var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var COL={awake:'#747E8C',rem:'#00D4FF',light:'rgba(0,229,160,.5)',deep:'#00E5A0'};
+  var COL={awake:'#747E8C',rem:'#00D4FF',light:'rgba(0,229,160,.55)',deep:'#00E5A0'};
   // hero dashed ring — 96% of need (matches home)
   (function(){ var cv=document.getElementById('hring'); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
     cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -153,33 +146,17 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba(0,229,160,.72)';ctx.shadowColor='rgba(0,229,160,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
     if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
   })();
-  // hypnogram — stepped stage trace over the night, animated left→right reveal
-  (function(){ var cv=document.getElementById('hyp'),host=cv.parentElement,W=host.clientWidth-44,H=150,dpr=devicePixelRatio||1;
-    cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
-    // levels 0 Awake .. 3 Deep ; sequence [level, dur]
-    var seq=[[1,.4],[2,.9],[3,1.15],[2,.5],[1,.6],[0,.12],[2,.75],[3,.85],[2,.6],[1,.9],[0,.08],[2,.5],[3,.55],[2,.4],[1,.55]];
-    var lv=['awake','rem','light','deep'];
-    var total=seq.reduce(function(a,s){return a+s[1];},0),PT=12,PB=12;
-    function Y(l){return PT+(H-PT-PB)*(l/3);}
-    var segs=[],x=0; seq.forEach(function(s){var w=s[1]/total*W;segs.push({x0:x,x1:x+w,y:Y(s[0]),lv:s[0]});x+=w;});
-    function draw(prog){ ctx.clearRect(0,0,W,H); var rx=prog*W;
-      // faint level lines
-      ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;for(var l=0;l<4;l++){ctx.beginPath();ctx.moveTo(0,Y(l));ctx.lineTo(W,Y(l));ctx.stroke();}
-      ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';
-      for(var i=0;i<segs.length;i++){ var s=segs[i]; if(s.x0>rx)break; var xe=Math.min(s.x1,rx);
-        var c=COL[lv[s.lv]]; ctx.strokeStyle=c; ctx.shadowColor=c; ctx.shadowBlur=s.lv===0?0:5;
-        ctx.beginPath();ctx.moveTo(s.x0,s.y);ctx.lineTo(xe,s.y);ctx.stroke();
-        // vertical connector to next segment
-        if(i<segs.length-1 && segs[i+1].x0<=rx){ var n=segs[i+1]; ctx.beginPath();ctx.moveTo(s.x1,s.y);ctx.lineTo(s.x1,n.y);ctx.strokeStyle='rgba(255,255,255,.18)';ctx.shadowBlur=0;ctx.stroke(); }
-      }
-      ctx.shadowBlur=0;
-    }
-    if(rm){draw(1);return;} var st=null; setTimeout(function(){(function f(ts){if(!st)st=ts;var p=Math.min(1,(ts-st)/2200),e=1-Math.pow(1-p,2.2);draw(e);if(p<1)requestAnimationFrame(f);})(performance.now());},450);
+  // THE NIGHT — Lanes: blocks per stage across the night + duration (no glow)
+  (function(){
+    var CN=['awake','rem','light','deep'];
+    var SEQ=[[1,.4],[2,.9],[3,1.15],[2,.5],[1,.6],[0,.12],[2,.75],[3,.85],[2,.6],[1,.9],[0,.08],[2,.5],[3,.55],[2,.4],[1,.55]];
+    var TOT=SEQ.reduce(function(a,s){return a+s[1];},0), DUR={3:'1:47',2:'3:37',1:'1:09',0:'0:32'};
+    var rows=[3,2,1,0].map(function(lv){ var blks='',x=0;
+      SEQ.forEach(function(s,i){ var w=s[1]/TOT*100; if(s[0]===lv) blks+='<span class="blk" style="left:'+x+'%;width:'+w+'%;background:'+COL[CN[lv]]+';--d:'+(0.2+i*0.05)+'s"></span>'; x+=w; });
+      return '<div class="lane" style="--sc:'+COL[CN[lv]]+'"><span class="ln">'+CN[lv].toUpperCase()+'</span><div class="track">'+blks+'</div><span class="ld">'+DUR[lv]+'</span></div>';
+    }).join('');
+    document.getElementById('lanes').innerHTML=rows;
   })();
-  // stage mix — composition bar + readout (Deep, Light, REM, Awake)
-  var mix=[['Deep',COL.deep,'1:47','25%',25],['Light',COL.light,'3:37','52%',52],['REM',COL.rem,'1:09','16%',16],['Awake',COL.awake,'0:32','7%',7]];
-  document.getElementById('stack').innerHTML=mix.map(function(m,i){return '<span style="--w:'+m[4]+'%;background:'+m[1]+';--d:'+(0.3+i*0.1)+'s"></span>';}).join('');
-  document.getElementById('mix').innerHTML=mix.map(function(m){return '<div class="mx"><span class="dot" style="background:'+m[1]+'"></span><span class="nm">'+m[0]+'</span><span class="du">'+m[2]+'<span class="pc">'+m[3]+'</span></span></div>';}).join('');
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
 })();
 </script>
