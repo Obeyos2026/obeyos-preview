@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · RHR detail — 5 designs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0D12; --white:#F9FAFB; --muted:#8A93A6; --mid:#747E8C; --dim:#5C6679; --hair:rgba(255,255,255,.08);
+  --lime:#C8FF00; --mint:#00E5A0; --amber:#F59E0B; --red:#EF4444; --cyan:#00D4FF; --good:#22C55E;
+  --panel:rgba(255,255,255,.022); --glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --sig:var(--good); /* RHR is Normal */
+  --head:'Bebas Neue',sans-serif; --body:'Inter',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;position:relative;overflow:hidden;background:var(--bg);
+  background-image:radial-gradient(rgba(200,255,0,.026) 1px, transparent 1px),radial-gradient(120% 60% at 50% -6%, rgba(34,197,94,.06), transparent 60%);
+  background-size:28px 28px,100% 100%;padding:14px 20px 60px;}
+
+/* toggle */
+.vtoggle{position:sticky;top:0;z-index:9;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:8px 0 12px;margin:0 -20px 6px;background:linear-gradient(#0A0D12 72%,transparent);}
+.vtoggle button{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:7px 11px;border-radius:14px;border:1px solid var(--hair);background:var(--panel);color:var(--muted);cursor:pointer;}
+.vtoggle button.on{background:var(--good);color:#06210f;border-color:var(--good);}
+
+/* header */
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.hd .ht{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+
+.variant{display:none;animation:fadein .4s var(--ease);}
+.variant.on{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.statuspill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 10px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);}
+.statuspill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+.delta{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--good);}
+.delta.up{color:var(--amber);}
+
+/* section label */
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:22px 0 12px;}
+
+/* range bar (horizontal) */
+.rangebar{position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--amber),var(--good) 30%,var(--good) 70%,var(--amber));opacity:.9;}
+.rangebar .band{position:absolute;top:-3px;bottom:-3px;border-radius:6px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);}
+.rangebar .mk{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#0A0D12;border:2px solid var(--sig);box-shadow:0 0 10px var(--sig);transform:translate(-50%,-50%);}
+.rangelbls{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:9px;letter-spacing:.04em;}
+
+/* generic glass card */
+.card{padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.card + .card{margin-top:10px;}
+
+/* trend svg */
+.trend{width:100%;height:110px;display:block;overflow:visible;}
+.trend .ln{fill:none;stroke:var(--sig);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--sig) 45%,transparent));}
+.trend .ar{opacity:.16;}
+.trend .pt{fill:#0A0D12;stroke:var(--sig);stroke-width:1.6;}
+.trend .td{fill:var(--sig);filter:drop-shadow(0 0 6px var(--sig));}
+.taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
+.taxis .now{color:var(--sig);}
+
+/* what-it-means + tips */
+.prose{font-size:13.5px;line-height:1.6;color:var(--muted);}
+.prose b{color:var(--white);font-weight:500;}
+.tip{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--hair);}
+.tip:first-child{border-top:none;}
+.tip .ti{width:22px;height:22px;border-radius:7px;flex-shrink:0;background:color-mix(in srgb,var(--sig) 12%,transparent);border:1px solid color-mix(in srgb,var(--sig) 30%,transparent);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--sig);}
+.tip .tt{font-size:13px;line-height:1.5;color:var(--muted);}
+.tip .tt b{color:var(--white);font-weight:500;}
+
+.cta{margin-top:24px;display:block;width:100%;height:46px;border:none;border-radius:23px;background:var(--lime);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+
+/* ============ V1 · SHEET ============ */
+.v1 .sheet{border-radius:22px;border:1px solid var(--hair);background:#0C0F15;padding:20px 18px;position:relative;box-shadow:0 -10px 40px -20px rgba(0,0,0,.7);}
+.v1 .grab{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);}
+.v1 .top{display:flex;align-items:flex-end;justify-content:space-between;margin-top:8px;}
+.v1 .big{font-family:var(--head);font-size:64px;line-height:.8;color:var(--white);}
+.v1 .big small{font-family:var(--mono);font-size:12px;color:var(--dim);margin-left:4px;}
+.v1 .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--mid);text-transform:uppercase;margin-top:4px;}
+
+/* ============ V2 · EDITORIAL ============ */
+.v2 .hero{display:grid;grid-template-columns:1fr auto;align-items:end;column-gap:12px;margin-top:10px;}
+.v2 .num{font-family:var(--head);font-size:104px;line-height:.72;color:var(--white);}
+.v2 .num small{font-family:var(--mono);font-size:15px;color:var(--dim);letter-spacing:.02em;}
+.v2 .side{padding-bottom:8px;text-align:right;}
+.v2 .name{font-family:var(--head);font-size:30px;letter-spacing:.02em;color:var(--sig);line-height:.9;}
+.v2 .full{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:6px;}
+
+/* ============ V3 · GAUGE ============ */
+.v3 .gwrap{display:flex;flex-direction:column;align-items:center;margin-top:14px;}
+.v3 .gauge{position:relative;width:230px;height:230px;}
+.v3 .gauge svg{width:100%;height:100%;overflow:visible;transform:rotate(135deg);}
+.v3 .gauge .gt{fill:none;stroke:rgba(255,255,255,.08);stroke-width:9;stroke-linecap:round;stroke-dasharray:330 480;}
+.v3 .gauge .ga{fill:none;stroke:var(--sig);stroke-width:9;stroke-linecap:round;stroke-dasharray:330 480;stroke-dashoffset:330;filter:drop-shadow(0 0 7px color-mix(in srgb,var(--sig) 55%,transparent));transition:stroke-dashoffset 1.4s var(--ease) .3s;}
+.v3.on .gauge .ga{stroke-dashoffset:135;}
+.v3 .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.v3 .gauge .n{font-family:var(--head);font-size:76px;line-height:.8;}
+.v3 .gauge .u{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+.v3 .gmarks{display:flex;justify-content:space-between;width:200px;margin-top:-6px;font-family:var(--mono);font-size:9px;color:var(--dim);}
+
+/* ============ V4 · STACKED ============ */
+.v4 .now{display:flex;align-items:center;gap:16px;}
+.v4 .now .n{font-family:var(--head);font-size:60px;line-height:.8;}
+.v4 .now .n small{font-family:var(--mono);font-size:12px;color:var(--dim);}
+.v4 .now .meta{flex:1;}
+.v4 .krow{display:flex;gap:8px;margin-top:14px;}
+.v4 .k{flex:1;text-align:center;padding:12px 6px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--hair);}
+.v4 .k .kv{font-family:var(--head);font-size:24px;color:var(--white);}
+.v4 .k .kl{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+
+/* ============ V5 · INTRADAY STORY ============ */
+.v5 .hero{margin-top:8px;}
+.v5 .n{font-family:var(--head);font-size:50px;line-height:.85;}
+.v5 .n small{font-family:var(--mono);font-size:11px;color:var(--dim);}
+.v5 .story{font-size:15px;line-height:1.65;color:var(--muted);margin-top:14px;}
+.v5 .story b{color:var(--white);font-weight:500;}
+.v5 .story .hl{color:var(--sig);font-weight:500;}
+.v5 .intraday{width:100%;height:130px;display:block;overflow:visible;margin-top:6px;}
+.v5 .intraday .ln{fill:none;stroke:var(--sig);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--sig) 40%,transparent));}
+.v5 .intraday .ar{opacity:.15;}
+.v5 .lo{fill:#0A0D12;stroke:var(--sig);stroke-width:1.6;}
+.v5 iaxis,.v5 .iaxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="vtoggle">
+    <button data-v="1" class="on">Sheet</button>
+    <button data-v="2">Editorial</button>
+    <button data-v="3">Gauge</button>
+    <button data-v="4">Stacked</button>
+    <button data-v="5">Story</button>
+  </div>
+  <div class="hd">
+    <button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="ht">Signal · RHR</span>
+  </div>
+
+  <!-- ============ V1 · SHEET ============ -->
+  <section class="variant v1 on" data-v="1">
+    <div class="sheet">
+      <div class="grab"></div>
+      <div class="top">
+        <div>
+          <div class="eyebrow">Resting heart rate</div>
+          <div class="big" style="margin-top:6px">55<small>BPM</small></div>
+          <div class="lbl">Today · at rest</div>
+        </div>
+        <div style="text-align:right">
+          <span class="statuspill"><i></i>Normal</span>
+          <div class="delta" style="margin-top:8px">▼ 2 vs baseline</div>
+        </div>
+      </div>
+      <div class="sl">Your range</div>
+      <div class="rangebar"><span class="band" style="left:28%;right:26%"></span><span class="mk" style="left:38%"></span></div>
+      <div class="rangelbls"><span>40</span><span>Your band 52–62</span><span>85</span></div>
+      <div class="sl">7-day trend</div>
+      <svg class="trend" id="t1" viewBox="0 0 380 110" preserveAspectRatio="none"></svg>
+      <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+      <div class="sl">What it means</div>
+      <p class="prose"><b>Resting heart rate tracks recovery.</b> Lower usually means better recovered. Yours is <b>2 bpm below</b> your 30-day baseline — a sign your body absorbed yesterday's load well. It fed today's <b style="color:var(--mint)">READY</b>.</p>
+      <div class="sl">Tips</div>
+      <div class="tip"><span class="ti">1</span><span class="tt">A morning spike of <b>+5 bpm or more</b> often follows poor sleep or alcohol. Yours is low — keep the routine.</span></div>
+      <div class="tip"><span class="ti">2</span><span class="tt">Best measured <b>right after waking</b>. Late nights push it up for 1–2 days.</span></div>
+    </div>
+    <button class="cta">View full history →</button>
+  </section>
+
+  <!-- ============ V2 · EDITORIAL ============ -->
+  <section class="variant v2" data-v="2">
+    <div class="eyebrow">Signal detail</div>
+    <div class="hero">
+      <div class="num">55<small>BPM</small></div>
+      <div class="side"><div class="name">RESTING</div><div class="name">HEART</div><div class="full">30-day avg 57 · ▼2</div></div>
+    </div>
+    <div style="margin-top:14px"><span class="statuspill"><i></i>Normal · well recovered</span></div>
+    <div class="sl">14-day trend</div>
+    <svg class="trend" id="t2" viewBox="0 0 380 110" preserveAspectRatio="none"></svg>
+    <div class="taxis"><span>2w</span><span></span><span>1w</span><span></span><span class="now">Today</span></div>
+    <div class="sl">The read</div>
+    <p class="prose"><b>RHR is your recovery baseline.</b> A rising trend means accumulating fatigue; a falling one means you're absorbing load. Yours has drifted <b>down 3 bpm over two weeks</b> — training is landing, not draining. This is a green input to the verdict.</p>
+    <div class="sl">Do this</div>
+    <div class="tip"><span class="ti">✓</span><span class="tt"><b>Push the main lifts today</b> — your recovery markers back it.</span></div>
+    <div class="tip"><span class="ti">!</span><span class="tt">If RHR jumps <b>5+ bpm tomorrow</b>, ZEAL will likely call BUILD — ease off then.</span></div>
+    <button class="cta">View full history →</button>
+  </section>
+
+  <!-- ============ V3 · GAUGE ============ -->
+  <section class="variant v3" data-v="3">
+    <div class="eyebrow" style="text-align:center;margin-top:6px">Resting heart rate</div>
+    <div class="gwrap">
+      <div class="gauge">
+        <svg viewBox="0 0 230 230"><circle class="gt" cx="115" cy="115" r="100"/><circle class="ga" cx="115" cy="115" r="100"/></svg>
+        <div class="ctr"><div class="n" style="color:var(--sig)">55</div><div class="u">BPM · Normal</div></div>
+      </div>
+      <div class="gmarks"><span>40</span><span>optimal band</span><span>85</span></div>
+    </div>
+    <div class="card" style="margin-top:18px;display:flex;justify-content:space-between;text-align:center">
+      <div><div style="font-family:var(--head);font-size:26px">57</div><div style="font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim)">30-DAY AVG</div></div>
+      <div><div style="font-family:var(--head);font-size:26px;color:var(--good)">▼2</div><div style="font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim)">VS BASELINE</div></div>
+      <div><div style="font-family:var(--head);font-size:26px">52</div><div style="font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim)">7-DAY LOW</div></div>
+    </div>
+    <div class="sl">7-day trend</div>
+    <svg class="trend" id="t3" viewBox="0 0 380 110" preserveAspectRatio="none"></svg>
+    <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+    <div class="sl">What it means</div>
+    <p class="prose">Your resting HR sits <b>comfortably in the optimal band</b> and below baseline — a strong recovery signal that fed today's <b style="color:var(--mint)">READY</b>.</p>
+    <button class="cta">View full history →</button>
+  </section>
+
+  <!-- ============ V4 · STACKED CARDS ============ -->
+  <section class="variant v4" data-v="4">
+    <div class="card">
+      <div class="now">
+        <div class="n" style="color:var(--sig)">55<small>BPM</small></div>
+        <div class="meta"><span class="statuspill"><i></i>Normal</span><div class="delta" style="margin-top:8px">▼ 2 bpm vs 30-day baseline</div></div>
+      </div>
+      <div class="krow">
+        <div class="k"><div class="kv">52</div><div class="kl">7d low</div></div>
+        <div class="k"><div class="kv">59</div><div class="kl">7d high</div></div>
+        <div class="k"><div class="kv">57</div><div class="kl">avg</div></div>
+        <div class="k"><div class="kv" style="color:var(--good)">In band</div><div class="kl">status</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sl" style="margin:0 0 10px">7-day trend</div>
+      <svg class="trend" id="t4" viewBox="0 0 380 110" preserveAspectRatio="none"></svg>
+      <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+    </div>
+    <div class="card">
+      <div class="sl" style="margin:0 0 10px">Your range</div>
+      <div class="rangebar"><span class="band" style="left:28%;right:26%"></span><span class="mk" style="left:38%"></span></div>
+      <div class="rangelbls"><span>40</span><span>band 52–62</span><span>85</span></div>
+    </div>
+    <div class="card">
+      <div class="sl" style="margin:0 0 8px">What it means</div>
+      <p class="prose"><b>Lower resting HR = better recovery.</b> Yours is 2 below baseline — a green input to today's verdict.</p>
+    </div>
+    <div class="card">
+      <div class="sl" style="margin:0 0 6px">Tips</div>
+      <div class="tip"><span class="ti">1</span><span class="tt">A <b>+5 bpm morning spike</b> follows poor sleep or alcohol — watch for it.</span></div>
+      <div class="tip"><span class="ti">2</span><span class="tt">Measure <b>right after waking</b> for the truest read.</span></div>
+    </div>
+    <button class="cta">View full history →</button>
+  </section>
+
+  <!-- ============ V5 · INTRADAY STORY ============ -->
+  <section class="variant v5" data-v="5">
+    <div class="eyebrow">Resting heart rate · overnight</div>
+    <div class="hero"><div class="n" style="color:var(--sig)">55<small>BPM AT WAKE</small></div></div>
+    <svg class="intraday" id="t5" viewBox="0 0 380 130" preserveAspectRatio="none"></svg>
+    <div class="iaxis"><span>23:00</span><span>02:00</span><span>04:00</span><span>Low 52</span><span>Wake</span></div>
+    <p class="story">Your heart <b>settled to <span class="hl">52 bpm</span></b> around 4am — its lowest, and the truest recovery reading. By wake it eased to <span class="hl">55</span>, still <b>2 below your 30-day baseline</b>. A body that drops this low overnight is <b>well recovered</b> — it's why ZEAL called <b style="color:var(--mint)">READY</b>.</p>
+    <div class="sl">One thing</div>
+    <div class="tip"><span class="ti">→</span><span class="tt">Nights you drink or sleep short, that overnight low climbs 4–6 bpm — the clearest early warning before a BUILD or REST day.</span></div>
+    <button class="cta">View full history →</button>
+  </section>
+</div>
+
+<script>
+(function(){
+  var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // smooth path (Catmull-Rom) from [x,y] points
+  function smooth(p){ if(p.length<2) return ''; var d='M'+p[0][0]+','+p[0][1];
+    for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;
+      var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6,c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
+      d+='C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2[0]+','+p2[1];} return d; }
+  function drawTrend(id, vals, min, max){
+    var svg=document.getElementById(id); if(!svg) return;
+    var W=380,H=110,PL=6,PR=6,PT=12,PB=14;
+    var pts=vals.map(function(v,i){var x=PL+(W-PL-PR)*(i/(vals.length-1));var y=(H-PB)-(H-PT-PB)*((v-min)/(max-min));return [x,y];});
+    var line=smooth(pts);
+    var area=line+' L'+pts[pts.length-1][0]+','+(H-PB)+' L'+pts[0][0]+','+(H-PB)+' Z';
+    var last=pts[pts.length-1];
+    var g='<defs><linearGradient id="'+id+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sig)" stop-opacity=".5"/><stop offset="1" stop-color="var(--sig)" stop-opacity="0"/></linearGradient></defs>';
+    g+='<path class="ar" d="'+area+'" fill="url(#'+id+'g)"/>';
+    g+='<path class="ln" d="'+line+'"'+(rm?'':' stroke-dasharray="900" stroke-dashoffset="900"')+'/>';
+    pts.forEach(function(pt,i){ if(i<pts.length-1) g+='<circle class="pt" cx="'+pt[0]+'" cy="'+pt[1]+'" r="3"/>'; });
+    g+='<circle class="td" cx="'+last[0]+'" cy="'+last[1]+'" r="4.5"/>';
+    svg.innerHTML=g;
+    var ln=svg.querySelector('.ln');
+    if(!rm && ln){ requestAnimationFrame(function(){requestAnimationFrame(function(){ ln.style.transition='stroke-dashoffset 1.5s var(--ease)'; ln.style.strokeDashoffset='0'; });}); }
+  }
+  var d7=[58,57,59,56,55,56,55];
+  drawTrend('t1',d7,50,64);
+  drawTrend('t2',[60,59,58,59,57,58,56,57,56,55,56,55,55,55],50,64);
+  drawTrend('t3',d7,50,64);
+  drawTrend('t4',d7,50,64);
+  // intraday overnight curve for v5
+  (function(){ var svg=document.getElementById('t5'); if(!svg)return;
+    var vals=[64,61,58,55,53,52,52,53,55], min=48,max=68,W=380,H=130,PL=6,PR=6,PT=12,PB=16;
+    var pts=vals.map(function(v,i){var x=PL+(W-PL-PR)*(i/(vals.length-1));var y=(H-PB)-(H-PT-PB)*((v-min)/(max-min));return [x,y];});
+    var line=smooth(pts), area=line+' L'+pts[pts.length-1][0]+','+(H-PB)+' L'+pts[0][0]+','+(H-PB)+' Z';
+    var lo=pts[6];
+    var g='<defs><linearGradient id="t5g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sig)" stop-opacity=".45"/><stop offset="1" stop-color="var(--sig)" stop-opacity="0"/></linearGradient></defs>';
+    g+='<path class="ar" d="'+area+'" fill="url(#t5g)"/><path class="ln" d="'+line+'"/><circle class="lo" cx="'+lo[0]+'" cy="'+lo[1]+'" r="4.5"/>';
+    svg.innerHTML=g;
+  })();
+  // toggle
+  document.querySelectorAll('.vtoggle button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.vtoggle button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      document.querySelectorAll('.variant').forEach(function(s){ s.classList.toggle('on', s.dataset.v===b.dataset.v); });
+      window.scrollTo(0,0);
+    });
+  });
+})();
+</script>
+</body>
+</html>
