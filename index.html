@@ -196,6 +196,19 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .tl-item .tx .t{display:block;font-size:14px;color:var(--white);font-weight:400;}
 .tl-item .tx .s{display:block;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.06em;margin-top:3px;text-transform:uppercase;}
 .tl-item .go{color:var(--dim);font-size:16px;flex-shrink:0;}
+/* TODAY — Blend: timeline spine (line + node + time) × log value-readout */
+.tl-blend{position:relative;padding-left:30px;}
+.tl-blend::before{content:"";position:absolute;left:9px;top:5px;bottom:14px;width:1px;background:var(--hair);}
+.tl-blend .item{position:relative;display:flex;align-items:flex-start;gap:14px;padding-bottom:22px;text-decoration:none;}
+.tl-blend .item:last-child{padding-bottom:0;}
+.tl-blend .node{position:absolute;left:-30px;top:-1px;width:20px;height:20px;border-radius:50%;background:#0A0D12;border:1.5px solid color-mix(in srgb,var(--ec) 55%,transparent);display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px color-mix(in srgb,var(--ec) 28%,transparent);}
+.tl-blend .node svg{width:11px;height:11px;stroke:var(--ec);fill:none;stroke-width:1.8;}
+.tl-blend .mid{flex:1;min-width:0;}
+.tl-blend .time{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--ec);text-transform:uppercase;}
+.tl-blend .t{display:block;font-size:14.5px;color:var(--white);margin-top:4px;}
+.tl-blend .s{display:block;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.05em;margin-top:4px;text-transform:uppercase;}
+.tl-blend .val{flex-shrink:0;text-align:right;font-family:var(--head);font-size:24px;color:var(--ec);line-height:.8;padding-top:10px;}
+.tl-blend .val small{display:block;font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.1em;margin-top:4px;text-transform:uppercase;}
 
 /* 7-DAY TREND — smooth, labelled, tappable */
 .trend{margin-top:24px;padding:14px 4px 10px;border-radius:16px;background:var(--panel);border:1px solid var(--hair);cursor:pointer;position:relative;}
@@ -368,21 +381,21 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
   <!-- TODAY — events that fed the verdict -->
   <div class="sec-lbl fade" style="transition-delay:.6s"><span>Today</span><a href="#">Full log →</a></div>
-  <div class="tl fade" style="transition-delay:.64s">
-    <a class="tl-item" href="#" style="--ec:var(--amber)">
-      <span class="ic"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M4 9h2.5M17.5 9H20M6.5 12h11M4 15h2.5M17.5 15H20"/></svg><span class="bd">12.4</span></span>
-      <span class="tx"><span class="t">Strength · Upper body</span><span class="s">07:03 · 58 min · strain 12.4</span></span>
-      <span class="go">›</span>
+  <div class="tl-blend fade" style="transition-delay:.64s">
+    <a class="item" href="#" style="--ec:var(--amber)">
+      <span class="node"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M4 9h2.5M17.5 9H20M6.5 12h11M4 15h2.5M17.5 15H20"/></svg></span>
+      <span class="mid"><span class="time">07:03</span><span class="t">Strength · Upper body</span><span class="s">58 min · 6 exercises</span></span>
+      <span class="val">12.4<small>Strain</small></span>
     </a>
-    <a class="tl-item" href="#" style="--ec:var(--mint)">
-      <span class="ic"><svg viewBox="0 0 24 24"><path d="M20 15a8 8 0 11-9-11 6.5 6.5 0 009 11z"/></svg><span class="bd">8.1h</span></span>
-      <span class="tx"><span class="t">Primary sleep</span><span class="s">00:51 → 06:20 · 8.1 h · solid</span></span>
-      <span class="go">›</span>
+    <a class="item" href="#" style="--ec:var(--mint)">
+      <span class="node"><svg viewBox="0 0 24 24"><path d="M20 15a8 8 0 11-9-11 6.5 6.5 0 009 11z"/></svg></span>
+      <span class="mid"><span class="time">00:51</span><span class="t">Primary sleep</span><span class="s">00:51 → 06:20 · deep + REM</span></span>
+      <span class="val">8.1<small>Hrs</small></span>
     </a>
-    <a class="tl-item" href="#" style="--ec:var(--cyan)">
-      <span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg><span class="bd">FRESH</span></span>
-      <span class="tx"><span class="t">Morning check-in</span><span class="s">06:20 · soreness low · motivation high</span></span>
-      <span class="go">›</span>
+    <a class="item" href="#" style="--ec:var(--cyan)">
+      <span class="node"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></span>
+      <span class="mid"><span class="time">06:20</span><span class="t">Morning check-in</span><span class="s">soreness low · motivation high</span></span>
+      <span class="val">FRESH</span>
     </a>
   </div>
 
