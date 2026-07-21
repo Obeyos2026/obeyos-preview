@@ -337,11 +337,11 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
       ctx.clearRect(0,0,W,H); var mid=H*0.5, AMP=H*0.26;
       ctx.beginPath();
       for(var x=-BEAT;x<=W+BEAT;x++){ var f=((((x+phase)%BEAT)+BEAT)%BEAT)/BEAT; var y=mid+beatY(f)*AMP; if(x===-BEAT)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
-      ctx.strokeStyle='rgba(255,255,255,.05)'; ctx.lineWidth=1; ctx.lineJoin='round'; ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,.035)'; ctx.lineWidth=1; ctx.lineJoin='round'; ctx.stroke();
     }
     if(rm){ paint(0); return; }
     var start=null;
-    (function frame(ts){ if(!start)start=ts; paint(((ts-start)/1000)*103); requestAnimationFrame(frame); })(performance.now()); // ~1.09s/beat ≈ 55 bpm
+    (function frame(ts){ if(!start)start=ts; paint(((ts-start)/1000)*42); requestAnimationFrame(frame); })(performance.now()); // slow, calm drift
   })();
   render();
 })();
