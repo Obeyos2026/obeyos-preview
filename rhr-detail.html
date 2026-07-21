@@ -30,7 +30,11 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .hd .ht{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
 
 /* ===== HERO — home readiness ring + scan-fill number (identical component) ===== */
-.top{display:flex;flex-direction:column;align-items:center;margin-top:10px;}
+.top{position:relative;display:flex;flex-direction:column;align-items:center;margin-top:10px;}
+/* ambient ECG heartbeat behind the ring — illustrates "heart reading", black bg kept */
+.ecg{position:absolute;left:-24px;right:-24px;top:4px;height:158px;z-index:0;pointer-events:none;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);mask:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);}
+.top .gauge,.top .glyph,.top .statuspill{position:relative;z-index:1;}
 .gauge{position:relative;width:158px;height:158px;animation:breathe 5.5s ease-in-out infinite;}
 @keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .gauge svg{width:100%;height:100%;overflow:visible;transform:rotate(-90deg);}
@@ -149,6 +153,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 /* A · STATEMENT — Bebas headline + tight support + tip chips */
 .rd-eye{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
 .rd-big{font-family:var(--head);font-size:42px;letter-spacing:.02em;color:var(--sig);line-height:.9;margin-top:8px;text-shadow:0 0 24px color-mix(in srgb,var(--sig) 30%,transparent);}
+.rd-sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--mid);text-transform:uppercase;margin:9px 0 16px;}
 .rd-line{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);margin-top:12px;}
 .rd-line b{color:var(--white);font-weight:600;}
 .chips{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
@@ -191,6 +196,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
   <!-- HERO -->
   <div class="top">
+    <canvas class="ecg" id="ecg"></canvas>
     <div class="gauge" style="--arc:150">
       <svg viewBox="0 0 158 158"><circle class="trk" cx="79" cy="79" r="72"/><circle class="glow" cx="79" cy="79" r="72"/><circle class="arc" cx="79" cy="79" r="72"/></svg>
       <div class="ctr"><div class="score">55</div><div class="of">BPM</div></div>
@@ -232,46 +238,16 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="rangebar"><span class="band" style="left:28%;right:26%"></span><span class="mk" style="left:38%"></span></div>
   <div class="rangelbls"><span>40</span><span>band 52–62</span><span>85</span></div>
 
-  <!-- THE READ — 3 fresh variants -->
-  <div class="rdtoggle">
-    <button data-r="a" class="on">Statement</button>
-    <button data-r="b">Card</button>
-    <button data-r="c">Spec</button>
-  </div>
-
-  <!-- A · STATEMENT -->
-  <div class="readvar on" data-r="a">
-    <div class="rd-eye">The read</div>
-    <div class="rd-big">WELL RECOVERED</div>
-    <div class="rd-line">RHR is <b>2&nbsp;bpm below</b> your baseline — your body absorbed yesterday's load. A green input to today's <b style="color:var(--mint)">READY</b>.</div>
-    <div class="chips">
-      <div class="chip"><span class="ck">Watch</span><span>A <b>+5 bpm</b> morning spike usually follows poor sleep or alcohol.</span></div>
-      <div class="chip"><span class="ck">Measure</span><span><b>Right after waking</b> for the truest read.</span></div>
-    </div>
-  </div>
-
-  <!-- B · CARD -->
-  <div class="readvar" data-r="b">
-    <div class="rcard">
-      <div class="rc-h"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>Recovery marker</div>
-      <div class="rc-t">Two below baseline — <b>recovery is landing, not draining.</b> A green input to today's <b style="color:var(--mint)">READY</b>.</div>
-    </div>
-    <div class="rcard coach">
-      <div class="rc-k">Coach note</div>
-      <div class="arow"><span class="ar">→</span><span>A <b>+5 bpm</b> morning spike usually follows poor sleep or alcohol.</span></div>
-      <div class="arow"><span class="ar">→</span><span>Measure <b>right after waking</b> for the truest read.</span></div>
-    </div>
-  </div>
-
-  <!-- C · SPEC -->
-  <div class="readvar" data-r="c">
-    <div class="spec">
-      <div class="r"><span class="rk">Means</span><span class="rv"><b>Recovery marker</b> — lower is more recovered</span></div>
-      <div class="r"><span class="rk">Today</span><span class="rv"><span class="g">2&nbsp;bpm below</span> baseline · in band</span></div>
-      <div class="r"><span class="rk">Verdict</span><span class="rv">Green input to today's <b style="color:var(--mint)">READY</b></span></div>
-      <div class="r"><span class="rk">Watch</span><span class="rv">A <b>+5&nbsp;bpm</b> spike = poor sleep or alcohol</span></div>
-      <div class="r"><span class="rk">Measure</span><span class="rv"><b>Right after waking</b></span></div>
-    </div>
+  <!-- THE READ — Statement headline + Spec rows (locked blend) -->
+  <div class="sl">The read</div>
+  <div class="rd-big">WELL RECOVERED</div>
+  <div class="rd-sub">Resting HR · 2 bpm below baseline</div>
+  <div class="spec">
+    <div class="r"><span class="rk">Means</span><span class="rv"><b>Recovery marker</b> — lower is more recovered</span></div>
+    <div class="r"><span class="rk">Today</span><span class="rv"><span class="g">2&nbsp;bpm below</span> baseline · in band</span></div>
+    <div class="r"><span class="rk">Verdict</span><span class="rv">Green input to today's <b style="color:var(--mint)">READY</b></span></div>
+    <div class="r"><span class="rk">Watch</span><span class="rv">A <b>+5&nbsp;bpm</b> spike = poor sleep or alcohol</span></div>
+    <div class="r"><span class="rk">Measure</span><span class="rv"><b>Right after waking</b></span></div>
   </div>
 
   <button class="cta">View full history →</button>
@@ -338,14 +314,38 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   function refreshRows(){document.querySelectorAll('.wkrow').forEach(function(r){r.classList.toggle('on',+r.dataset.i===cur);});}
   document.querySelectorAll('.wkrow').forEach(function(r){r.addEventListener('click',function(){cur=+r.dataset.i;render();calpop.classList.remove('open');});});
   document.addEventListener('click',function(e){if(!calpop.contains(e.target)&&!document.getElementById('wkLabel').contains(e.target))calpop.classList.remove('open');});
-  // the-read variant toggle
-  document.querySelectorAll('.rdtoggle button').forEach(function(b){
-    b.addEventListener('click',function(){
-      document.querySelectorAll('.rdtoggle button').forEach(function(x){x.classList.remove('on');});
-      b.classList.add('on');
-      document.querySelectorAll('.readvar').forEach(function(s){s.classList.toggle('on',s.dataset.r===b.dataset.r);});
-    });
-  });
+  // ambient ECG heartbeat behind the ring
+  (function(){
+    var c=document.getElementById('ecg'); if(!c) return;
+    var ctx=c.getContext('2d'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches, W,H,dpr;
+    function size(){ dpr=window.devicePixelRatio||1; var r=c.getBoundingClientRect(); W=r.width;H=r.height; c.width=Math.round(W*dpr);c.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
+    size(); window.addEventListener('resize',size);
+    var BEAT=118;
+    function lerp(a,b,t){t=t<0?0:t>1?1:t;return a+(b-a)*t;}
+    function beatY(f){ // one heartbeat, up = negative
+      if(f<0.30) return 0;
+      if(f<0.35) return -lerp(0,0.10,(f-0.30)/0.05);
+      if(f<0.40) return -lerp(0.10,0,(f-0.35)/0.05);
+      if(f<0.45) return 0;
+      if(f<0.47) return lerp(0,0.16,(f-0.45)/0.02);
+      if(f<0.50) return lerp(0.16,-1.0,(f-0.47)/0.03);
+      if(f<0.53) return lerp(-1.0,0.38,(f-0.50)/0.03);
+      if(f<0.57) return lerp(0.38,0,(f-0.53)/0.04);
+      if(f<0.64) return -lerp(0,0.20,(f-0.57)/0.07);
+      if(f<0.72) return -lerp(0.20,0,(f-0.64)/0.08);
+      return 0;
+    }
+    function paint(phase){
+      ctx.clearRect(0,0,W,H); var mid=H*0.5, AMP=H*0.32;
+      ctx.beginPath();
+      for(var x=-BEAT;x<=W+BEAT;x++){ var f=((((x+phase)%BEAT)+BEAT)%BEAT)/BEAT; var y=mid+beatY(f)*AMP; if(x===-BEAT)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
+      ctx.strokeStyle='rgba(34,197,94,.17)'; ctx.lineWidth=1.4; ctx.lineJoin='round';
+      ctx.shadowColor='rgba(34,197,94,.5)'; ctx.shadowBlur=6; ctx.stroke(); ctx.shadowBlur=0;
+    }
+    if(rm){ paint(0); return; }
+    var start=null;
+    (function frame(ts){ if(!start)start=ts; paint(((ts-start)/1000)*70); requestAnimationFrame(frame); })(performance.now());
+  })();
   render();
 })();
 </script>
