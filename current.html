@@ -140,6 +140,37 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 @keyframes checkPing{0%{transform:translate(-50%,-50%) scale(.4);opacity:.9}70%{opacity:0}100%{transform:translate(-50%,-50%) scale(3.2);opacity:0}}
 @media(prefers-reduced-motion:reduce){.sig-icon::before,.sig-icon::after{animation:none!important}}
 
+/* VITALS — the raw reads behind the verdict (range gauge = where you sit in your own band) */
+.vitals{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.vital{position:relative;padding:13px 15px;border-radius:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);
+  border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.vital .vh{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--mid);text-transform:uppercase;}
+.vital .vh svg{width:12px;height:12px;stroke:var(--mid);fill:none;stroke-width:1.6;}
+.vital .vv{font-family:var(--head);font-size:27px;color:var(--white);margin-top:7px;line-height:.85;}
+.vital .vv small{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:3px;letter-spacing:.02em;}
+.vital .vs{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;margin-top:8px;color:var(--stc,var(--good));}
+.vital .vs i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--stc,var(--good));position:relative;flex-shrink:0;}
+.vital .vs i::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;border-radius:50%;background:var(--stc,var(--good));transform:translate(-50%,-50%);}
+/* vertical range gauge on the right */
+.vital .vg{position:absolute;top:14px;bottom:14px;right:14px;width:6px;border-radius:3px;background:rgba(255,255,255,.09);overflow:visible;}
+.vital .vg .fill{position:absolute;left:0;right:0;bottom:0;height:0;border-radius:3px;background:var(--stc,var(--good));box-shadow:0 0 8px color-mix(in srgb,var(--stc,var(--good)) 60%,transparent);transition:height 1.1s var(--ease) .5s;}
+.screen.play .vital .vg .fill{height:var(--gf,50%);}
+.vital .vg .dot{position:absolute;left:50%;bottom:0;width:11px;height:11px;border-radius:50%;background:#0A0D12;border:2px solid var(--stc,var(--good));box-shadow:0 0 8px var(--stc,var(--good));transform:translate(-50%,50%);transition:bottom 1.1s var(--ease) .5s;}
+.screen.play .vital .vg .dot{bottom:var(--gf,50%);}
+
+/* TODAY — timeline of the events that fed the verdict */
+.tl{display:flex;flex-direction:column;gap:8px;}
+.tl-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:14px;background:var(--panel);border:1px solid var(--hair);text-decoration:none;}
+.tl-item .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;background:color-mix(in srgb,var(--ec) 12%,transparent);border:1px solid color-mix(in srgb,var(--ec) 30%,transparent);}
+.tl-item .ic svg{width:18px;height:18px;stroke:var(--ec);fill:none;stroke-width:1.7;}
+.tl-item .ic .bd{position:absolute;bottom:-6px;right:-6px;font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:7px;background:#0A0D12;border:1px solid color-mix(in srgb,var(--ec) 55%,transparent);color:var(--ec);}
+.tl-item .tx{flex:1;min-width:0;}
+.tl-item .tx .t{display:block;font-size:14px;color:var(--white);font-weight:400;}
+.tl-item .tx .s{display:block;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.06em;margin-top:3px;text-transform:uppercase;}
+.tl-item .go{color:var(--dim);font-size:16px;flex-shrink:0;}
+
 /* 7-DAY TREND — smooth, labelled, tappable */
 .trend{margin-top:24px;padding:14px 4px 10px;border-radius:16px;background:var(--panel);border:1px solid var(--hair);cursor:pointer;position:relative;}
 .trend .th{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:0 8px 4px;}
@@ -285,6 +316,35 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
       <div class="nm">Check-in</div><div class="st">Logged</div></div>
   </div>
 
+  <!-- VITALS — raw reads behind the verdict -->
+  <div class="sec-lbl fade" style="transition-delay:.54s"><span>Vitals · what ZEAL read</span><a href="#">All →</a></div>
+  <div class="vitals fade" style="transition-delay:.58s">
+    <div class="vital" style="--stc:var(--good);--gf:52%">
+      <div class="vh"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>RHR</div>
+      <div class="vv">55<small>BPM</small></div>
+      <div class="vs"><i></i>Normal</div>
+      <div class="vg"><span class="fill"></span><span class="dot"></span></div>
+    </div>
+    <div class="vital" style="--stc:var(--good);--gf:82%">
+      <div class="vh"><svg viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/></svg>SpO₂</div>
+      <div class="vv">96<small>%</small></div>
+      <div class="vs"><i></i>Normal</div>
+      <div class="vg"><span class="fill"></span><span class="dot"></span></div>
+    </div>
+    <div class="vital" style="--stc:var(--good);--gf:50%">
+      <div class="vh"><svg viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 10-4 0v9.8a4 4 0 104 0z"/></svg>Skin temp</div>
+      <div class="vv">36.5<small>°C</small></div>
+      <div class="vs"><i></i>Normal</div>
+      <div class="vg"><span class="fill"></span><span class="dot"></span></div>
+    </div>
+    <div class="vital" style="--stc:var(--amber);--gf:34%">
+      <div class="vh"><svg viewBox="0 0 24 24"><path d="M6 8a4 4 0 018 0c0 3-4 3-4 6M4 15h16M4 19h16"/></svg>Resp rate</div>
+      <div class="vv">13<small>RPM</small></div>
+      <div class="vs"><i></i>Slightly low</div>
+      <div class="vg"><span class="fill"></span><span class="dot"></span></div>
+    </div>
+  </div>
+
   <!-- TREND (tap → calendar) -->
   <div class="trend fade" id="trend" style="transition-delay:.56s">
     <div class="th"><span>Readiness · 7 days</span><span class="tap">Tap for history ▸</span></div>
@@ -297,7 +357,27 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="tlbls"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
   </div>
 
-  <div class="driver fade" style="transition-delay:.62s">
+  <!-- TODAY — events that fed the verdict -->
+  <div class="sec-lbl fade" style="transition-delay:.6s"><span>Today</span><a href="#">Full log →</a></div>
+  <div class="tl fade" style="transition-delay:.64s">
+    <a class="tl-item" href="#" style="--ec:var(--amber)">
+      <span class="ic"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M4 9h2.5M17.5 9H20M6.5 12h11M4 15h2.5M17.5 15H20"/></svg><span class="bd">12.4</span></span>
+      <span class="tx"><span class="t">Strength · Upper body</span><span class="s">07:03 · 58 min · strain 12.4</span></span>
+      <span class="go">›</span>
+    </a>
+    <a class="tl-item" href="#" style="--ec:var(--mint)">
+      <span class="ic"><svg viewBox="0 0 24 24"><path d="M20 15a8 8 0 11-9-11 6.5 6.5 0 009 11z"/></svg><span class="bd">8.1h</span></span>
+      <span class="tx"><span class="t">Primary sleep</span><span class="s">00:51 → 06:20 · 8.1 h · solid</span></span>
+      <span class="go">›</span>
+    </a>
+    <a class="tl-item" href="#" style="--ec:var(--cyan)">
+      <span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg><span class="bd">FRESH</span></span>
+      <span class="tx"><span class="t">Morning check-in</span><span class="s">06:20 · soreness low · motivation high</span></span>
+      <span class="go">›</span>
+    </a>
+  </div>
+
+  <div class="driver fade" style="transition-delay:.68s">
     <div class="k">Primary driver</div>
     <div class="t"><b>HRV up 8% on your 30-day baseline.</b> Recovered · solid sleep. Nothing's holding you back.</div>
   </div>
