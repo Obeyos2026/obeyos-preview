@@ -137,7 +137,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     svg.innerHTML='<defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sig)" stop-opacity=".45"/><stop offset="1" stop-color="var(--sig)" stop-opacity="0"/></linearGradient></defs><path class="ar" d="'+area+'" fill="url(#rg)"/><path class="ln" d="'+line+'"/><circle class="td" cx="'+last[0]+'" cy="'+last[1]+'" r="4.5"/>';
   })();
   // drivers spec
-  var D=[['HRV','#C8FF00','68','MS','baseline 62','+6','up'],['Resting HR','#22C55E','55','BPM','baseline 57','▼2','up'],['Sleep','#00E5A0','8.1','H','96% of need','+0.7','up'],['Resp rate','#F59E0B','13.4','RPM','baseline 14','steady','up']];
+  var D=[['HRV','#C8FF00','68','MS','baseline 62','+6','up'],['Resting HR','#22C55E','55','BPM','baseline 57','-2','up'],['Sleep','#00E5A0','8.1','H','96% of need','+0.7','up'],['Resp rate','#F59E0B','13.4','RPM','baseline 14','NORMAL','up']];
   document.getElementById('drivers').innerHTML=D.map(function(d){
     return '<div class="r"><span class="dot" style="background:'+d[1]+'"></span><span class="nm">'+d[0]+'</span><span class="mid"><span class="val">'+d[2]+'<small>'+d[3]+'</small></span><span class="base">'+d[4]+'</span></span><span class="st '+d[6]+'">'+d[5]+'</span></div>';
   }).join('');
