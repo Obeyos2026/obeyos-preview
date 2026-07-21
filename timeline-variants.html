@@ -24,6 +24,20 @@ body{background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 
 .mount{min-height:340px;}
 .ic svg{fill:none;stroke:var(--ec);stroke-width:1.7;}
 
+/* ★ BLEND — timeline spine (line + node + time) × log readout (value on the right) */
+.tl-blend{position:relative;padding-left:30px;margin-top:4px;}
+.tl-blend::before{content:"";position:absolute;left:9px;top:5px;bottom:14px;width:1px;background:var(--hair);}
+.tl-blend .item{position:relative;display:flex;align-items:flex-start;gap:14px;padding-bottom:22px;}
+.tl-blend .item:last-child{padding-bottom:0;}
+.tl-blend .node{position:absolute;left:-30px;top:-1px;width:20px;height:20px;border-radius:50%;background:#0A0D12;border:1.5px solid color-mix(in srgb,var(--ec) 55%,transparent);display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px color-mix(in srgb,var(--ec) 28%,transparent);}
+.tl-blend .node svg{width:11px;height:11px;stroke:var(--ec);fill:none;stroke-width:1.8;}
+.tl-blend .mid{flex:1;min-width:0;}
+.tl-blend .time{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--ec);text-transform:uppercase;}
+.tl-blend .t{font-size:14.5px;color:var(--white);margin-top:4px;}
+.tl-blend .s{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.05em;margin-top:4px;text-transform:uppercase;}
+.tl-blend .val{flex-shrink:0;text-align:right;font-family:var(--head);font-size:24px;color:var(--ec);line-height:.8;padding-top:10px;}
+.tl-blend .val small{display:block;font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.1em;margin-top:4px;}
+
 /* A · CARDS */
 .tl-cards .item{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:14px;background:var(--panel);border:1px solid var(--hair);text-decoration:none;}
 .tl-cards .item+.item{margin-top:8px;}
@@ -80,7 +94,7 @@ body{background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 
 </head>
 <body>
 <div class="vtoggle">
-  <button data-v="cards" class="on">Cards</button><button data-v="line">Timeline</button><button data-v="log">Log</button><button data-v="track">Track</button><button data-v="stat">Stat</button>
+  <button data-v="blend" class="on">★ Blend</button><button data-v="line">Timeline</button><button data-v="log">Log</button><button data-v="cards">Cards</button><button data-v="track">Track</button><button data-v="stat">Stat</button>
 </div>
 <div class="sec-lbl"><span>Today</span><a href="#">Full log →</a></div>
 <div class="mount" id="mount"></div>
@@ -88,12 +102,13 @@ body{background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 
 (function(){
   var G={ dumbbell:'M6.5 6.5v11M17.5 6.5v11M4 9h2.5M17.5 9H20M6.5 12h11M4 15h2.5M17.5 15H20', moon:'M20 15a8 8 0 11-9-11 6.5 6.5 0 009 11z', check:'M5 12l4 4 10-10' };
   var E=[
-    {ic:'dumbbell',ec:'var(--amber)',t:'Strength · Upper body',time:'07:03',sub:'58 min · strain 12.4',val:'12.4',vl:'STRAIN',hr:7.05,span:0},
-    {ic:'moon',ec:'var(--mint)',t:'Primary sleep',time:'00:51',sub:'00:51 → 06:20 · solid',val:'8.1',vl:'HRS',hr:0.85,span:5.48,sleep:true},
+    {ic:'dumbbell',ec:'var(--amber)',t:'Strength · Upper body',time:'07:03',sub:'58 min · 6 exercises',val:'12.4',vl:'STRAIN',hr:7.05,span:0},
+    {ic:'moon',ec:'var(--mint)',t:'Primary sleep',time:'00:51',sub:'00:51 → 06:20 · deep + REM',val:'8.1',vl:'HRS',hr:0.85,span:5.48,sleep:true},
     {ic:'check',ec:'var(--cyan)',t:'Morning check-in',time:'06:20',sub:'soreness low · motivation high',val:'FRESH',vl:'',hr:6.33,span:0}
   ];
   function ic(k){return '<svg viewBox="0 0 24 24"><path d="'+G[k]+'"/></svg>';}
   var R={
+    blend:function(){return '<div class="tl-blend">'+E.map(function(e){return '<div class="item" style="--ec:'+e.ec+'"><span class="node">'+ic(e.ic)+'</span><div class="mid"><div class="time">'+e.time+'</div><div class="t">'+e.t+'</div><div class="s">'+e.sub+'</div></div><div class="val">'+e.val+(e.vl?'<small>'+e.vl+'</small>':'')+'</div></div>';}).join('')+'</div>';},
     cards:function(){return '<div class="tl-cards">'+E.map(function(e){return '<a class="item" href="#" style="--ec:'+e.ec+'"><span class="ci">'+ic(e.ic)+'<span class="bd">'+e.val+'</span></span><span class="tx"><span class="t">'+e.t+'</span><span class="s">'+e.time+' · '+e.sub+'</span></span><span class="go">›</span></a>';}).join('')+'</div>';},
     line:function(){return '<div class="tl-line">'+E.map(function(e){return '<div class="item" style="--ec:'+e.ec+'"><span class="node">'+ic(e.ic)+'</span><div class="time">'+e.time+'</div><div class="t">'+e.t+'</div><div class="s">'+e.sub+'</div></div>';}).join('')+'</div>';},
     log:function(){return '<div class="tl-log">'+E.map(function(e){return '<div class="row" style="--ec:'+e.ec+'"><span class="time">'+e.time+'</span><div><div class="t">'+e.t+'</div><div class="sub">'+e.sub+'</div></div><div class="val">'+e.val+(e.vl?'<small>'+e.vl+'</small>':'')+'</div></div>';}).join('')+'</div>';},
@@ -111,7 +126,7 @@ body{background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 
   var mount=document.getElementById('mount');
   function show(m){ mount.innerHTML=R[m](); }
   document.querySelectorAll('.vtoggle button').forEach(function(b){ b.addEventListener('click',function(){ document.querySelectorAll('.vtoggle button').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); show(b.dataset.v); }); });
-  show('cards');
+  show('blend');
 })();
 </script>
 </body>
