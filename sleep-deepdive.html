@@ -27,24 +27,22 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .hd .win{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);margin-left:auto;}
 
 /* VERDICT hero */
-.hero{margin-top:16px;}
-.hero .eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
-.word-wrap{position:relative;display:inline-block;line-height:.8;margin-top:8px;}
+.hero{display:grid;grid-template-columns:1fr auto;grid-template-areas:"eb ga" "vw ga" "fu fu";align-items:center;column-gap:14px;margin-top:18px;}
+.hero .eyebrow{grid-area:eb;align-self:end;font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.word-wrap{grid-area:vw;align-self:start;position:relative;display:inline-block;line-height:.8;margin-top:6px;}
 /* exact copy of the home dashboard verdict scan — fades out, no wall */
 .vscan{position:absolute;inset:-18px -18px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);}
 .vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%, var(--sig) 0%, transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);}
 .screen.play .vscan::after{animation:sweep 5.5s linear .6s infinite;}
 @keyframes sweep{0%{opacity:0;transform:translateX(-58%);}6%{opacity:.85;}30%{opacity:.5;}44%{opacity:0;transform:translateX(58%);}100%{opacity:0;transform:translateX(58%);}}
-.word{position:relative;z-index:2;font-family:var(--head);font-size:56px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
-.hgrid{display:flex;align-items:center;gap:14px;}
-.hgrid .hleft{min-width:0;}
-.hgrid .gauge{position:relative;width:118px;height:118px;flex-shrink:0;}
-.hgrid .gauge .ring-cv{position:absolute;top:0;left:0;pointer-events:none;}
-.hgrid .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.hgrid .gauge .rn{font-family:var(--head);font-size:40px;color:var(--white);line-height:.8;}
-.hgrid .gauge .rn small{font-size:18px;color:var(--muted);}
-.hgrid .gauge .ru{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
-.furn{display:flex;margin-top:20px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.word{position:relative;z-index:2;font-family:var(--head);font-size:60px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.hero .gauge{grid-area:ga;position:relative;width:120px;height:120px;}
+.hero .gauge .ring-cv{position:absolute;top:0;left:0;pointer-events:none;}
+.hero .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hero .gauge .rn{font-family:var(--head);font-size:40px;color:var(--white);line-height:.8;}
+.hero .gauge .rn small{font-size:18px;color:var(--muted);}
+.hero .gauge .ru{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.furn{grid-area:fu;display:flex;margin-top:16px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
 .fc{flex:1;padding:13px 4px;text-align:center;border-left:1px solid var(--hair);}
 .fc:first-child{border-left:none;}
 .fv{font-family:var(--head);font-size:23px;color:var(--white);}
@@ -64,7 +62,17 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   background-image:linear-gradient(90deg,transparent 24.6%,rgba(255,255,255,.05) 25%,transparent 25.4%,transparent 49.6%,rgba(255,255,255,.05) 50%,transparent 50.4%,transparent 74.6%,rgba(255,255,255,.05) 75%,transparent 75.4%);}
 .lanes .blk{position:absolute;top:0;bottom:0;border-radius:3px;opacity:0;transition:opacity .5s var(--ease) var(--d);}
 .screen.play .lanes .blk{opacity:1;}
+.lanes .blk .bd{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:7px;color:rgba(10,13,18,.82);letter-spacing:.01em;}
 .lanes .ld{font-family:var(--head);font-size:17px;color:var(--sc);text-align:right;line-height:.8;}
+/* stage balance vs science */
+.bal .r{display:grid;grid-template-columns:12px 52px 42px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--hair);}
+.bal .r:first-child{border-top:none;}
+.bal .dot{width:9px;height:9px;border-radius:3px;}
+.bal .nm{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--white);text-transform:uppercase;}
+.bal .ac{font-family:var(--head);font-size:18px;color:var(--white);}
+.bal .rg{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;}
+.bal .st{font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;}
+.bal .st.ok,.bal .st.hi{color:var(--mint);} .bal .st.lo{color:var(--amber);}
 .tax{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--white);margin-top:11px;letter-spacing:.02em;padding:0 46px 0 50px;}
 
 /* STAGE MIX — single composition bar + mono readout */
@@ -102,18 +110,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
   <!-- VERDICT hero — editorial: word left, dashed ring right (matches home) -->
   <div class="hero fade">
-    <div class="hgrid">
-      <div class="hleft">
-        <div class="eyebrow">Tonight's sleep read</div>
-        <div class="word-wrap"><span class="vscan"></span><span class="word">WELL<br>RESTED</span></div>
-      </div>
-      <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn">96<small>%</small></div><div class="ru">of need</div></div></div>
-    </div>
+    <div class="eyebrow">Tonight's sleep read</div>
+    <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn">96<small>%</small></div><div class="ru">of need</div></div></div>
+    <div class="word-wrap"><span class="vscan"></span><span class="word">WELL<br>RESTED</span></div>
     <div class="furn">
       <div class="fc"><div class="fv">8:01</div><div class="fk">slept</div></div>
       <div class="fc"><div class="fv g">8:20</div><div class="fk">needed</div></div>
-      <div class="fc"><div class="fv">94<span style="font-size:13px">%</span></div><div class="fk">efficient</div></div>
-      <div class="fc"><div class="fv g">41<span style="font-size:13px">%</span></div><div class="fk">restorative</div></div>
+      <div class="fc"><div class="fv">8:34</div><div class="fk">in bed</div></div>
     </div>
   </div>
 
@@ -124,11 +127,16 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="tax"><span>22:51</span><span>00:30</span><span>02:15</span><span>04:00</span><span>06:20</span></div>
   </div>
 
+  <!-- STAGE BALANCE vs evidence -->
+  <div class="card fade" style="transition-delay:.19s">
+    <div class="ch"><span class="k">Stage balance</span><span class="kv">vs healthy adult range</span></div>
+    <div class="bal" id="bal"></div>
+  </div>
+
   <!-- EFFICIENCY -->
   <div class="card fade" style="transition-delay:.22s">
     <div class="ch"><span class="k">Efficiency &amp; body</span></div>
-    <div class="mrow"><span class="ml">Time asleep · in bed</span><span class="mv" style="font-size:17px">8:01 · 8:34</span></div>
-    <div class="mrow"><span class="ml">Sleep efficiency</span><span class="mv g">94<small>%</small></span></div>
+    <div class="mrow"><span class="ml">Sleep efficiency</span><span class="mv g">94<small>% · 8:01 of 8:34</small></span></div>
     <div class="mrow"><span class="ml">Disturbances</span><span class="mv">7<small>× · 22 min</small></span></div>
     <div class="mrow"><span class="ml">Resp rate (sleep)</span><span class="mv">13.4<small>rpm</small></span></div>
   </div>
@@ -152,13 +160,20 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   (function(){
     var CN=['awake','rem','light','deep'];
     var SEQ=[[1,.4],[2,.9],[3,1.15],[2,.5],[1,.6],[0,.12],[2,.75],[3,.85],[2,.6],[1,.9],[0,.08],[2,.5],[3,.55],[2,.4],[1,.55]];
-    var TOT=SEQ.reduce(function(a,s){return a+s[1];},0), DUR={3:'1:47',2:'3:37',1:'1:09',0:'0:32'};
+    var TOT=SEQ.reduce(function(a,s){return a+s[1];},0), DUR={3:'1:47',2:'3:37',1:'1:09',0:'0:32'}, MIN={3:107,2:217,1:69,0:32};
+    var sumBy={}; SEQ.forEach(function(s){sumBy[s[0]]=(sumBy[s[0]]||0)+s[1];});
+    function fmt(m){m=Math.round(m);return m>=60?(Math.floor(m/60)+'h'+(m%60||'')):m+'m';}
     var rows=[3,2,1,0].map(function(lv){ var blks='',x=0;
-      SEQ.forEach(function(s,i){ var w=s[1]/TOT*100; if(s[0]===lv) blks+='<span class="blk" style="left:'+x+'%;width:'+w+'%;background:'+COL[CN[lv]]+';--d:'+(0.2+i*0.05)+'s"></span>'; x+=w; });
+      SEQ.forEach(function(s,i){ var w=s[1]/TOT*100; if(s[0]===lv){ var bm=MIN[lv]*(s[1]/sumBy[lv]); var lbl=w>6.5?'<span class="bd">'+fmt(bm)+'</span>':''; blks+='<span class="blk" style="left:'+x+'%;width:'+w+'%;background:'+COL[CN[lv]]+';--d:'+(0.2+i*0.05)+'s">'+lbl+'</span>'; } x+=w; });
       return '<div class="lane" style="--sc:'+COL[CN[lv]]+'"><span class="ln">'+CN[lv].toUpperCase()+'</span><div class="track">'+blks+'</div><span class="ld">'+DUR[lv]+'</span></div>';
     }).join('');
     document.getElementById('lanes').innerHTML=rows;
   })();
+  // STAGE BALANCE vs evidence-based healthy adult ranges (Deep 15-20 · REM 20-25 · Light 50-55 · Awake <10)
+  var BAL=[['deep','Deep','25%','15–20%','hi','ample'],['light','Light','52%','50–55%','ok','in range'],['rem','REM','16%','20–25%','lo','slightly low'],['awake','Awake','7%','&lt; 10%','ok','in range']];
+  document.getElementById('bal').innerHTML=BAL.map(function(b){
+    return '<div class="r"><span class="dot" style="background:'+COL[b[0]]+'"></span><span class="nm">'+b[1]+'</span><span class="ac">'+b[2]+'</span><span class="rg">healthy '+b[3]+'</span><span class="st '+b[4]+'">'+b[5]+'</span></div>';
+  }).join('');
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
 })();
 </script>
