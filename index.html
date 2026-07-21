@@ -116,13 +116,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .screen.play .sg .ring .a{stroke-dashoffset:var(--o,50);}
 .sg .ring .ico{position:absolute;top:7px;left:0;right:0;display:flex;justify-content:center;}
 .sg .ring .ico svg{width:12px;height:12px;transform:none;stroke:var(--sig);fill:none;stroke-width:1.7;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 45%,transparent));}
-.sg .ring .v{position:absolute;left:0;right:0;top:56%;transform:translateY(-50%);text-align:center;font-family:var(--head);font-size:17px;color:var(--white);line-height:.9;}
+.sg .ring .v{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--head);font-size:18px;color:var(--white);line-height:.9;}
 .sg .ring .v small{font-family:var(--mono);font-size:6px;color:var(--dim);letter-spacing:.02em;margin-left:1px;}
 .sg .nm{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--mid);text-transform:uppercase;}
 .sg .st{font-family:var(--mono);font-size:7px;letter-spacing:.05em;color:var(--sig);text-transform:uppercase;}
 .sg.you .nm{color:var(--cyan);} .sg.you .ring .v{font-family:var(--mono);font-size:9px;letter-spacing:.02em;color:var(--cyan);}
 /* ── Locked OBEYOS signal icons — ported from brand-tour-v2.html (icon colour follows the ring's --sig) ── */
-.sg .ico .sig-icon{--sc:var(--sig);position:relative;display:inline-block;width:18px;height:18px;}
+.sg .sig-icon{--sc:var(--sig);position:relative;display:inline-block;width:16px;height:16px;margin:2px 0 -1px;flex-shrink:0;}
 .sig-icon::before,.sig-icon::after{content:'';position:absolute;left:50%;top:50%;}
 .s-hrv.sig-icon::before{width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--sc),transparent);opacity:.3;transform:translate(-50%,-50%);}
 .s-hrv.sig-icon::after{width:6px;height:6px;border-radius:50%;background:var(--sc);box-shadow:0 0 8px var(--sc);transform:translate(-50%,-50%);animation:hrvBeat 1.5s cubic-bezier(.23,1,.32,1) infinite;}
@@ -260,28 +260,28 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="sigs fade" style="transition-delay:.5s">
     <div class="sg" style="--sig:var(--lime);--o:24;--d:1s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-        <span class="ico"><span class="sig-icon s-hrv"></span></span>
         <span class="v" data-to="68">0<small>MS</small></span></div>
+      <span class="sig-icon s-hrv"></span>
       <div class="nm">HRV</div><div class="st">Strong</div></div>
     <div class="sg" style="--sig:var(--lime);--o:34;--d:1.1s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-        <span class="ico"><span class="sig-icon s-sleep"></span></span>
         <span class="v" data-to="8.1">0<small>H</small></span></div>
+      <span class="sig-icon s-sleep"></span>
       <div class="nm">Sleep</div><div class="st">Strong</div></div>
     <div class="sg" style="--sig:var(--lime);--o:27;--d:1.2s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-        <span class="ico"><span class="sig-icon s-recov"></span></span>
         <span class="v" data-to="84">0</span></div>
+      <span class="sig-icon s-recov"></span>
       <div class="nm">Recov</div><div class="st">Strong</div></div>
     <div class="sg" style="--sig:var(--amber);--o:64;--d:1.3s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-        <span class="ico"><span class="sig-icon s-strain"></span></span>
         <span class="v" data-to="12.4">0</span></div>
+      <span class="sig-icon s-strain"></span>
       <div class="nm">Strain</div><div class="st">Moderate</div></div>
     <div class="sg you" style="--sig:var(--cyan);--o:22;--d:1.4s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-        <span class="ico"><span class="sig-icon s-check"></span></span>
         <span class="v">FRESH</span></div>
+      <span class="sig-icon s-check"></span>
       <div class="nm">Check-in</div><div class="st">Logged</div></div>
   </div>
 
