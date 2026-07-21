@@ -291,27 +291,27 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <!-- SIGNALS -->
   <div class="sec-lbl fade" style="transition-delay:.46s"><span>The read</span><a href="#">Full read →</a></div>
   <div class="sigs fade" style="transition-delay:.5s">
-    <div class="sg" style="--sig:var(--lime);--o:24;--d:1s">
+    <div class="sg" data-m="hrv" style="--sig:var(--lime);--o:24;--d:1s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
         <span class="v" data-to="68">0<small>MS</small></span></div>
       <span class="sig-icon s-hrv"></span>
       <div class="nm">HRV</div><div class="st">Strong</div></div>
-    <div class="sg" style="--sig:var(--lime);--o:34;--d:1.1s">
+    <div class="sg" data-m="sleep" style="--sig:var(--lime);--o:34;--d:1.1s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
         <span class="v" data-to="8.1">0<small>H</small></span></div>
       <span class="sig-icon s-sleep"></span>
       <div class="nm">Sleep</div><div class="st">Strong</div></div>
-    <div class="sg" style="--sig:var(--lime);--o:27;--d:1.2s">
+    <div class="sg" data-m="recov" style="--sig:var(--lime);--o:27;--d:1.2s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
         <span class="v" data-to="84">0</span></div>
       <span class="sig-icon s-recov"></span>
       <div class="nm">Recov</div><div class="st">Strong</div></div>
-    <div class="sg" style="--sig:var(--amber);--o:64;--d:1.3s">
+    <div class="sg" data-m="strain" style="--sig:var(--amber);--o:64;--d:1.3s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
         <span class="v" data-to="12.4">0</span></div>
       <span class="sig-icon s-strain"></span>
       <div class="nm">Strain</div><div class="st">Moderate</div></div>
-    <div class="sg you" style="--sig:var(--cyan);--o:22;--d:1.4s">
+    <div class="sg you" data-m="checkin" style="--sig:var(--cyan);--o:22;--d:1.4s">
       <div class="ring"><svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
         <span class="v">FRESH</span></div>
       <span class="sig-icon s-check"></span>
@@ -321,25 +321,25 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <!-- VITALS — raw reads behind the verdict -->
   <div class="sec-lbl fade" style="transition-delay:.54s"><span>Vitals · what ZEAL read</span><a href="#">All →</a></div>
   <div class="vitals fade" style="transition-delay:.58s">
-    <div class="vital" style="--stc:var(--good);--gf:52%">
+    <div class="vital" data-m="rhr" style="--stc:var(--good);--gf:52%">
       <div class="vh"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>RHR</div>
       <div class="vv">55<small>BPM</small></div>
       <div class="vs"><i></i>Normal</div>
       <div class="vg"><span class="fill"></span><span class="dot"></span></div>
     </div>
-    <div class="vital" style="--stc:var(--good);--gf:82%">
+    <div class="vital" data-m="spo2" style="--stc:var(--good);--gf:82%">
       <div class="vh"><svg viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/></svg>SpO₂</div>
       <div class="vv">96<small>%</small></div>
       <div class="vs"><i></i>Normal</div>
       <div class="vg"><span class="fill"></span><span class="dot"></span></div>
     </div>
-    <div class="vital" style="--stc:var(--good);--gf:50%">
+    <div class="vital" data-m="temp" style="--stc:var(--good);--gf:50%">
       <div class="vh"><svg viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 10-4 0v9.8a4 4 0 104 0z"/></svg>Skin temp</div>
       <div class="vv">36.5<small>°C</small></div>
       <div class="vs"><i></i>Normal</div>
       <div class="vg"><span class="fill"></span><span class="dot"></span></div>
     </div>
-    <div class="vital" style="--stc:var(--amber);--gf:34%">
+    <div class="vital" data-m="resp" style="--stc:var(--amber);--gf:34%">
       <div class="vh"><svg viewBox="0 0 24 24"><path d="M6 8a4 4 0 018 0c0 3-4 3-4 6M4 15h16M4 19h16"/></svg>Resp rate</div>
       <div class="vv">13<small>RPM</small></div>
       <div class="vs"><i></i>Slightly low</div>
@@ -457,7 +457,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   // ---- every reading + vital opens its detail ----
   document.querySelectorAll('.sg, .vital').forEach(function(c){
     c.classList.add('tappable');
-    c.addEventListener('click', function(){ location.href = 'rhr-detail.html'; });
+    c.addEventListener('click', function(){ location.href = 'signal.html?m=' + (c.dataset.m||'rhr'); });
   });
 
   // ---- calendar sheet ----
