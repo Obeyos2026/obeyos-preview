@@ -56,19 +56,45 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .statuspill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 11px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);margin-top:12px;}
 .statuspill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
 
-/* ===== stat trio — three separate floating cards with icons (no rectangle) ===== */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px;}
-.stat{display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 6px;border-radius:15px;
+/* ===== stat trio — 3 variants ===== */
+@keyframes flo{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}
+.svtoggle{display:flex;gap:6px;justify-content:center;margin:18px 0 0;}
+.svtoggle button{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:13px;border:1px solid var(--hair);background:var(--panel);color:var(--muted);cursor:pointer;}
+.svtoggle button.on{background:var(--lime);color:#0A0D12;border-color:var(--lime);}
+.statvar{display:none;}
+.statvar.on{display:grid;}
+
+/* A · CARDS — icon-top floating cards */
+.stats{grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;}
+.stats .stat{display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 6px;border-radius:15px;
   background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);
   border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 12px 26px -16px rgba(0,0,0,.7);
   animation:flo 5s ease-in-out infinite;}
-.stat:nth-child(2){animation-delay:-1.6s}.stat:nth-child(3){animation-delay:-3.2s}
-@keyframes flo{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}
-.stat .si{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--sig) 12%,transparent);border:1px solid color-mix(in srgb,var(--sig) 26%,transparent);}
-.stat .si svg{width:13px;height:13px;stroke:var(--sig);fill:none;stroke-width:1.7;}
-.stat .sv{font-family:var(--head);font-size:26px;color:var(--white);line-height:.85;margin-top:2px;}
-.stat .sv.g{color:var(--sig);}
-.stat .sk{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;text-align:center;}
+.stats .stat:nth-child(2){animation-delay:-1.6s}.stats .stat:nth-child(3){animation-delay:-3.2s}
+.stats .si{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--sig) 12%,transparent);border:1px solid color-mix(in srgb,var(--sig) 26%,transparent);}
+.stats .si svg{width:13px;height:13px;stroke:var(--sig);fill:none;stroke-width:1.7;}
+.stats .sv{font-family:var(--head);font-size:26px;color:var(--white);line-height:.85;margin-top:2px;}
+.stats .sv.g{color:var(--sig);}
+.stats .sk{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;text-align:center;}
+
+/* B · RAIL — borderless instrument readout, hairline dividers */
+.rail{grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;margin-top:16px;padding:6px 0;}
+.rail .ri{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.rail .si svg{width:15px;height:15px;stroke:var(--sig);fill:none;stroke-width:1.7;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 40%,transparent));}
+.rail .rv{font-family:var(--head);font-size:30px;color:var(--white);line-height:.85;}
+.rail .rv.g{color:var(--sig);}
+.rail .rk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.rail .rsep{width:1px;height:44px;background:linear-gradient(transparent,var(--hair) 20%,var(--hair) 80%,transparent);}
+
+/* C · PILLS — icon-left rows */
+.pills{grid-template-columns:1fr;gap:8px;margin-top:16px;}
+.pills .pill{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;
+  background:var(--glass);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.pills .pi{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--sig) 12%,transparent);border:1px solid color-mix(in srgb,var(--sig) 26%,transparent);}
+.pills .pi svg{width:16px;height:16px;stroke:var(--sig);fill:none;stroke-width:1.7;}
+.pills .pk{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;flex:1;}
+.pills .pv{font-family:var(--head);font-size:26px;color:var(--white);line-height:.85;}
+.pills .pv.g{color:var(--sig);}
 
 .sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:24px 0 10px;}
 
@@ -143,20 +169,31 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <span class="statuspill"><i></i>Normal · well recovered</span>
   </div>
 
-  <!-- STAT TRIO -->
-  <div class="stats">
-    <div class="stat">
-      <span class="si"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span>
-      <span class="sv">57</span><span class="sk">30-day avg</span>
-    </div>
-    <div class="stat">
-      <span class="si"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
-      <span class="sv g">▼2</span><span class="sk">vs baseline</span>
-    </div>
-    <div class="stat">
-      <span class="si"><svg viewBox="0 0 24 24"><path d="M4 6l6 8 4-5 6 9"/></svg></span>
-      <span class="sv">52</span><span class="sk">7-day low</span>
-    </div>
+  <!-- STAT TRIO — 3 variants -->
+  <div class="svtoggle">
+    <button data-s="cards" class="on">Cards</button>
+    <button data-s="rail">Rail</button>
+    <button data-s="pills">Pills</button>
+  </div>
+  <!-- A · CARDS -->
+  <div class="statvar stats on" data-s="cards">
+    <div class="stat"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span><span class="sv">57</span><span class="sk">30-day avg</span></div>
+    <div class="stat"><span class="si"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span><span class="sv g">▼2</span><span class="sk">vs baseline</span></div>
+    <div class="stat"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 6l6 8 4-5 6 9"/></svg></span><span class="sv">52</span><span class="sk">7-day low</span></div>
+  </div>
+  <!-- B · RAIL -->
+  <div class="statvar rail" data-s="rail">
+    <div class="ri"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span><span class="rv">57</span><span class="rk">30-day avg</span></div>
+    <div class="rsep"></div>
+    <div class="ri"><span class="si"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span><span class="rv g">▼2</span><span class="rk">vs baseline</span></div>
+    <div class="rsep"></div>
+    <div class="ri"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 6l6 8 4-5 6 9"/></svg></span><span class="rv">52</span><span class="rk">7-day low</span></div>
+  </div>
+  <!-- C · PILLS -->
+  <div class="statvar pills" data-s="pills">
+    <div class="pill"><span class="pi"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span><span class="pk">30-day avg</span><span class="pv">57</span></div>
+    <div class="pill"><span class="pi"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span><span class="pk">vs baseline</span><span class="pv g">▼2</span></div>
+    <div class="pill"><span class="pi"><svg viewBox="0 0 24 24"><path d="M4 6l6 8 4-5 6 9"/></svg></span><span class="pk">7-day low</span><span class="pv">52</span></div>
   </div>
 
   <!-- TREND -->
@@ -257,6 +294,14 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   function refreshRows(){document.querySelectorAll('.wkrow').forEach(function(r){r.classList.toggle('on',+r.dataset.i===cur);});}
   document.querySelectorAll('.wkrow').forEach(function(r){r.addEventListener('click',function(){cur=+r.dataset.i;render();calpop.classList.remove('open');});});
   document.addEventListener('click',function(e){if(!calpop.contains(e.target)&&!document.getElementById('wkLabel').contains(e.target))calpop.classList.remove('open');});
+  // stat-variant toggle
+  document.querySelectorAll('.svtoggle button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.svtoggle button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      document.querySelectorAll('.statvar').forEach(function(s){s.classList.toggle('on',s.dataset.s===b.dataset.s);});
+    });
+  });
   render();
 })();
 </script>
