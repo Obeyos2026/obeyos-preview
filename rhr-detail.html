@@ -320,30 +320,28 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     var ctx=c.getContext('2d'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches, W,H,dpr;
     function size(){ dpr=window.devicePixelRatio||1; var r=c.getBoundingClientRect(); W=r.width;H=r.height; c.width=Math.round(W*dpr);c.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
     size(); window.addEventListener('resize',size);
-    var BEAT=118;
+    var BEAT=112;
     function lerp(a,b,t){t=t<0?0:t>1?1:t;return a+(b-a)*t;}
-    function beatY(f){ // one heartbeat, up = negative
-      if(f<0.30) return 0;
-      if(f<0.35) return -lerp(0,0.10,(f-0.30)/0.05);
-      if(f<0.40) return -lerp(0.10,0,(f-0.35)/0.05);
-      if(f<0.45) return 0;
-      if(f<0.47) return lerp(0,0.16,(f-0.45)/0.02);
-      if(f<0.50) return lerp(0.16,-1.0,(f-0.47)/0.03);
-      if(f<0.53) return lerp(-1.0,0.38,(f-0.50)/0.03);
-      if(f<0.57) return lerp(0.38,0,(f-0.53)/0.04);
-      if(f<0.64) return -lerp(0,0.20,(f-0.57)/0.07);
-      if(f<0.72) return -lerp(0.20,0,(f-0.64)/0.08);
-      return 0;
+    function beatY(f){ // real EKG: rounded P + T, sharp up/down QRS. up = negative
+      if(f>=0.30 && f<0.40) return -0.12*Math.sin((f-0.30)/0.10*Math.PI); // P wave (rounded)
+      if(f<0.44) return 0;                                               // PR segment
+      if(f<0.46) return lerp(0,0.08,(f-0.44)/0.02);                      // Q dip
+      if(f<0.485) return lerp(0.08,-1.0,(f-0.46)/0.025);                 // R sharp up
+      if(f<0.515) return lerp(-1.0,0.34,(f-0.485)/0.03);                 // S sharp down (below baseline)
+      if(f<0.55) return lerp(0.34,0,(f-0.515)/0.035);                    // back to baseline
+      if(f<0.60) return 0;                                               // ST segment
+      if(f<0.74) return -0.22*Math.sin((f-0.60)/0.14*Math.PI);          // T wave (rounded)
+      return 0;                                                          // flat gap
     }
     function paint(phase){
-      ctx.clearRect(0,0,W,H); var mid=H*0.5, AMP=H*0.24;
+      ctx.clearRect(0,0,W,H); var mid=H*0.5, AMP=H*0.26;
       ctx.beginPath();
       for(var x=-BEAT;x<=W+BEAT;x++){ var f=((((x+phase)%BEAT)+BEAT)%BEAT)/BEAT; var y=mid+beatY(f)*AMP; if(x===-BEAT)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
-      ctx.strokeStyle='rgba(255,255,255,.075)'; ctx.lineWidth=1; ctx.lineJoin='round'; ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,.05)'; ctx.lineWidth=1; ctx.lineJoin='round'; ctx.stroke();
     }
     if(rm){ paint(0); return; }
     var start=null;
-    (function frame(ts){ if(!start)start=ts; paint(((ts-start)/1000)*70); requestAnimationFrame(frame); })(performance.now());
+    (function frame(ts){ if(!start)start=ts; paint(((ts-start)/1000)*103); requestAnimationFrame(frame); })(performance.now()); // ~1.09s/beat ≈ 55 bpm
   })();
   render();
 })();
