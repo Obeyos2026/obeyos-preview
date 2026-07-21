@@ -46,27 +46,25 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
 .ch .kv{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
-.ch .kv b{color:var(--white);font-weight:500;}
+.ch .kv b{color:var(--sig);font-weight:500;}
 
-/* overnight trace */
-.trace-wrap{position:relative;}
-.trace{width:100%;height:120px;display:block;overflow:visible;}
-.trace .ln{fill:none;stroke:var(--sig);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 35%,transparent));stroke-dasharray:2600;stroke-dashoffset:2600;transition:stroke-dashoffset 2.4s var(--ease) .4s;}
-.screen.play .trace .ln{stroke-dashoffset:0;}
-.trace .mk{stroke:rgba(255,255,255,.35);stroke-width:1;stroke-dasharray:3 3;}
-.trace .md{fill:var(--white);}
-.tx{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--white);margin-top:6px;letter-spacing:.04em;}
+/* HYPNOGRAM — the night as an OBEYOS signal trace */
+.hyp-wrap{position:relative;padding-left:44px;}
+.hyp-lvls{position:absolute;left:0;top:0;bottom:16px;width:40px;display:flex;flex-direction:column;justify-content:space-between;}
+.hyp-lvls span{font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;}
+.hyp{width:100%;height:150px;display:block;}
+.tx{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--white);margin-top:6px;letter-spacing:.04em;padding-left:44px;}
 
-/* stage bars */
-.stage{margin-top:12px;}
-.stage .sh{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;}
-.stage .sn{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--white);text-transform:uppercase;}
-.stage .sp{font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--sc);font-weight:500;}
-.stage .sd{font-family:var(--head);font-size:19px;color:var(--white);margin-left:auto;}
-.stage .track{position:relative;height:16px;border-radius:6px;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 6px,transparent 6px 12px),rgba(255,255,255,.03);overflow:hidden;}
-.stage .fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:6px;background:var(--sc);box-shadow:0 0 10px color-mix(in srgb,var(--sc) 45%,transparent);transition:width 1.1s var(--ease) var(--d);}
-.screen.play .stage .fill{width:var(--w);}
-.stage .typ{position:absolute;top:-2px;bottom:-2px;border-left:1px dashed rgba(255,255,255,.5);border-right:1px dashed rgba(255,255,255,.5);background:rgba(255,255,255,.04);}
+/* STAGE MIX — single composition bar + mono readout */
+.stack{display:flex;height:12px;border-radius:6px;overflow:hidden;background:rgba(255,255,255,.04);}
+.stack span{height:100%;width:0;transition:width 1s var(--ease) var(--d);}
+.screen.play .stack span{width:var(--w);}
+.mix{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;}
+.mx{display:flex;align-items:center;gap:9px;}
+.mx .dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+.mx .nm{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--mid);text-transform:uppercase;flex:1;}
+.mx .du{font-family:var(--head);font-size:18px;color:var(--white);}
+.mx .pc{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:5px;}
 
 /* mini rows */
 .mrow{display:flex;align-items:baseline;justify-content:space-between;padding:12px 0;border-top:1px solid var(--hair);}
@@ -102,17 +100,21 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     </div>
   </div>
 
-  <!-- OVERNIGHT trace -->
+  <!-- THE NIGHT — hypnogram signal trace -->
   <div class="card fade" style="transition-delay:.1s">
-    <div class="ch"><span class="k">Through the night</span><span class="kv">Duration <b>7:29</b></span></div>
-    <div class="trace-wrap"><svg class="trace" id="trace" viewBox="0 0 400 120" preserveAspectRatio="none"></svg></div>
+    <div class="ch"><span class="k">The night · stage flow</span><span class="kv">restorative <b>41%</b></span></div>
+    <div class="hyp-wrap">
+      <div class="hyp-lvls"><span>Awake</span><span>REM</span><span>Light</span><span>Deep</span></div>
+      <canvas class="hyp" id="hyp"></canvas>
+    </div>
     <div class="tx"><span>22:51</span><span>06:20</span></div>
   </div>
 
-  <!-- SLEEP STAGES -->
+  <!-- STAGE MIX -->
   <div class="card fade" style="transition-delay:.16s">
-    <div class="ch"><span class="k">Sleep stages</span><span class="kv">restorative <b>41%</b></span></div>
-    <div id="stages"></div>
+    <div class="ch"><span class="k">Stage mix</span><span class="kv">7:29 asleep</span></div>
+    <div class="stack" id="stack"></div>
+    <div class="mix" id="mix"></div>
   </div>
 
   <!-- EFFICIENCY -->
@@ -130,26 +132,35 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
 <script>
 (function(){
-  var scr=document.getElementById('screen');
-  // overnight trace — HR-ish signal through the night (deterministic noise)
-  (function(){ var svg=document.getElementById('trace'),W=400,H=120,PT=10,PB=10,N=150,seed=7;
-    function rnd(){ seed=(seed*9301+49297)%233280; return seed/233280; }
-    var base=[], v=58;
-    for(var i=0;i<N;i++){ var dip=Math.sin(i/N*Math.PI*3.4)*6; v += (rnd()-0.5)*8; v=Math.max(48,Math.min(96,v*0.82+ (58+dip)*0.18)); base.push(v); }
-    function Y(x){ return (H-PB)-(H-PT-PB)*((x-40)/60); }
-    var d='M0,'+Y(base[0]).toFixed(1);
-    base.forEach(function(val,i){ d+=' L'+(i/(N-1)*W).toFixed(1)+','+Y(val).toFixed(1); });
-    var g='<line class="mk" x1="1" y1="'+PT+'" x2="1" y2="'+(H-PB)+'"/><circle class="md" cx="1" cy="'+(H-PB)+'" r="3"/>';
-    g+='<line class="mk" x1="'+(W-1)+'" y1="'+PT+'" x2="'+(W-1)+'" y2="'+(H-PB)+'"/><circle class="md" cx="'+(W-1)+'" cy="'+(H-PB)+'" r="3"/>';
-    g+='<path class="ln" d="'+d+'"/>';
-    svg.innerHTML=g;
+  var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var COL={awake:'#747E8C',rem:'#00D4FF',light:'rgba(0,229,160,.5)',deep:'#00E5A0'};
+  // hypnogram — stepped stage trace over the night, animated left→right reveal
+  (function(){ var cv=document.getElementById('hyp'),host=cv.parentElement,W=host.clientWidth-44,H=150,dpr=devicePixelRatio||1;
+    cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    // levels 0 Awake .. 3 Deep ; sequence [level, dur]
+    var seq=[[1,.4],[2,.9],[3,1.15],[2,.5],[1,.6],[0,.12],[2,.75],[3,.85],[2,.6],[1,.9],[0,.08],[2,.5],[3,.55],[2,.4],[1,.55]];
+    var lv=['awake','rem','light','deep'];
+    var total=seq.reduce(function(a,s){return a+s[1];},0),PT=12,PB=12;
+    function Y(l){return PT+(H-PT-PB)*(l/3);}
+    var segs=[],x=0; seq.forEach(function(s){var w=s[1]/total*W;segs.push({x0:x,x1:x+w,y:Y(s[0]),lv:s[0]});x+=w;});
+    function draw(prog){ ctx.clearRect(0,0,W,H); var rx=prog*W;
+      // faint level lines
+      ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;for(var l=0;l<4;l++){ctx.beginPath();ctx.moveTo(0,Y(l));ctx.lineTo(W,Y(l));ctx.stroke();}
+      ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';
+      for(var i=0;i<segs.length;i++){ var s=segs[i]; if(s.x0>rx)break; var xe=Math.min(s.x1,rx);
+        var c=COL[lv[s.lv]]; ctx.strokeStyle=c; ctx.shadowColor=c; ctx.shadowBlur=s.lv===0?0:5;
+        ctx.beginPath();ctx.moveTo(s.x0,s.y);ctx.lineTo(xe,s.y);ctx.stroke();
+        // vertical connector to next segment
+        if(i<segs.length-1 && segs[i+1].x0<=rx){ var n=segs[i+1]; ctx.beginPath();ctx.moveTo(s.x1,s.y);ctx.lineTo(s.x1,n.y);ctx.strokeStyle='rgba(255,255,255,.18)';ctx.shadowBlur=0;ctx.stroke(); }
+      }
+      ctx.shadowBlur=0;
+    }
+    if(rm){draw(1);return;} var st=null; setTimeout(function(){(function f(ts){if(!st)st=ts;var p=Math.min(1,(ts-st)/2200),e=1-Math.pow(1-p,2.2);draw(e);if(p<1)requestAnimationFrame(f);})(performance.now());},450);
   })();
-  // stages
-  var stages=[['Awake','#747E8C','7%',7,'0:32',5,10],['Light','rgba(0,229,160,.5)','52%',52,'3:37',45,58],['Deep (SWS)','#00E5A0','25%',25,'1:47',16,26],['REM','#00D4FF','16%',16,'1:09',18,25]];
-  document.getElementById('stages').innerHTML=stages.map(function(s,i){
-    return '<div class="stage" style="--sc:'+s[1]+'"><div class="sh"><span class="sn">'+s[0]+'</span><span class="sp">'+s[2]+'</span><span class="sd">'+s[4]+'</span></div>'+
-      '<div class="track"><span class="typ" style="left:'+s[5]+'%;width:'+(s[6]-s[5])+'%"></span><span class="fill" style="--w:'+s[3]+'%;--d:'+(0.3+i*0.12)+'s"></span></div></div>';
-  }).join('');
+  // stage mix — composition bar + readout (Deep, Light, REM, Awake)
+  var mix=[['Deep',COL.deep,'1:47','25%',25],['Light',COL.light,'3:37','52%',52],['REM',COL.rem,'1:09','16%',16],['Awake',COL.awake,'0:32','7%',7]];
+  document.getElementById('stack').innerHTML=mix.map(function(m,i){return '<span style="--w:'+m[4]+'%;background:'+m[1]+';--d:'+(0.3+i*0.1)+'s"></span>';}).join('');
+  document.getElementById('mix').innerHTML=mix.map(function(m){return '<div class="mx"><span class="dot" style="background:'+m[1]+'"></span><span class="nm">'+m[0]+'</span><span class="du">'+m[2]+'<span class="pc">'+m[3]+'</span></span></div>';}).join('');
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
 })();
 </script>
