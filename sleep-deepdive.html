@@ -73,6 +73,19 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .bal .rg{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;}
 .bal .st{font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;}
 .bal .st.ok,.bal .st.hi{color:var(--mint);} .bal .st.lo{color:var(--amber);}
+/* efficiency — ring + rows */
+.ef4{display:flex;gap:16px;align-items:center;}
+.ef4 .gauge{position:relative;width:88px;height:88px;flex-shrink:0;}
+.ef4 .gauge .ring-cv{position:absolute;top:0;left:0;pointer-events:none;}
+.ef4 .gauge .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ef4 .gauge .v b{font-family:var(--head);font-weight:400;font-size:26px;color:var(--white);line-height:.8;}
+.ef4 .gauge .v small{font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.ef4 .rows{flex:1;}
+.ef4 .r{display:flex;align-items:baseline;justify-content:space-between;padding:9px 0;border-top:1px solid var(--hair);}
+.ef4 .r:first-child{border-top:none;}
+.ef4 .ml{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--mid);text-transform:uppercase;}
+.ef4 .mv{font-family:var(--head);font-size:19px;color:var(--white);}
+.ef4 .mv small{font-family:var(--mono);font-size:8px;color:var(--dim);}
 .tax{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--white);margin-top:11px;letter-spacing:.02em;padding:0 46px 0 50px;}
 
 /* STAGE MIX — single composition bar + mono readout */
@@ -133,12 +146,17 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="bal" id="bal"></div>
   </div>
 
-  <!-- EFFICIENCY -->
+  <!-- EFFICIENCY — ring + rows -->
   <div class="card fade" style="transition-delay:.22s">
     <div class="ch"><span class="k">Efficiency &amp; body</span></div>
-    <div class="mrow"><span class="ml">Sleep efficiency</span><span class="mv g">94<small>% · 8:01 of 8:34</small></span></div>
-    <div class="mrow"><span class="ml">Disturbances</span><span class="mv">7<small>× · 22 min</small></span></div>
-    <div class="mrow"><span class="ml">Resp rate (sleep)</span><span class="mv">13.4<small>rpm</small></span></div>
+    <div class="ef4">
+      <div class="gauge"><canvas class="ring-cv" id="efring"></canvas><div class="v"><b>94<span style="font-size:12px">%</span></b><small>efficient</small></div></div>
+      <div class="rows">
+        <div class="r"><span class="ml">Asleep · in bed</span><span class="mv">8:01<small> / 8:34</small></span></div>
+        <div class="r"><span class="ml">Disturbances</span><span class="mv">7<small>× 22m</small></span></div>
+        <div class="r"><span class="ml">Resp rate</span><span class="mv">13.4<small>rpm</small></span></div>
+      </div>
+    </div>
   </div>
 
   <div class="sl fade">The read</div>
@@ -149,13 +167,15 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 (function(){
   var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var COL={awake:'#747E8C',rem:'#00D4FF',light:'rgba(0,229,160,.55)',deep:'#00E5A0'};
-  // hero dashed ring — 96% of need (matches home)
-  (function(){ var cv=document.getElementById('hring'); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+  // reusable dashed ring (mint)
+  function drawRing(id,frac,delay){ var cv=document.getElementById(id); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
     cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
-    var T=Math.round(size*0.4),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.11,sa=150*Math.PI/180,sw=240*Math.PI/180,frac=0.96;
+    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.12,sa=150*Math.PI/180,sw=240*Math.PI/180;
     function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba(0,229,160,.72)';ctx.shadowColor='rgba(0,229,160,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
-    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
-  })();
+    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},delay||400);
+  }
+  drawRing('hring',0.96,400);
+  drawRing('efring',0.94,700);
   // THE NIGHT — Lanes: blocks per stage across the night + duration (no glow)
   (function(){
     var CN=['awake','rem','light','deep'];
