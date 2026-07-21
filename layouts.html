@@ -108,19 +108,19 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   animation:flo 4.6s ease-in-out infinite;}
 .sg:nth-child(2){animation-delay:-.9s}.sg:nth-child(3){animation-delay:-1.8s}.sg:nth-child(4){animation-delay:-2.7s}.sg:nth-child(5){animation-delay:-3.6s}
 @keyframes flo{0%,100%{transform:translateY(-3.5px)}50%{transform:translateY(3.5px)}}
-.sg .ring{position:relative;width:52px;height:52px;}
+.sg .ring{position:relative;width:56px;height:56px;}
 .sg .ring svg{width:100%;height:100%;overflow:visible;transform:rotate(135deg);}
 .sg .ring .t{fill:none;stroke:rgba(255,255,255,.08);stroke-width:5;stroke-linecap:round;stroke-dasharray:106 200;}
 .sg .ring .a{fill:none;stroke:var(--sig);stroke-width:5;stroke-linecap:round;stroke-dasharray:106 200;stroke-dashoffset:106;
   filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 55%,transparent));transition:stroke-dashoffset 1.1s var(--ease) var(--d,1s);}
 .screen.play .sg .ring .a{stroke-dashoffset:var(--o,50);}
-.sg .ring .ico{position:absolute;top:9px;left:0;right:0;display:flex;justify-content:center;}
-.sg .ring .ico svg{width:11px;height:11px;transform:none;stroke:var(--sig);fill:none;stroke-width:1.7;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 45%,transparent));}
-.sg .ring .v{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:var(--head);font-size:16px;color:var(--white);line-height:.9;}
-.sg .ring .v small{font-family:var(--mono);font-size:6px;color:var(--dim);letter-spacing:.04em;margin-left:1px;}
-.sg .nm{font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--mid);text-transform:uppercase;}
-.sg .st{font-family:var(--mono);font-size:6.5px;letter-spacing:.04em;color:var(--sig);text-transform:uppercase;}
-.sg.you .nm{color:var(--cyan);} .sg.you .ring .v{font-family:var(--mono);font-size:10px;color:var(--cyan);bottom:9px;}
+.sg .ring .ico{position:absolute;top:7px;left:0;right:0;display:flex;justify-content:center;}
+.sg .ring .ico svg{width:12px;height:12px;transform:none;stroke:var(--sig);fill:none;stroke-width:1.7;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 45%,transparent));}
+.sg .ring .v{position:absolute;left:0;right:0;top:56%;transform:translateY(-50%);text-align:center;font-family:var(--head);font-size:17px;color:var(--white);line-height:.9;}
+.sg .ring .v small{font-family:var(--mono);font-size:6px;color:var(--dim);letter-spacing:.02em;margin-left:1px;}
+.sg .nm{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--mid);text-transform:uppercase;}
+.sg .st{font-family:var(--mono);font-size:7px;letter-spacing:.05em;color:var(--sig);text-transform:uppercase;}
+.sg.you .nm{color:var(--cyan);} .sg.you .ring .v{font-family:var(--mono);font-size:9px;letter-spacing:.02em;color:var(--cyan);}
 
 /* 7-DAY TREND — smooth, labelled, tappable */
 .trend{margin-top:24px;padding:14px 4px 10px;border-radius:16px;background:var(--panel);border:1px solid var(--hair);cursor:pointer;position:relative;}
