@@ -22,13 +22,25 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
 .ht{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
 
-/* hero */
-.top{position:relative;display:flex;flex-direction:column;align-items:center;margin-top:8px;}
-.gauge{position:relative;width:150px;height:150px;}
-.gauge canvas{position:absolute;top:0;left:0;}
-.gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.gauge .n{font-family:var(--head);font-size:50px;color:var(--white);line-height:.8;}
-.gauge .u{font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+/* hero — sleep performance */
+.perf{display:flex;flex-direction:column;align-items:center;margin-top:16px;}
+.perf .peye{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.perf .pct{font-family:var(--head);font-size:96px;line-height:.78;color:var(--white);margin-top:10px;text-shadow:0 0 34px rgba(0,229,160,.18);}
+.perf .pct small{font-size:38px;color:var(--muted);letter-spacing:.02em;}
+.perf .cmpwrap{position:relative;width:100%;max-width:320px;margin-top:4px;}
+.perf .conn{position:absolute;top:0;left:0;width:100%;height:30px;pointer-events:none;}
+.perf .conn path{fill:none;stroke-width:1;stroke-dasharray:3 4;}
+.perf .conn .a{stroke:color-mix(in srgb,var(--mid) 60%,transparent);}
+.perf .conn .b{stroke:color-mix(in srgb,var(--mint) 60%,transparent);}
+.perf .cmp{display:flex;justify-content:space-between;padding:36px 12px 0;}
+.perf .ccol{display:flex;flex-direction:column;align-items:center;gap:9px;}
+.perf .cv{font-family:var(--head);font-size:46px;line-height:.8;}
+.perf .ccol.l .cv{color:var(--mid);}
+.perf .ccol.r .cv{color:var(--mint);}
+.perf .cpill{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:6px 13px;border-radius:16px;border:1px solid;}
+.perf .ccol.l .cpill{color:var(--mid);border-color:color-mix(in srgb,var(--mid) 42%,transparent);}
+.perf .ccol.r .cpill{color:var(--mint);border-color:color-mix(in srgb,var(--mint) 45%,transparent);}
+.perf .pill{margin-top:24px;}
 .pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 11px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);margin-top:12px;}
 .pill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
 
@@ -80,15 +92,23 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <div class="screen play" id="screen">
   <div class="hd"><button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ht">Signal · Sleep · deep dive</span></div>
 
-  <div class="top">
-    <div class="gauge"><canvas id="ring"></canvas><div class="ctr"><div class="n">8.1</div><div class="u">Hours</div></div></div>
-    <span class="pill"><i></i>Strong · 0.7 h above need</span>
+  <div class="perf">
+    <div class="peye">Sleep performance</div>
+    <div class="pct">96<small>%</small></div>
+    <div class="cmpwrap">
+      <svg class="conn" viewBox="0 0 100 30" preserveAspectRatio="none"><path class="a" d="M20,30 L20,6 L47,6"/><path class="b" d="M80,30 L80,6 L53,6"/></svg>
+      <div class="cmp">
+        <div class="ccol l"><div class="cv">8:01</div><div class="cpill">Hours of sleep</div></div>
+        <div class="ccol r"><div class="cv">8:20</div><div class="cpill">Sleep needed</div></div>
+      </div>
+    </div>
+    <span class="pill"><i></i>Strong · 96% of need</span>
   </div>
 
   <!-- HOURS VS NEED -->
   <div class="card">
     <div class="ch"><span class="k">Hours vs need</span><span class="go">›</span></div>
-    <div class="legend"><span><i style="background:var(--sig)"></i>Slept</span><span><i style="background:#5C6679"></i>Needed</span></div>
+    <div class="legend"><span><i style="background:var(--sig)"></i>Needed</span><span><i style="background:#747E8C"></i>Slept</span></div>
     <svg class="hvn" id="hvn" viewBox="0 0 380 150" preserveAspectRatio="none"></svg>
     <div class="axis"><span>Tue 15</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
   </div>
@@ -118,19 +138,11 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   </div>
 
   <div class="sl">The read</div>
-  <div class="drv"><div class="t"><b>You cleared your sleep need with 0.7 h to spare</b> — strong deep + REM, 94% efficient. This is the fuel behind today's <b style="color:var(--mint)">READY</b>.</div></div>
+  <div class="drv"><div class="t"><b>You hit 96% of your sleep need</b> — strong deep + REM, 94% efficient. That's the fuel behind today's <b style="color:var(--mint)">READY</b>.</div></div>
 </div>
 
 <script>
 (function(){
-  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // ring
-  (function(){ var cv=document.getElementById('ring'),host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
-    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
-    var T=Math.round(size*0.4),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.11,sa=150*Math.PI/180,sw=240*Math.PI/180,frac=0.72;
-    function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.6;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba(0,229,160,.72)';ctx.shadowColor='rgba(0,229,160,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
-    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
-  })();
   // hours vs need dual line
   (function(){ var svg=document.getElementById('hvn'),W=380,H=150,PL=20,PR=20,PT=26,PB=14,mn=4,mx=10;
     var need=[8.27,8.53,9.45,8.97,8.87,8.53,8.87], got=[7.33,5.78,7.43,5.87,7.5,6.58,8.02];
