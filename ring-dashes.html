@@ -18,8 +18,8 @@ body{background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 
 h1{font-family:var(--head);font-size:30px;letter-spacing:.03em;margin-bottom:4px;}
 .sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-bottom:30px;text-align:center;}
 .row{display:flex;gap:8px;margin-bottom:14px;}
-.tg{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:7px 13px;border-radius:14px;border:1px solid var(--hair);background:rgba(255,255,255,.022);color:var(--muted);cursor:pointer;}
-.tg.on{background:var(--lime);color:#0A0D12;border-color:var(--lime);}
+.mg{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:7px 13px;border-radius:14px;border:1px solid var(--hair);background:rgba(255,255,255,.022);color:var(--muted);cursor:pointer;}
+.mg.on{background:var(--lime);color:#0A0D12;border-color:var(--lime);}
 .stage{display:flex;flex-direction:column;align-items:center;gap:40px;margin-top:26px;}
 .g{position:relative;display:flex;flex-direction:column;align-items:center;}
 .g canvas{display:block;}
@@ -33,56 +33,59 @@ h1{font-family:var(--head);font-size:30px;letter-spacing:.03em;margin-bottom:4px
 </head>
 <body>
 <h1>DASHED RINGS — MOCK</h1>
-<div class="sub">Ticks instead of a solid fill · no needle</div>
+<div class="sub">Ticks · no needle · which colour treatment?</div>
 <div class="row">
-  <button class="tg on" data-t="thin">Thin ticks</button>
-  <button class="tg" data-t="med">Medium</button>
-  <button class="tg" data-t="chunky">Chunky</button>
+  <button class="mg" data-mode="zone">Zone</button>
+  <button class="mg on" data-mode="mono">Mono</button>
+  <button class="mg" data-mode="rainbow">Rainbow</button>
 </div>
 <div class="stage" id="stage">
   <div class="g" data-f="0.88" data-num="88" data-u="Readiness · PEAK" data-cap="lands in PEAK (lime)" data-size="210" data-fs="66"></div>
   <div class="g" data-f="0.62" data-num="74" data-u="Readiness · READY" data-cap="lands in READY (mint)" data-size="168" data-fs="52"></div>
   <div class="g" data-f="0.34" data-num="46" data-u="Readiness · BUILD" data-cap="lands in BUILD (amber)" data-size="140" data-fs="42"></div>
 </div>
-<div class="note"><b>Tier-coloured arc:</b> ticks run <b style="color:#EF4444">REST</b> → <b style="color:#F59E0B">BUILD</b> → <b style="color:#00E5A0">READY</b> → <b style="color:#C8FF00">PEAK</b> across the arc. Lit ticks (up to the reading) glow; the rest stay dim — so the colour where the fill ends shows the zone.</div>
+<div class="note"><b>Zone</b> — the whole arc takes the reading's tier colour (lime/mint/amber/red): colour still = your verdict zone, but no rainbow.<br><b>Mono</b> — always the single lime accent; only the number carries the tier colour. Most on-brand / restrained.<br><b>Rainbow</b> — the full spectrum scale (reads consumer-fitness / childish — shown for comparison).</div>
 
 <script>
 (function(){
-  var STYLES={ thin:{ticks:56,len:0.10,w:1.6}, med:{ticks:42,len:0.13,w:2.6}, chunky:{ticks:32,len:0.17,w:4} };
-  var cur='thin';
+  var S={ticks:56,len:0.10,w:1.6};
+  var MODE='mono';
   var els=[].slice.call(document.querySelectorAll('.g'));
   // verdict tier scale: REST red → BUILD amber → READY mint → PEAK lime
   function tierRGB(t){ if(t<0.25)return[239,68,68]; if(t<0.5)return[245,158,11]; if(t<0.75)return[0,229,160]; return[200,255,0]; }
   function build(){
     els.forEach(function(g){
       var size=+g.dataset.size, dpr=window.devicePixelRatio||1, frac=+g.dataset.f;
-      var nc=tierRGB(Math.min(0.999,frac));
-      g.innerHTML='<canvas></canvas><div class="ctr" style="height:'+size+'px"><div class="num" style="font-size:'+g.dataset.fs+'px;color:rgb('+nc+')">'+g.dataset.num+'</div><div class="u">'+g.dataset.u+'</div></div><div class="cap">'+g.dataset.cap+'</div>';
+      var vc=tierRGB(Math.min(0.999,frac)); // the reading's verdict tier
+      g.innerHTML='<canvas></canvas><div class="ctr" style="height:'+size+'px"><div class="num" style="font-size:'+g.dataset.fs+'px;color:rgb('+vc+')">'+g.dataset.num+'</div><div class="u">'+g.dataset.u+'</div></div><div class="cap">'+g.dataset.cap+'</div>';
       var cv=g.querySelector('canvas'); cv.style.width=size+'px'; cv.style.height=size+'px'; cv.width=Math.round(size*dpr); cv.height=Math.round(size*dpr);
       var ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
-      var S=STYLES[cur], start=null,dur=1200;
-      function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/dur),e=1-Math.pow(1-p,3); ctx.clearRect(0,0,size,size); draw(ctx,size,S,frac,e); if(p<1)requestAnimationFrame(step); }
+      var start=null,dur=1200;
+      function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/dur),e=1-Math.pow(1-p,3); ctx.clearRect(0,0,size,size); draw(ctx,size,frac,vc,e); if(p<1)requestAnimationFrame(step); }
       requestAnimationFrame(step);
     });
   }
-  function draw(ctx,size,S,frac,prog){
+  function draw(ctx,size,frac,vc,prog){
     var cx=size/2, cy=size/2, R=size/2-8, tickLen=R*S.len;
-    var startA=150*Math.PI/180, sweep=240*Math.PI/180;
-    var litFrac=frac*prog;
+    var startA=150*Math.PI/180, sweep=240*Math.PI/180, litFrac=frac*prog;
+    var lime=[200,255,0];
     for(var i=0;i<S.ticks;i++){
-      var t=i/(S.ticks-1), ang=startA+t*sweep, rgb=tierRGB(t);
+      var t=i/(S.ticks-1), ang=startA+t*sweep;
       var x1=cx+(R-tickLen)*Math.cos(ang), y1=cy+(R-tickLen)*Math.sin(ang);
       var x2=cx+R*Math.cos(ang), y2=cy+R*Math.sin(ang);
-      var lit=t<=litFrac;
+      var lit=t<=litFrac, rgb;
+      if(MODE==='rainbow') rgb=tierRGB(t);        // rainbow scale (childish)
+      else if(MODE==='zone') rgb=vc;              // whole arc = the reading's tier colour
+      else rgb=lime;                              // mono: one lime accent always
       ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
       ctx.lineWidth=S.w; ctx.lineCap='round';
-      if(lit){ ctx.strokeStyle='rgba('+rgb+',.7)'; ctx.shadowColor='rgba('+rgb+',.5)'; ctx.shadowBlur=3; }
-      else { ctx.strokeStyle='rgba('+rgb+',.12)'; ctx.shadowBlur=0; }
+      if(lit){ ctx.strokeStyle='rgba('+rgb+',.72)'; ctx.shadowColor='rgba('+rgb+',.45)'; ctx.shadowBlur=3; }
+      else { ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.shadowBlur=0; }
       ctx.stroke();
     }
     ctx.shadowBlur=0;
   }
-  document.querySelectorAll('.tg').forEach(function(b){ b.addEventListener('click',function(){ document.querySelectorAll('.tg').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); cur=b.dataset.t; build(); }); });
+  document.querySelectorAll('.mg').forEach(function(b){ b.addEventListener('click',function(){ document.querySelectorAll('.mg').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); MODE=b.dataset.mode; build(); }); });
   build();
 })();
 </script>
