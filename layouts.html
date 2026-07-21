@@ -82,14 +82,14 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 @keyframes numFill{0%{background-position:0 150%,0 50%;}45%{background-position:0 150%,0 50%;}92%{background-position:0 -50%,0 50%;}100%{background-position:0 -50%,0 50%;}}
 .gauge .of{font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);margin-top:3px;text-transform:uppercase;}
 .vword-wrap{position:relative;margin-top:12px;line-height:.8;}
-.vscan{position:absolute;inset:-16px -18px;z-index:0;pointer-events:none;
-  -webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px), linear-gradient(180deg,transparent 0,#000 26%,#000 74%,transparent 100%);
-  -webkit-mask-composite:source-in;
-  mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px), linear-gradient(180deg,transparent 0,#000 26%,#000 74%,transparent 100%);
-  mask-composite:intersect;}
+/* parent carries the vertical fade — clips the bars soft at top+bottom (nested mask, Safari-safe, no mask-composite) */
+.vscan{position:absolute;inset:-18px -18px;z-index:0;pointer-events:none;
+  -webkit-mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);
+  mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);}
+/* child carries the vertical light-bars; the radial background gives the left↔right glow falloff */
 .vscan::after{content:"";position:absolute;inset:0;opacity:0;
   background:radial-gradient(circle at 50% 50%, var(--vc) 0%, transparent 55%);
-  -webkit-mask:radial-gradient(circle at 50% 50%,transparent 0%,transparent 8%,#000 30%);mask:radial-gradient(circle at 50% 50%,transparent 0%,transparent 8%,#000 30%);
+  -webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);
   transform:translateX(-58%);}
 .screen.play .vscan::after{animation:sweep 5.5s linear .6s infinite;}
 @keyframes sweep{0%{opacity:0;transform:translateX(-58%);}6%{opacity:.85;}30%{opacity:.5;}44%{opacity:0;transform:translateX(58%);}100%{opacity:0;transform:translateX(58%);}}
