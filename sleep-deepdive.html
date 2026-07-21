@@ -34,7 +34,14 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,var(--sig) 0%,transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);}
 .screen.play .vscan::after{animation:sweep 3.6s var(--ease) .6s infinite;}
 @keyframes sweep{0%{opacity:0;transform:translateX(-58%)}10%{opacity:.8}55%{opacity:.4}100%{opacity:0;transform:translateX(58%)}}
-.word{position:relative;z-index:2;font-family:var(--head);font-size:70px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.word{position:relative;z-index:2;font-family:var(--head);font-size:56px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.hgrid{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px;}
+.hgrid .gauge{position:relative;width:120px;height:120px;flex-shrink:0;}
+.hgrid .gauge .ring-cv{position:absolute;top:0;left:0;pointer-events:none;}
+.hgrid .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hgrid .gauge .rn{font-family:var(--head);font-size:40px;color:var(--white);line-height:.8;}
+.hgrid .gauge .rn small{font-size:18px;color:var(--muted);}
+.hgrid .gauge .ru{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
 .furn{display:flex;margin-top:20px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
 .fc{flex:1;padding:13px 4px;text-align:center;border-left:1px solid var(--hair);}
 .fc:first-child{border-left:none;}
@@ -88,15 +95,20 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <span class="tt">Sleep</span><span class="win">22:51 → 06:20</span>
   </div>
 
-  <!-- VERDICT hero -->
+  <!-- VERDICT hero — editorial: word left, dashed ring right (matches home) -->
   <div class="hero fade">
-    <div class="eyebrow">Tonight's sleep read</div>
-    <div class="word-wrap"><span class="vscan"></span><span class="word">WELL<br>RESTED</span></div>
+    <div class="hgrid">
+      <div class="hleft">
+        <div class="eyebrow">Tonight's sleep read</div>
+        <div class="word-wrap"><span class="vscan"></span><span class="word">WELL<br>RESTED</span></div>
+      </div>
+      <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn">96<small>%</small></div><div class="ru">of need</div></div></div>
+    </div>
     <div class="furn">
-      <div class="fc"><div class="fv g">96<span style="font-size:13px">%</span></div><div class="fk">of need</div></div>
       <div class="fc"><div class="fv">8:01</div><div class="fk">slept</div></div>
-      <div class="fc"><div class="fv">8:20</div><div class="fk">needed</div></div>
+      <div class="fc"><div class="fv g">8:20</div><div class="fk">needed</div></div>
       <div class="fc"><div class="fv">94<span style="font-size:13px">%</span></div><div class="fk">efficient</div></div>
+      <div class="fc"><div class="fv g">41<span style="font-size:13px">%</span></div><div class="fk">restorative</div></div>
     </div>
   </div>
 
@@ -134,6 +146,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 (function(){
   var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var COL={awake:'#747E8C',rem:'#00D4FF',light:'rgba(0,229,160,.5)',deep:'#00E5A0'};
+  // hero dashed ring — 96% of need (matches home)
+  (function(){ var cv=document.getElementById('hring'); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.4),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.11,sa=150*Math.PI/180,sw=240*Math.PI/180,frac=0.96;
+    function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba(0,229,160,.72)';ctx.shadowColor='rgba(0,229,160,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
+    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
+  })();
   // hypnogram — stepped stage trace over the night, animated left→right reveal
   (function(){ var cv=document.getElementById('hyp'),host=cv.parentElement,W=host.clientWidth-44,H=150,dpr=devicePixelRatio||1;
     cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
