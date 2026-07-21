@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Sleep hero — 5 OBEYOS variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--good:#22C55E;--sig:var(--mint);--vc:var(--mint);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 55% at 50% -6%,rgba(0,229,160,.06),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 60px;}
+.vtoggle{position:sticky;top:0;z-index:9;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:6px 0 14px;margin:0 -20px 2px;background:linear-gradient(#0A0D12 74%,transparent);}
+.vtoggle button{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:14px;border:1px solid var(--hair);background:var(--panel);color:var(--muted);cursor:pointer;}
+.vtoggle button.on{background:var(--lime);color:#0A0D12;border-color:var(--lime);}
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:2px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.ht{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.mount{min-height:340px;}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 11px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+.eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.desc{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:26px;line-height:1.7;}
+
+/* V1 RING */
+.v1{display:flex;flex-direction:column;align-items:center;margin-top:16px;}
+.v1 .gauge{position:relative;width:210px;height:210px;}
+.v1 .gauge canvas{position:absolute;top:0;left:0;}
+.v1 .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.v1 .n{font-family:var(--head);font-size:70px;color:var(--white);line-height:.78;}
+.v1 .n small{font-size:26px;color:var(--muted);}
+.v1 .u{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+.v1 .row{display:flex;gap:26px;margin-top:6px;}
+.v1 .row div{text-align:center;}
+.v1 .rv{font-family:var(--head);font-size:22px;color:var(--white);}
+.v1 .rv.g{color:var(--sig);}
+.v1 .rk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.v1 .pill{margin-top:16px;}
+
+/* V2 VERDICT */
+.v2{margin-top:20px;}
+.v2 .word-wrap{position:relative;display:inline-block;line-height:.8;}
+.v2 .vscan{position:absolute;inset:-16px -18px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent,#000 24%,#000 76%,transparent);mask:linear-gradient(180deg,transparent,#000 24%,#000 76%,transparent);}
+.v2 .vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,var(--sig) 0%,transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);animation:sweep 3.4s var(--ease) .5s infinite;}
+@keyframes sweep{0%{opacity:0;transform:translateX(-58%)}10%{opacity:.8}55%{opacity:.4}100%{opacity:0;transform:translateX(58%)}}
+.v2 .word{position:relative;z-index:2;font-family:var(--head);font-size:74px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 34%,transparent);}
+.v2 .furn{display:flex;gap:0;margin-top:20px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.v2 .fc{flex:1;padding:14px 4px;text-align:center;border-left:1px solid var(--hair);}
+.v2 .fc:first-child{border-left:none;}
+.v2 .fv{font-family:var(--head);font-size:24px;color:var(--white);}
+.v2 .fv.g{color:var(--sig);}
+.v2 .fk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+
+/* V3 METER */
+.v3{margin-top:22px;}
+.v3 .big{font-family:var(--head);font-size:64px;color:var(--white);line-height:.8;}
+.v3 .big small{font-size:22px;color:var(--muted);}
+.v3 .of{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--mid);text-transform:uppercase;margin-top:6px;}
+.v3 .meter{position:relative;height:12px;border-radius:6px;background:rgba(255,255,255,.06);margin-top:22px;overflow:visible;}
+.v3 .fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,color-mix(in srgb,var(--sig) 50%,transparent),var(--sig));box-shadow:0 0 12px color-mix(in srgb,var(--sig) 50%,transparent);}
+.v3 .need{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--white);box-shadow:0 0 8px var(--white);}
+.v3 .need::after{content:"NEED";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:7px;letter-spacing:.1em;color:var(--muted);}
+.v3 .mlbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:14px;letter-spacing:.04em;}
+.v3 .pill{margin-top:22px;}
+
+/* V4 READ */
+.v4{margin-top:20px;}
+.v4 .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.v4 .stmt{font-family:var(--head);font-size:40px;line-height:.92;color:var(--white);margin-top:10px;}
+.v4 .stmt b{color:var(--sig);}
+.v4 .spec{margin-top:22px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.015);}
+.v4 .r{display:grid;grid-template-columns:92px 1fr auto;gap:12px;align-items:baseline;padding:13px 15px;border-top:1px solid var(--hair);}
+.v4 .r:first-child{border-top:none;}
+.v4 .rk{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.v4 .rt{font-family:var(--body);font-weight:400;font-size:12.5px;color:var(--muted);}
+.v4 .rv{font-family:var(--head);font-size:19px;color:var(--white);}
+.v4 .rv.g{color:var(--sig);}
+
+/* V5 WAVE */
+.v5{margin-top:16px;}
+.v5 .top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;}
+.v5 .big{font-family:var(--head);font-size:52px;color:var(--white);line-height:.8;}
+.v5 .big small{font-size:18px;color:var(--muted);}
+.v5 .pct{font-family:var(--head);font-size:30px;color:var(--sig);}
+.v5 .hyp{width:100%;height:130px;display:block;}
+.v5 .stlbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--dim);margin-top:6px;letter-spacing:.04em;}
+.v5 .stlbl span{color:var(--dim);}
+.v5 .pill{margin-top:16px;display:inline-flex;}
+.v5 .hd2{display:flex;flex-direction:column;gap:12px;}
+</style>
+</head>
+<body>
+<div class="screen play" id="screen">
+  <div class="vtoggle">
+    <button data-v="ring" class="on">Ring</button><button data-v="verdict">Verdict</button><button data-v="meter">Meter</button><button data-v="read">Read</button><button data-v="wave">Wave</button>
+  </div>
+  <div class="hd"><button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ht">Signal · Sleep</span></div>
+  <div class="mount" id="mount"></div>
+</div>
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tickRing(cv,frac,rgb){
+    var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.4),cx=size/2,cy=size/2,R=size/2-6,tl=R*0.11,sa=150*Math.PI/180,sw=240*Math.PI/180;
+    function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.6;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba('+rgb+',.72)';ctx.shadowColor='rgba('+rgb+',.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
+    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},350);
+  }
+  function hypno(cv){
+    var host=cv.parentElement,W=host.clientWidth,H=130,dpr=devicePixelRatio||1;
+    cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    // levels: 0 Awake(top) .. 3 Deep(bottom). sequence of [level,duration]
+    var seq=[[1,.5],[2,1],[3,1.2],[2,.6],[1,.7],[0,.15],[2,.8],[3,.9],[2,.7],[1,1.1],[0,.1],[2,.5]];
+    var total=seq.reduce(function(a,s){return a+s[1];},0), PT=14,PB=14, lvlY=function(l){return PT+(H-PT-PB)*(l/3);};
+    var cols=['#5C6679','#00D4FF','rgba(0,229,160,.55)','#00E5A0'];
+    var x=0; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.lineCap='round';
+    var pts=[]; seq.forEach(function(s){ var w=(s[1]/total)*W; pts.push([x, lvlY(s[0]), s[0]]); pts.push([x+w, lvlY(s[0]), s[0]]); x+=w; });
+    // draw segments coloured by level
+    for(var i=0;i<pts.length-1;i++){ ctx.beginPath(); ctx.moveTo(pts[i][0],pts[i][1]); ctx.lineTo(pts[i+1][0],pts[i+1][1]); var lv=pts[i][2]; ctx.strokeStyle=cols[lv]; ctx.shadowColor=cols[lv]; ctx.shadowBlur=lv===0?0:5; ctx.stroke(); }
+    ctx.shadowBlur=0;
+  }
+  var R={
+    ring:function(){return '<div class="v1"><div class="gauge"><canvas id="rc"></canvas><div class="ctr"><div class="n">96<small>%</small></div><div class="u">of sleep need</div></div></div>'+
+      '<div class="row"><div><div class="rv">8:01</div><div class="rk">Slept</div></div><div><div class="rv g">8:20</div><div class="rk">Needed</div></div><div><div class="rv">94<span style="font-size:12px">%</span></div><div class="rk">Efficient</div></div></div>'+
+      '<span class="pill"><i></i>Strong</span></div>';},
+    verdict:function(){return '<div class="v2"><div class="eyebrow">Tonight\'s sleep read</div><div class="word-wrap" style="margin-top:8px"><span class="vscan"></span><span class="word">WELL<br>RESTED</span></div>'+
+      '<div class="furn"><div class="fc"><div class="fv g">96<span style="font-size:14px">%</span></div><div class="fk">of need</div></div><div class="fc"><div class="fv">8:01</div><div class="fk">slept</div></div><div class="fc"><div class="fv">8:20</div><div class="fk">needed</div></div><div class="fc"><div class="fv">94<span style="font-size:14px">%</span></div><div class="fk">efficient</div></div></div></div>';},
+    meter:function(){return '<div class="v3"><div class="eyebrow">Sleep vs need</div><div class="big" style="margin-top:8px">8:01<small> slept</small></div><div class="of">of 8:20 needed · 19 min short</div>'+
+      '<div class="meter"><div class="fill" style="width:96%"></div><div class="need" style="left:100%"></div></div><div class="mlbl"><span>0h</span><span>your need · 8:20</span></div>'+
+      '<span class="pill"><i></i>Strong · 96% of need</span></div>';},
+    read:function(){return '<div class="v4"><div class="k">The read</div><div class="stmt">YOU CLEARED <b>96%</b> OF YOUR SLEEP NEED.</div>'+
+      '<div class="spec"><div class="r"><span class="rk">Slept</span><span class="rt">actual asleep time</span><span class="rv">8:01</span></div>'+
+      '<div class="r"><span class="rk">Needed</span><span class="rt">from strain + debt</span><span class="rv g">8:20</span></div>'+
+      '<div class="r"><span class="rk">Efficiency</span><span class="rt">asleep vs in bed</span><span class="rv">94%</span></div>'+
+      '<div class="r"><span class="rk">Debt</span><span class="rt">carried forward</span><span class="rv g">None</span></div>'+
+      '<div class="r"><span class="rk">Verdict</span><span class="rt">tonight\'s input</span><span class="rv g" style="font-size:15px">READY</span></div></div></div>';},
+    wave:function(){return '<div class="v5"><div class="hd2"><div class="eyebrow">The night · sleep stages</div>'+
+      '<div class="top"><div class="big">8.1<small> hrs</small></div><div class="pct">96%</div></div></div>'+
+      '<canvas id="hy"></canvas><div class="stlbl"><span>00:51</span><span>Awake · REM · Light · Deep</span><span>06:20</span></div>'+
+      '<span class="pill"><i></i>Strong · deep + REM solid</span></div>';}
+  };
+  var mount=document.getElementById('mount');
+  function show(m){ mount.innerHTML=R[m]();
+    if(m==='ring'){ tickRing(document.getElementById('rc'),0.96,'0,229,160'); }
+    if(m==='wave'){ hypno(document.getElementById('hy')); }
+  }
+  document.querySelectorAll('.vtoggle button').forEach(function(b){ b.addEventListener('click',function(){ document.querySelectorAll('.vtoggle button').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); show(b.dataset.v); }); });
+  show('ring');
+})();
+</script>
+</body>
+</html>
