@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Sleep read outcomes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--sig:var(--mint);
+  --panel:rgba(255,255,255,.022);--head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;max-width:430px;margin:0 auto;padding:16px 20px 60px;}
+h1{font-family:var(--head);font-size:26px;letter-spacing:.03em;}
+.sub{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin:4px 0 18px;}
+/* tier legend */
+.legend{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+.lrow{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);cursor:pointer;}
+.lrow.on{border-color:color-mix(in srgb,var(--c) 45%,transparent);background:color-mix(in srgb,var(--c) 7%,transparent);}
+.lrow .sw{width:26px;height:26px;border-radius:8px;background:var(--c);box-shadow:0 0 10px color-mix(in srgb,var(--c) 55%,transparent);flex-shrink:0;}
+.lrow .w{font-family:var(--head);font-size:19px;color:var(--c);letter-spacing:.02em;flex:1;}
+.lrow .r{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;}
+
+/* hero preview */
+.hero{display:grid;grid-template-columns:1fr auto;grid-template-areas:"eb ga" "vw ga" "fu fu";align-items:center;column-gap:14px;padding:16px 4px 0;border-top:1px solid var(--hair);}
+.eyebrow{grid-area:eb;align-self:end;font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.word-wrap{grid-area:vw;align-self:start;position:relative;display:inline-block;line-height:.8;margin-top:6px;}
+.vscan{position:absolute;inset:-18px -18px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);}
+.vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%, var(--sig) 0%, transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);animation:sweep 5.5s linear .4s infinite;}
+@keyframes sweep{0%{opacity:0;transform:translateX(-58%);}6%{opacity:.85;}30%{opacity:.5;}44%{opacity:0;transform:translateX(58%);}100%{opacity:0;transform:translateX(58%);}}
+.word{position:relative;z-index:2;font-family:var(--head);font-size:56px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.gauge{grid-area:ga;position:relative;width:120px;height:120px;}
+.gauge canvas{position:absolute;top:0;left:0;}
+.gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.gauge .rn{font-family:var(--head);font-size:38px;color:var(--white);line-height:.8;}
+.gauge .rn small{font-size:17px;color:var(--muted);}
+.gauge .ru{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.furn{grid-area:fu;display:flex;margin-top:16px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.fc{flex:1;padding:12px 4px;text-align:center;border-left:1px solid var(--hair);}
+.fc:first-child{border-left:none;}
+.fv{font-family:var(--head);font-size:22px;color:var(--white);}
+.fv.g{color:var(--sig);}
+.fk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 11px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);margin-top:16px;}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+</style>
+</head>
+<body>
+<h1>SLEEP READ · OUTCOMES</h1>
+<div class="sub">Four tiers, mirroring the verdict colours</div>
+<div class="legend" id="legend"></div>
+<div id="hero"></div>
+<script>
+(function(){
+  var O=[
+    {k:'peak',w:'FULLY<br>RESTED',c:'200,255,0',pct:104,slept:'8:40',needed:'8:20',bed:'8:55',range:'≥ 100% of need',tier:'Peak rest · surplus'},
+    {k:'ready',w:'WELL<br>RESTED',c:'0,229,160',pct:96,slept:'8:01',needed:'8:20',bed:'8:34',range:'90–99% of need',tier:'Strong · need cleared'},
+    {k:'build',w:'UNDER<br>RESTED',c:'245,158,11',pct:78,slept:'6:30',needed:'8:20',bed:'7:10',range:'70–89% of need',tier:'Short · 1h 50m under'},
+    {k:'rest',w:'SLEEP<br>DEBT',c:'239,68,68',pct:62,slept:'5:10',needed:'8:20',bed:'6:00',range:'< 70% of need',tier:'Depleted · 3h 10m deficit'}
+  ];
+  var cur=0, rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('legend').innerHTML=O.map(function(o,i){return '<div class="lrow'+(i===0?' on':'')+'" data-i="'+i+'" style="--c:rgb('+o.c+')"><span class="sw"></span><span class="w">'+o.w.replace('<br>',' ')+'</span><span class="r">'+o.range+'</span></div>';}).join('');
+  function drawRing(cv,frac,rgb){var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.12,sa=150*Math.PI/180,sw=240*Math.PI/180;
+    function fr(p){ctx.clearRect(0,0,size,size);var lit=Math.min(1,frac)*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba('+rgb+',.72)';ctx.shadowColor='rgba('+rgb+',.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
+    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1100),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},300);
+  }
+  function show(i){ cur=i; var o=O[i];
+    document.querySelectorAll('.lrow').forEach(function(r){r.classList.toggle('on',+r.dataset.i===i);});
+    var h=document.getElementById('hero'); h.style.setProperty('--sig','rgb('+o.c+')');
+    h.innerHTML='<div class="hero"><div class="eyebrow">Tonight\'s sleep read</div>'+
+      '<div class="gauge"><canvas id="oc"></canvas><div class="ctr"><div class="rn">'+o.pct+'<small>%</small></div><div class="ru">of need</div></div></div>'+
+      '<div class="word-wrap"><span class="vscan"></span><span class="word">'+o.w+'</span></div>'+
+      '<div class="furn"><div class="fc"><div class="fv">'+o.slept+'</div><div class="fk">slept</div></div><div class="fc"><div class="fv g">'+o.needed+'</div><div class="fk">needed</div></div><div class="fc"><div class="fv">'+o.bed+'</div><div class="fk">in bed</div></div></div>'+
+      '</div><div style="text-align:center;margin-top:16px"><span class="pill"><i></i>'+o.tier+'</span></div>';
+    drawRing(document.getElementById('oc'),o.pct/100,o.c);
+  }
+  document.querySelectorAll('.lrow').forEach(function(r){r.addEventListener('click',function(){show(+r.dataset.i);});});
+  show(0);
+})();
+</script>
+</body>
+</html>
