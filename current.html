@@ -66,20 +66,19 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   transition:stroke-dashoffset 1.5s var(--ease) .3s;}
 .screen.play .gauge .glow{stroke-dashoffset:var(--arc,80);}
 .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;}
-/* looping scan-light behind the readiness number (verdict-coloured, same as the word) */
-.gauge .scanbg{position:absolute;left:50%;top:42%;width:134px;height:66px;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
-  -webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);}
-.gauge .scanbg::after{content:"";position:absolute;inset:0;opacity:0;
-  background:radial-gradient(circle at 50% 50%, var(--vc) 0%, transparent 60%);
-  -webkit-mask:radial-gradient(circle at 50% 50%,transparent 0%,transparent 6%,#000 34%);mask:radial-gradient(circle at 50% 50%,transparent 0%,transparent 6%,#000 34%);
-  transform:translateX(-58%);}
-.screen.play .gauge .scanbg::after{animation:sweep 3s var(--ease) .7s infinite;}
-/* vertical odometer — digits roll up into place */
-.gauge .odo{position:relative;z-index:2;display:flex;font-family:var(--head);font-size:54px;line-height:1;height:1em;color:var(--white);}
-.gauge .odo-col{position:relative;height:1em;width:.6ch;overflow:hidden;}
-.gauge .odo-strip{position:absolute;top:0;left:0;width:100%;transform:translateY(0);}
-.gauge .odo-strip.roll{transition:transform 1.7s var(--ease) .3s;}
-.gauge .odo-strip span{height:1em;display:flex;align-items:center;justify-content:center;}
+/* readiness number — scan-light lives INSIDE the glyphs, sweeping top→bottom, verdict-coloured */
+.gauge .score{position:relative;z-index:2;font-family:var(--head);font-size:54px;line-height:.8;letter-spacing:.05em;
+  color:transparent;-webkit-text-fill-color:transparent;
+  background-image:
+    linear-gradient(180deg, transparent 34%, rgba(255,255,255,.96) 50%, transparent 66%),
+    repeating-linear-gradient(90deg, var(--vc) 0, var(--vc) 4px, color-mix(in srgb,var(--vc) 46%,transparent) 5px, color-mix(in srgb,var(--vc) 46%,transparent) 6px);
+  background-repeat:no-repeat, repeat;
+  background-size:100% 240%, auto;
+  background-position:0 -140%, 0 0;
+  -webkit-background-clip:text;background-clip:text;
+  filter:drop-shadow(0 0 15px color-mix(in srgb,var(--vc) 42%,transparent));}
+.screen.play .gauge .score{animation:numFill 2.6s var(--ease) .5s infinite;}
+@keyframes numFill{0%{background-position:0 -140%,0 0;}100%{background-position:0 140%,0 0;}}
 .gauge .of{font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);margin-top:3px;text-transform:uppercase;}
 .vword-wrap{position:relative;margin-top:12px;line-height:.8;}
 .vscan{position:absolute;inset:-10px -16px;z-index:0;pointer-events:none;
@@ -180,8 +179,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   .gauge .arc,.gauge .glow,.sg .ring .a{transition:none;stroke-dashoffset:var(--arc,80);}
   .sg .ring .a{stroke-dashoffset:var(--o,50);}
   .tcv .line{transition:none;stroke-dashoffset:0;} .tcv .pt,.tcv .area{transition:none;opacity:1;} .tcv .area{opacity:.16;}
-  .vscan::after,.gauge .scanbg::after{animation:none;opacity:.28;transform:none;} .sync .dot{animation:none;}
-  .gauge .odo-strip{transition:none;}
+  .vscan::after{animation:none;opacity:.28;transform:none;} .sync .dot{animation:none;}
+  .gauge .score{animation:none;background-position:0 50%,0 0;}
 }
 </style>
 </head>
@@ -208,7 +207,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="eyebrow fade" style="transition-delay:.12s">Today's verdict</div>
     <div class="gauge fade" style="transition-delay:.18s">
       <svg viewBox="0 0 150 150"><circle class="trk" cx="75" cy="75" r="68"/><circle class="glow" cx="75" cy="75" r="68"/><circle class="arc" cx="75" cy="75" r="68"/></svg>
-      <div class="ctr"><span class="scanbg"></span><div class="odo" id="odo"></div><div class="of">Readiness</div></div>
+      <div class="ctr"><div class="score" id="score">84</div><div class="of">Readiness</div></div>
     </div>
     <div class="vword-wrap fade" style="transition-delay:.3s"><span class="vscan"></span><span class="vword">READY</span></div>
     <div class="directive fade" style="transition-delay:.4s">Push the main lifts today.<span class="sub">Upper body · 55–70 min</span></div>
@@ -323,19 +322,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
   function countUp(el, to, dur, delay, dec){ if(rm){ el.childNodes[0].nodeValue=(dec?to.toFixed(1):to); return; }
     setTimeout(function(){ var t0=null; function step(ts){ if(!t0)t0=ts; var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3), v=e*to; el.childNodes[0].nodeValue=(dec?v.toFixed(1):Math.round(v)); if(p<1)requestAnimationFrame(step);} requestAnimationFrame(step); }, delay); }
-  (function buildOdo(){ var odo=document.getElementById('odo'), val='84';
-    val.split('').forEach(function(ch){
-      var col=document.createElement('div'); col.className='odo-col';
-      var strip=document.createElement('div'); strip.className='odo-strip';
-      var h=''; for(var k=0;k<20;k++) h+='<span>'+(k%10)+'</span>'; strip.innerHTML=h; // two 0-9 cycles → a full spin then land
-      col.appendChild(strip); odo.appendChild(col);
-      var target=10+parseInt(ch,10); // land in the 2nd cycle so it rolls a full turn first
-      if(rm){ strip.style.transform='translateY(-'+target+'em)'; return; }
-      requestAnimationFrame(function(){ requestAnimationFrame(function(){
-        strip.classList.add('roll'); strip.style.transform='translateY(-'+target+'em)';
-      });});
-    });
-  })();
+  /* readiness number is static "84"; the scan-fill animation lives in CSS (.score) */
   document.querySelectorAll('.sg .v[data-to]').forEach(function(el,i){ var to=+el.getAttribute('data-to'); countUp(el,to,1100,1000+i*100, to%1!==0); });
 
   // ---- calendar sheet ----
