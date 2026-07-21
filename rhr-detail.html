@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A0D12">
-<title>OBEY OS · RHR detail (in-language)</title>
+<title>OBEY OS · RHR detail — Instrument variants</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
   --bg:#0A0D12; --white:#F9FAFB; --muted:#8A93A6; --mid:#747E8C; --dim:#5C6679; --hair:rgba(255,255,255,.08);
   --lime:#C8FF00; --mint:#00E5A0; --amber:#F59E0B; --red:#EF4444; --cyan:#00D4FF; --good:#22C55E;
   --panel:rgba(255,255,255,.022); --glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
-  --sig:var(--good); /* RHR normal — the metric's own accent, exactly like the home vitals */
+  --sig:var(--good);
   --head:'Bebas Neue',sans-serif; --body:'Inter',-apple-system,sans-serif; --mono:'DM Mono',monospace;
   --ease:cubic-bezier(.23,1,.32,1);
 }
@@ -33,215 +33,192 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
 .hd .ht{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
 
-.variant{display:none;animation:fadein .4s var(--ease);}
-.variant.on{display:block;}
-@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-/* ---- LOCKED components (identical DNA to the home) ---- */
-/* the ring gauge — same 270° arc as the reading cards, scaled up */
-.rg{position:relative;margin:0 auto;}
+/* ---- gauge (locked ring, scaled) — gently breathes ---- */
+.top{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:8px;}
+.rg{position:relative;width:170px;height:170px;animation:breathe 6s ease-in-out infinite;}
 .rg svg{width:100%;height:100%;overflow:visible;transform:rotate(135deg);}
 .rg .t{fill:none;stroke:rgba(255,255,255,.08);stroke-width:5;stroke-linecap:round;stroke-dasharray:106 200;}
 .rg .a{fill:none;stroke:var(--sig);stroke-width:5;stroke-linecap:round;stroke-dasharray:106 200;stroke-dashoffset:106;
-  filter:drop-shadow(0 0 5px color-mix(in srgb,var(--sig) 55%,transparent));transition:stroke-dashoffset 1.3s var(--ease) .3s;}
-.screen.play .rg .a{stroke-dashoffset:var(--o,70);}
+  filter:drop-shadow(0 0 6px color-mix(in srgb,var(--sig) 55%,transparent));transition:stroke-dashoffset 1.3s var(--ease) .3s;}
+.screen.play .rg .a{stroke-dashoffset:var(--o,74);}
 .rg .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.rg .n{font-family:var(--head);color:var(--white);line-height:.8;}
-.rg .u{font-family:var(--mono);letter-spacing:.16em;color:var(--dim);text-transform:uppercase;}
-.rg .ic{position:absolute;left:0;right:0;display:flex;justify-content:center;}
-.rg .ic svg{stroke:var(--sig);fill:none;stroke-width:1.7;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 45%,transparent));transform:none;}
+.rg .n{font-family:var(--head);color:var(--white);line-height:.8;font-size:64px;}
+.rg .u{font-family:var(--mono);letter-spacing:.16em;color:var(--dim);text-transform:uppercase;font-size:9px;margin-top:3px;}
+.rg .ic{position:absolute;left:0;right:0;top:20px;display:flex;justify-content:center;}
+.rg .ic svg{width:15px;height:15px;stroke:var(--sig);fill:none;stroke-width:1.7;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--sig) 45%,transparent));transform:none;}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 
 .statuspill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sig);padding:5px 11px;border-radius:20px;border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);}
 .statuspill i{width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 8px var(--sig);}
-.delta{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--good);}
 
-.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:22px 0 12px;}
-.card{padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
-.card + .card{margin-top:10px;}
-
-/* trend — identical style to the home 7-day chart */
-.trend{width:100%;height:104px;display:block;overflow:visible;}
-.trend .ln{fill:none;stroke:var(--sig);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px color-mix(in srgb,var(--sig) 45%,transparent));}
-.trend .ar{opacity:.15;}
-.trend .pt{fill:#0A0D12;stroke:var(--sig);stroke-width:1.6;}
-.trend .td{fill:var(--sig);filter:drop-shadow(0 0 6px var(--sig));}
-.taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
-.taxis .now{color:var(--sig);}
-
-/* range bar */
-.rangebar{position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--amber),var(--good) 30%,var(--good) 70%,var(--amber));opacity:.9;}
-.rangebar .band{position:absolute;top:-3px;bottom:-3px;border-radius:6px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);}
-.rangebar .mk{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#0A0D12;border:2px solid var(--sig);box-shadow:0 0 10px var(--sig);transform:translate(-50%,-50%);}
-.rangelbls{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:9px;letter-spacing:.04em;}
-
-.prose{font-size:13.5px;line-height:1.6;color:var(--muted);}
-.prose b{color:var(--white);font-weight:500;}
-.tip{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--hair);}
-.tip:first-child{border-top:none;padding-top:0;}
-.tip .ti{width:22px;height:22px;border-radius:7px;flex-shrink:0;background:color-mix(in srgb,var(--sig) 12%,transparent);border:1px solid color-mix(in srgb,var(--sig) 30%,transparent);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--sig);}
-.tip .tt{font-size:13px;line-height:1.5;color:var(--muted);}
-.tip .tt b{color:var(--white);font-weight:500;}
-
+/* floating stat card */
+.statcard{margin-top:20px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 14px 30px -18px rgba(0,0,0,.7);
+  animation:flo 5.4s ease-in-out infinite;}
+@keyframes flo{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}
 .statrow{display:flex;justify-content:space-between;text-align:center;}
-.statrow .s .sv{font-family:var(--head);font-size:26px;color:var(--white);line-height:.85;}
+.statrow .s .sv{font-family:var(--head);font-size:27px;color:var(--white);line-height:.85;}
 .statrow .s .sv.g{color:var(--good);}
 .statrow .s .sk{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
 
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:22px 0 12px;}
+
+/* trend — smooth, no intermediate dots */
+.trend{width:100%;height:104px;display:block;overflow:visible;}
+.trend .ln{fill:none;stroke:var(--sig);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--sig) 50%,transparent));}
+.trend .ar{opacity:.15;}
+.trend .td{fill:var(--sig);filter:drop-shadow(0 0 7px var(--sig));}
+.taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
+.taxis .now{color:var(--sig);}
+
+/* range — smoother track + glowing thumb */
+.rangebar{position:relative;height:8px;border-radius:5px;
+  background:linear-gradient(90deg, color-mix(in srgb,var(--amber) 42%,transparent), color-mix(in srgb,var(--good) 70%,transparent) 34%, color-mix(in srgb,var(--good) 70%,transparent) 66%, color-mix(in srgb,var(--amber) 42%,transparent));
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.4);}
+.rangebar .band{position:absolute;top:0;bottom:0;border-radius:5px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--good) 32%,transparent),transparent);}
+.rangebar .mk{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:#0A0D12;border:2.5px solid var(--sig);box-shadow:0 0 14px var(--sig),0 3px 8px rgba(0,0,0,.5);transform:translate(-50%,-50%);}
+.rangebar .mk::after{content:"";position:absolute;inset:3.5px;border-radius:50%;background:var(--sig);box-shadow:0 0 6px var(--sig);}
+.rangelbls{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:11px;letter-spacing:.04em;}
+
 .cta{margin-top:24px;display:block;width:100%;height:46px;border:none;border-radius:23px;background:var(--lime);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
 
-/* ===== A · INSTRUMENT ===== */
-.A .rg{width:170px;height:170px;}
-.A .rg .n{font-size:64px;}.A .rg .u{font-size:9px;margin-top:3px;}
-.A .rg .ic{top:20px;}.A .rg .ic svg{width:15px;height:15px;}
-.A .top{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:8px;}
+/* ================= LOWER SECTION VARIANTS ================= */
+.lower{display:none;animation:fadein .35s var(--ease);}
+.lower.on{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* ===== B · SHEET ===== */
-.B .sheet{border-radius:22px;border:1px solid var(--hair);background:#0C0F15;padding:22px 18px 20px;position:relative;box-shadow:0 -10px 40px -20px rgba(0,0,0,.7);}
-.B .grab{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);}
-.B .row{display:flex;align-items:center;gap:16px;margin-top:6px;}
-.B .rg{width:96px;height:96px;margin:0;flex-shrink:0;}
-.B .rg .n{font-size:34px;}.B .rg .u{font-size:7px;}.B .rg .ic{top:12px;}.B .rg .ic svg{width:11px;height:11px;}
-.B .rmeta{flex:1;}
-.B .rmeta .big{font-family:var(--head);font-size:20px;color:var(--white);}
-.B .rmeta .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--mid);text-transform:uppercase;margin:2px 0 8px;}
+/* --- V1 · DRIVER (locked primary-driver pattern + labelled notes) --- */
+.drv{margin-top:8px;padding:2px 0 2px 14px;border-left:2px solid var(--sig);}
+.drv .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.drv .t{font-family:var(--body);font-weight:300;font-size:15px;line-height:1.55;color:var(--muted);margin-top:7px;}
+.drv .t b{color:var(--white);font-weight:500;}
+.notes{margin-top:20px;display:flex;flex-direction:column;gap:2px;}
+.note{display:grid;grid-template-columns:74px 1fr;gap:12px;align-items:baseline;padding:13px 0;border-top:1px solid var(--hair);}
+.note .nk{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sig);}
+.note .nt{font-family:var(--body);font-weight:300;font-size:14px;line-height:1.5;color:var(--muted);}
+.note .nt b{color:var(--white);font-weight:500;}
 
-/* ===== C · FOCUS ===== */
-.C .hero{display:flex;align-items:center;gap:18px;margin-top:8px;}
-.C .rg{width:120px;height:120px;margin:0;flex-shrink:0;}
-.C .rg .n{font-size:44px;}.C .rg .u{font-size:8px;}.C .rg .ic{top:14px;}.C .rg .ic svg{width:12px;height:12px;}
-.C .call{flex:1;}
-.C .call .k{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
-.C .call .big{font-family:var(--head);font-size:30px;color:var(--sig);line-height:.92;margin-top:6px;}
-.C .call .sub{font-family:var(--mono);font-size:9.5px;color:var(--mid);margin-top:8px;letter-spacing:.04em;}
+/* --- V2 · CALLOUT (glass card, pulled stat, coach note) --- */
+.callout{margin-top:8px;padding:18px;border-radius:16px;background:var(--glass);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.callout .ch{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
+.callout .ch svg{width:13px;height:13px;stroke:var(--sig);fill:none;stroke-width:1.7;}
+.callout .pull{display:flex;align-items:baseline;gap:10px;margin:14px 0 4px;}
+.callout .pull .pn{font-family:var(--head);font-size:40px;color:var(--sig);line-height:.8;}
+.callout .pull .pl{font-family:var(--body);font-weight:400;font-size:14px;color:var(--white);}
+.callout .ct{font-family:var(--body);font-weight:300;font-size:14px;line-height:1.55;color:var(--muted);margin-top:8px;}
+.callout .ct b{color:var(--white);font-weight:500;}
+.coach{margin-top:12px;padding:16px;border-radius:16px;background:color-mix(in srgb,var(--sig) 7%,transparent);border:1px solid color-mix(in srgb,var(--sig) 24%,transparent);}
+.coach .ck{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--sig);text-transform:uppercase;}
+.coach .cl{display:flex;gap:9px;align-items:flex-start;margin-top:11px;font-family:var(--body);font-weight:300;font-size:14px;line-height:1.5;color:var(--muted);}
+.coach .cl:first-of-type{margin-top:12px;}
+.coach .cl b{color:var(--white);font-weight:500;}
+.coach .cl .ar{color:var(--sig);font-family:var(--mono);flex-shrink:0;}
+
+/* --- V3 · STRUCTURED (spec-sheet rows) --- */
+.spec{margin-top:8px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.015);}
+.spec .r{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:baseline;padding:15px 16px;border-top:1px solid var(--hair);}
+.spec .r:first-child{border-top:none;}
+.spec .r .rk{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
+.spec .r .rv{font-family:var(--body);font-weight:300;font-size:14px;line-height:1.45;color:var(--muted);}
+.spec .r .rv b{color:var(--white);font-weight:500;}
+.spec .r .rv .g{color:var(--sig);font-weight:500;}
 </style>
 </head>
 <body>
 <div class="screen play" id="screen">
   <div class="vtoggle">
-    <button data-v="A" class="on">Instrument</button>
-    <button data-v="B">Sheet</button>
-    <button data-v="C">Focus</button>
+    <button data-v="1" class="on">Driver</button>
+    <button data-v="2">Callout</button>
+    <button data-v="3">Structured</button>
   </div>
   <div class="hd">
     <button class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <span class="ht">Vitals · RHR</span>
   </div>
 
-  <!-- ===== A · INSTRUMENT ===== -->
-  <section class="variant A on" data-v="A">
-    <div class="top">
-      <div class="rg" style="--o:74">
-        <svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-        <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
-        <div class="ctr"><div class="n">55</div><div class="u">BPM</div></div>
-      </div>
-      <span class="statuspill"><i></i>Normal · well recovered</span>
+  <!-- shared top (kept — you liked this) -->
+  <div class="top">
+    <div class="rg" style="--o:74">
+      <svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
+      <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
+      <div class="ctr"><div class="n">55</div><div class="u">BPM</div></div>
     </div>
-    <div class="card" style="margin-top:20px"><div class="statrow">
-      <div class="s"><div class="sv">57</div><div class="sk">30-day avg</div></div>
-      <div class="s"><div class="sv g">▼2</div><div class="sk">vs baseline</div></div>
-      <div class="s"><div class="sv">52</div><div class="sk">7-day low</div></div>
-    </div></div>
-    <div class="sl">7-day trend</div>
-    <svg class="trend" id="tA" viewBox="0 0 380 104" preserveAspectRatio="none"></svg>
-    <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
-    <div class="sl">Your range</div>
-    <div class="rangebar"><span class="band" style="left:28%;right:26%"></span><span class="mk" style="left:38%"></span></div>
-    <div class="rangelbls"><span>40</span><span>band 52–62</span><span>85</span></div>
+    <span class="statuspill"><i></i>Normal · well recovered</span>
+  </div>
+  <div class="statcard"><div class="statrow">
+    <div class="s"><div class="sv">57</div><div class="sk">30-day avg</div></div>
+    <div class="s"><div class="sv g">▼2</div><div class="sk">vs baseline</div></div>
+    <div class="s"><div class="sv">52</div><div class="sk">7-day low</div></div>
+  </div></div>
+  <div class="sl">7-day trend</div>
+  <svg class="trend" id="trend" viewBox="0 0 380 104" preserveAspectRatio="none"></svg>
+  <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+  <div class="sl">Your range</div>
+  <div class="rangebar"><span class="band" style="left:28%;right:26%"></span><span class="mk" style="left:38%"></span></div>
+  <div class="rangelbls"><span>40</span><span>band 52–62</span><span>85</span></div>
+
+  <!-- ===== V1 · DRIVER ===== -->
+  <div class="lower on" data-v="1">
     <div class="sl">What it means</div>
-    <p class="prose"><b>Resting heart rate tracks recovery.</b> Yours is <b>2 bpm below</b> your 30-day baseline — your body absorbed yesterday's load. It fed today's <b style="color:var(--mint)">READY</b>.</p>
-    <div class="sl">Tips</div>
-    <div class="tip"><span class="ti">1</span><span class="tt">A <b>+5 bpm morning spike</b> often follows poor sleep or alcohol — watch for it.</span></div>
-    <div class="tip"><span class="ti">2</span><span class="tt">Measure <b>right after waking</b> for the truest read.</span></div>
+    <div class="drv">
+      <div class="k">The read</div>
+      <div class="t"><b>Resting heart rate tracks recovery.</b> Yours sits <b>2 bpm below</b> your 30-day baseline — your body absorbed yesterday's load well. A green input to today's <b style="color:var(--mint)">READY</b>.</div>
+    </div>
+    <div class="notes">
+      <div class="note"><span class="nk">Watch</span><span class="nt">A <b>+5 bpm morning spike</b> usually follows poor sleep or alcohol.</span></div>
+      <div class="note"><span class="nk">Measure</span><span class="nt"><b>Right after waking</b> — late nights push it up for a day or two.</span></div>
+    </div>
     <button class="cta">View full history →</button>
-  </section>
+  </div>
 
-  <!-- ===== B · SHEET ===== -->
-  <section class="variant B" data-v="B">
-    <div class="sheet">
-      <div class="grab"></div>
-      <div class="row">
-        <div class="rg" style="--o:74">
-          <svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-          <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
-          <div class="ctr"><div class="n">55</div><div class="u">BPM</div></div>
-        </div>
-        <div class="rmeta">
-          <div class="big">Resting heart rate</div>
-          <div class="lbl">Today · at rest</div>
-          <span class="statuspill"><i></i>Normal</span>
-          <div class="delta" style="margin-top:8px">▼ 2 vs baseline</div>
-        </div>
-      </div>
-      <div class="sl">7-day trend</div>
-      <svg class="trend" id="tB" viewBox="0 0 380 104" preserveAspectRatio="none"></svg>
-      <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
-      <div class="sl">Your range</div>
-      <div class="rangebar"><span class="band" style="left:28%;right:26%"></span><span class="mk" style="left:38%"></span></div>
-      <div class="rangelbls"><span>40</span><span>band 52–62</span><span>85</span></div>
-      <div class="sl">What it means</div>
-      <p class="prose">Lower resting HR = better recovery. Yours is <b>2 below baseline</b> — a green input to today's <b style="color:var(--mint)">READY</b>.</p>
-      <div class="sl">Tips</div>
-      <div class="tip"><span class="ti">1</span><span class="tt">A <b>+5 bpm spike</b> follows poor sleep or alcohol.</span></div>
-      <div class="tip"><span class="ti">2</span><span class="tt">Measure <b>right after waking</b>.</span></div>
+  <!-- ===== V2 · CALLOUT ===== -->
+  <div class="lower" data-v="2">
+    <div class="sl">The read</div>
+    <div class="callout">
+      <div class="ch"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>Recovery marker</div>
+      <div class="pull"><span class="pn">▼2</span><span class="pl">below your 30-day baseline</span></div>
+      <div class="ct"><b>Lower resting HR means better recovery.</b> Your body absorbed yesterday's load — a green input that helped ZEAL call <b style="color:var(--mint)">READY</b>.</div>
+    </div>
+    <div class="coach">
+      <div class="ck">Coach note</div>
+      <div class="cl"><span class="ar">→</span><span>A <b>+5 bpm morning spike</b> usually follows poor sleep or alcohol.</span></div>
+      <div class="cl"><span class="ar">→</span><span>Measure <b>right after waking</b> for the truest read.</span></div>
     </div>
     <button class="cta">View full history →</button>
-  </section>
+  </div>
 
-  <!-- ===== C · FOCUS ===== -->
-  <section class="variant C" data-v="C">
-    <div class="hero">
-      <div class="rg" style="--o:74">
-        <svg viewBox="0 0 62 62"><circle class="t" cx="31" cy="31" r="25"/><circle class="a" cx="31" cy="31" r="25"/></svg>
-        <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span>
-        <div class="ctr"><div class="n">55</div><div class="u">BPM</div></div>
-      </div>
-      <div class="call">
-        <div class="k">Resting HR · reading</div>
-        <div class="big">WELL<br>RECOVERED</div>
-        <div class="sub">▼2 vs baseline · in band</div>
-      </div>
-    </div>
-    <div class="sl">7-day trend</div>
-    <svg class="trend" id="tC" viewBox="0 0 380 104" preserveAspectRatio="none"></svg>
-    <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
-    <div class="card" style="margin-top:20px">
-      <div class="sl" style="margin:0 0 8px">The read</div>
-      <p class="prose"><b>Lower resting HR means better recovery.</b> Two below your 30-day baseline says training is landing, not draining — a green input to today's verdict.</p>
-    </div>
-    <div class="card">
-      <div class="sl" style="margin:0 0 6px">One thing</div>
-      <div class="tip"><span class="ti">→</span><span class="tt">Nights you drink or sleep short, this climbs 4–6 bpm — the earliest warning before a BUILD or REST day.</span></div>
+  <!-- ===== V3 · STRUCTURED ===== -->
+  <div class="lower" data-v="3">
+    <div class="sl">The read</div>
+    <div class="spec">
+      <div class="r"><span class="rk">Means</span><span class="rv"><b>Recovery marker</b> — lower is more recovered</span></div>
+      <div class="r"><span class="rk">Today</span><span class="rv"><span class="g">2 bpm below</span> your 30-day baseline · in band</span></div>
+      <div class="r"><span class="rk">Verdict</span><span class="rv">Green input to today's <b style="color:var(--mint)">READY</b></span></div>
+      <div class="r"><span class="rk">Watch</span><span class="rv">A <b>+5 bpm</b> morning spike = poor sleep or alcohol</span></div>
+      <div class="r"><span class="rk">Measure</span><span class="rv"><b>Right after waking</b> for the truest read</span></div>
     </div>
     <button class="cta">View full history →</button>
-  </section>
+  </div>
 </div>
 
 <script>
 (function(){
-  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function smooth(p){if(p.length<2)return '';var d='M'+p[0][0]+','+p[0][1];
     for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;
       var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6,c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
       d+='C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2[0]+','+p2[1];}return d;}
-  var d7=[58,57,59,56,55,56,55];
-  ['tA','tB','tC'].forEach(function(id){
-    var svg=document.getElementById(id); if(!svg)return;
-    var W=380,H=104,PL=6,PR=6,PT=12,PB=12,min=50,max=64;
+  (function(){ var svg=document.getElementById('trend'); if(!svg)return;
+    var d7=[58,57,59,56,55,56,55],W=380,H=104,PL=6,PR=6,PT=14,PB=12,min=51,max=63;
     var pts=d7.map(function(v,i){var x=PL+(W-PL-PR)*(i/(d7.length-1));var y=(H-PB)-(H-PT-PB)*((v-min)/(max-min));return [x,y];});
     var line=smooth(pts),area=line+' L'+pts[pts.length-1][0]+','+(H-PB)+' L'+pts[0][0]+','+(H-PB)+' Z',last=pts[pts.length-1];
-    var g='<defs><linearGradient id="'+id+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sig)" stop-opacity=".5"/><stop offset="1" stop-color="var(--sig)" stop-opacity="0"/></linearGradient></defs>';
-    g+='<path class="ar" d="'+area+'" fill="url(#'+id+'g)"/><path class="ln" d="'+line+'"/>';
-    pts.forEach(function(pt,i){if(i<pts.length-1)g+='<circle class="pt" cx="'+pt[0]+'" cy="'+pt[1]+'" r="3"/>';});
-    g+='<circle class="td" cx="'+last[0]+'" cy="'+last[1]+'" r="4.5"/>';
+    var g='<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sig)" stop-opacity=".45"/><stop offset="1" stop-color="var(--sig)" stop-opacity="0"/></linearGradient></defs>';
+    g+='<path class="ar" d="'+area+'" fill="url(#tg)"/><path class="ln" d="'+line+'"/><circle class="td" cx="'+last[0]+'" cy="'+last[1]+'" r="4.5"/>';
     svg.innerHTML=g;
-  });
+  })();
   document.querySelectorAll('.vtoggle button').forEach(function(b){
     b.addEventListener('click',function(){
       document.querySelectorAll('.vtoggle button').forEach(function(x){x.classList.remove('on');});
       b.classList.add('on');
-      document.querySelectorAll('.variant').forEach(function(s){s.classList.toggle('on',s.dataset.v===b.dataset.v);});
-      window.scrollTo(0,0);
+      document.querySelectorAll('.lower').forEach(function(s){s.classList.toggle('on',s.dataset.v===b.dataset.v);});
     });
   });
 })();
