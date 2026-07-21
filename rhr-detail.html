@@ -138,16 +138,46 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .rangebar .mk::after{content:"";position:absolute;inset:3.5px;border-radius:50%;background:var(--sig);box-shadow:0 0 6px var(--sig);}
 .rangelbls{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:11px;letter-spacing:.04em;}
 
-/* ===== DRIVER lower (locked) ===== */
-.drv{margin-top:8px;padding:2px 0 2px 14px;border-left:2px solid var(--sig);}
-.drv .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
-.drv .t{font-family:var(--body);font-weight:300;font-size:15px;line-height:1.55;color:var(--muted);margin-top:7px;}
-.drv .t b{color:var(--white);font-weight:500;}
-.notes{margin-top:20px;display:flex;flex-direction:column;gap:2px;}
-.note{display:grid;grid-template-columns:74px 1fr;gap:12px;align-items:baseline;padding:13px 0;border-top:1px solid var(--hair);}
-.note .nk{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sig);}
-.note .nt{font-family:var(--body);font-weight:300;font-size:14px;line-height:1.5;color:var(--muted);}
-.note .nt b{color:var(--white);font-weight:500;}
+/* ===== THE READ — 3 variants ===== */
+.rdtoggle{display:flex;gap:6px;justify-content:center;margin:26px 0 16px;}
+.rdtoggle button{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:13px;border:1px solid var(--hair);background:var(--panel);color:var(--muted);cursor:pointer;}
+.rdtoggle button.on{background:var(--lime);color:#0A0D12;border-color:var(--lime);}
+.readvar{display:none;animation:fadein .3s var(--ease);}
+.readvar.on{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* A · STATEMENT — Bebas headline + tight support + tip chips */
+.rd-eye{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.rd-big{font-family:var(--head);font-size:42px;letter-spacing:.02em;color:var(--sig);line-height:.9;margin-top:8px;text-shadow:0 0 24px color-mix(in srgb,var(--sig) 30%,transparent);}
+.rd-line{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);margin-top:12px;}
+.rd-line b{color:var(--white);font-weight:600;}
+.chips{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
+.chip{display:grid;grid-template-columns:60px 1fr;gap:12px;align-items:baseline;padding:13px 15px;border-radius:13px;background:var(--glass);border:1px solid rgba(255,255,255,.09);}
+.chip .ck{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--sig);}
+.chip span:last-child{font-family:var(--body);font-weight:400;font-size:13.5px;line-height:1.45;color:var(--muted);}
+.chip b{color:var(--white);font-weight:600;}
+
+/* B · CARD — glass cards, bold one-liner (500, not light) */
+.rcard{padding:17px;border-radius:16px;background:var(--glass);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.rcard + .rcard{margin-top:10px;}
+.rcard .rc-h{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
+.rcard .rc-h svg{width:14px;height:14px;stroke:var(--sig);fill:none;stroke-width:1.7;}
+.rcard .rc-t{font-family:var(--body);font-weight:400;font-size:15px;line-height:1.5;color:var(--muted);margin-top:12px;}
+.rcard .rc-t b{color:var(--white);font-weight:600;}
+.rcard.coach{background:color-mix(in srgb,var(--sig) 7%,transparent);border-color:color-mix(in srgb,var(--sig) 24%,transparent);}
+.rcard .rc-k{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--sig);text-transform:uppercase;}
+.rcard .arow{display:flex;gap:9px;align-items:flex-start;margin-top:12px;font-family:var(--body);font-weight:400;font-size:14px;line-height:1.45;color:var(--muted);}
+.rcard .arow b{color:var(--white);font-weight:600;}
+.rcard .arow .ar{color:var(--sig);font-family:var(--mono);flex-shrink:0;}
+
+/* C · SPEC — labelled rows, no paragraph */
+.spec{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.015);}
+.spec .r{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:baseline;padding:15px 16px;border-top:1px solid var(--hair);}
+.spec .r:first-child{border-top:none;}
+.spec .r .rk{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
+.spec .r .rv{font-family:var(--body);font-weight:400;font-size:14px;line-height:1.4;color:var(--muted);}
+.spec .r .rv b{color:var(--white);font-weight:600;}
+.spec .r .rv .g{color:var(--sig);font-weight:600;}
 
 .cta{margin-top:24px;display:block;width:100%;height:46px;border:none;border-radius:23px;background:var(--lime);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
 </style>
@@ -169,31 +199,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <span class="statuspill"><i></i>Normal · well recovered</span>
   </div>
 
-  <!-- STAT TRIO — 3 variants -->
-  <div class="svtoggle">
-    <button data-s="cards" class="on">Cards</button>
-    <button data-s="rail">Rail</button>
-    <button data-s="pills">Pills</button>
-  </div>
-  <!-- A · CARDS -->
-  <div class="statvar stats on" data-s="cards">
-    <div class="stat"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span><span class="sv">57</span><span class="sk">30-day avg</span></div>
-    <div class="stat"><span class="si"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span><span class="sv g">▼2</span><span class="sk">vs baseline</span></div>
-    <div class="stat"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 6l6 8 4-5 6 9"/></svg></span><span class="sv">52</span><span class="sk">7-day low</span></div>
-  </div>
-  <!-- B · RAIL -->
-  <div class="statvar rail" data-s="rail">
+  <!-- STAT — Rail (locked) -->
+  <div class="rail statvar on">
     <div class="ri"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span><span class="rv">57</span><span class="rk">30-day avg</span></div>
     <div class="rsep"></div>
     <div class="ri"><span class="si"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span><span class="rv g">▼2</span><span class="rk">vs baseline</span></div>
     <div class="rsep"></div>
     <div class="ri"><span class="si"><svg viewBox="0 0 24 24"><path d="M4 6l6 8 4-5 6 9"/></svg></span><span class="rv">52</span><span class="rk">7-day low</span></div>
-  </div>
-  <!-- C · PILLS -->
-  <div class="statvar pills" data-s="pills">
-    <div class="pill"><span class="pi"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span><span class="pk">30-day avg</span><span class="pv">57</span></div>
-    <div class="pill"><span class="pi"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span><span class="pk">vs baseline</span><span class="pv g">▼2</span></div>
-    <div class="pill"><span class="pi"><svg viewBox="0 0 24 24"><path d="M4 6l6 8 4-5 6 9"/></svg></span><span class="pk">7-day low</span><span class="pv">52</span></div>
   </div>
 
   <!-- TREND -->
@@ -220,16 +232,48 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="rangebar"><span class="band" style="left:28%;right:26%"></span><span class="mk" style="left:38%"></span></div>
   <div class="rangelbls"><span>40</span><span>band 52–62</span><span>85</span></div>
 
-  <!-- DRIVER -->
-  <div class="sl">What it means</div>
-  <div class="drv">
-    <div class="k">The read</div>
-    <div class="t"><b>Resting heart rate tracks recovery.</b> Yours sits <b>2 bpm below</b> your 30-day baseline — your body absorbed yesterday's load well. A green input to today's <b style="color:var(--mint)">READY</b>.</div>
+  <!-- THE READ — 3 fresh variants -->
+  <div class="rdtoggle">
+    <button data-r="a" class="on">Statement</button>
+    <button data-r="b">Card</button>
+    <button data-r="c">Spec</button>
   </div>
-  <div class="notes">
-    <div class="note"><span class="nk">Watch</span><span class="nt">A <b>+5 bpm morning spike</b> usually follows poor sleep or alcohol.</span></div>
-    <div class="note"><span class="nk">Measure</span><span class="nt"><b>Right after waking</b> — late nights push it up for a day or two.</span></div>
+
+  <!-- A · STATEMENT -->
+  <div class="readvar on" data-r="a">
+    <div class="rd-eye">The read</div>
+    <div class="rd-big">WELL RECOVERED</div>
+    <div class="rd-line">RHR is <b>2&nbsp;bpm below</b> your baseline — your body absorbed yesterday's load. A green input to today's <b style="color:var(--mint)">READY</b>.</div>
+    <div class="chips">
+      <div class="chip"><span class="ck">Watch</span><span>A <b>+5 bpm</b> morning spike usually follows poor sleep or alcohol.</span></div>
+      <div class="chip"><span class="ck">Measure</span><span><b>Right after waking</b> for the truest read.</span></div>
+    </div>
   </div>
+
+  <!-- B · CARD -->
+  <div class="readvar" data-r="b">
+    <div class="rcard">
+      <div class="rc-h"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>Recovery marker</div>
+      <div class="rc-t">Two below baseline — <b>recovery is landing, not draining.</b> A green input to today's <b style="color:var(--mint)">READY</b>.</div>
+    </div>
+    <div class="rcard coach">
+      <div class="rc-k">Coach note</div>
+      <div class="arow"><span class="ar">→</span><span>A <b>+5 bpm</b> morning spike usually follows poor sleep or alcohol.</span></div>
+      <div class="arow"><span class="ar">→</span><span>Measure <b>right after waking</b> for the truest read.</span></div>
+    </div>
+  </div>
+
+  <!-- C · SPEC -->
+  <div class="readvar" data-r="c">
+    <div class="spec">
+      <div class="r"><span class="rk">Means</span><span class="rv"><b>Recovery marker</b> — lower is more recovered</span></div>
+      <div class="r"><span class="rk">Today</span><span class="rv"><span class="g">2&nbsp;bpm below</span> baseline · in band</span></div>
+      <div class="r"><span class="rk">Verdict</span><span class="rv">Green input to today's <b style="color:var(--mint)">READY</b></span></div>
+      <div class="r"><span class="rk">Watch</span><span class="rv">A <b>+5&nbsp;bpm</b> spike = poor sleep or alcohol</span></div>
+      <div class="r"><span class="rk">Measure</span><span class="rv"><b>Right after waking</b></span></div>
+    </div>
+  </div>
+
   <button class="cta">View full history →</button>
 </div>
 
@@ -294,12 +338,12 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   function refreshRows(){document.querySelectorAll('.wkrow').forEach(function(r){r.classList.toggle('on',+r.dataset.i===cur);});}
   document.querySelectorAll('.wkrow').forEach(function(r){r.addEventListener('click',function(){cur=+r.dataset.i;render();calpop.classList.remove('open');});});
   document.addEventListener('click',function(e){if(!calpop.contains(e.target)&&!document.getElementById('wkLabel').contains(e.target))calpop.classList.remove('open');});
-  // stat-variant toggle
-  document.querySelectorAll('.svtoggle button').forEach(function(b){
+  // the-read variant toggle
+  document.querySelectorAll('.rdtoggle button').forEach(function(b){
     b.addEventListener('click',function(){
-      document.querySelectorAll('.svtoggle button').forEach(function(x){x.classList.remove('on');});
+      document.querySelectorAll('.rdtoggle button').forEach(function(x){x.classList.remove('on');});
       b.classList.add('on');
-      document.querySelectorAll('.statvar').forEach(function(s){s.classList.toggle('on',s.dataset.s===b.dataset.s);});
+      document.querySelectorAll('.readvar').forEach(function(s){s.classList.toggle('on',s.dataset.r===b.dataset.r);});
     });
   });
   render();

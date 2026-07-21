@@ -108,6 +108,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   animation:flo 4.6s ease-in-out infinite;}
 .sg:nth-child(2){animation-delay:-.9s}.sg:nth-child(3){animation-delay:-1.8s}.sg:nth-child(4){animation-delay:-2.7s}.sg:nth-child(5){animation-delay:-3.6s}
 @keyframes flo{0%,100%{transform:translateY(-3.5px)}50%{transform:translateY(3.5px)}}
+.tappable{cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.tappable:active{border-color:color-mix(in srgb,var(--sig,var(--lime)) 45%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--lime) 22%,transparent);}
 .sg .ring{position:relative;width:56px;height:56px;}
 .sg .ring svg{width:100%;height:100%;overflow:visible;transform:rotate(135deg);}
 .sg .ring .t{fill:none;stroke:rgba(255,255,255,.08);stroke-width:5;stroke-linecap:round;stroke-dasharray:106 200;}
@@ -451,6 +453,12 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     setTimeout(function(){ var t0=null; function step(ts){ if(!t0)t0=ts; var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3), v=e*to; el.childNodes[0].nodeValue=(dec?v.toFixed(1):Math.round(v)); if(p<1)requestAnimationFrame(step);} requestAnimationFrame(step); }, delay); }
   /* readiness number is static "84"; the scan-fill animation lives in CSS (.score) */
   document.querySelectorAll('.sg .v[data-to]').forEach(function(el,i){ var to=+el.getAttribute('data-to'); countUp(el,to,1100,1000+i*100, to%1!==0); });
+
+  // ---- every reading + vital opens its detail ----
+  document.querySelectorAll('.sg, .vital').forEach(function(c){
+    c.classList.add('tappable');
+    c.addEventListener('click', function(){ location.href = 'rhr-detail.html'; });
+  });
 
   // ---- calendar sheet ----
   var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim');
