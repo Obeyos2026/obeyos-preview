@@ -42,7 +42,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .screen.play .gauge .arc{stroke-dashoffset:var(--arc,150);}
 .gauge .glow{fill:none;stroke:var(--sig);stroke-width:9;stroke-linecap:round;stroke-dasharray:452;stroke-dashoffset:452;opacity:.35;filter:blur(6px);transition:stroke-dashoffset 1.5s var(--ease) .3s;}
 .screen.play .gauge .glow{stroke-dashoffset:var(--arc,150);}
-.gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-cv{position:absolute;top:0;left:0;z-index:0;pointer-events:none;}
+.gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;}
 .gauge .score{position:relative;z-index:2;font-family:var(--head);font-size:52px;line-height:1.06;letter-spacing:.04em;
   color:transparent;-webkit-text-fill-color:transparent;
   background-image:
@@ -132,7 +133,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="top">
     <canvas class="illo" id="illo"></canvas>
     <div class="gauge" id="gauge">
-      <svg viewBox="0 0 158 158"><circle class="trk" cx="79" cy="79" r="72"/><circle class="glow" cx="79" cy="79" r="72"/><circle class="arc" cx="79" cy="79" r="72"/></svg>
+      <canvas class="ring-cv" id="ringcv"></canvas>
       <div class="ctr"><div class="score" id="score"></div><div class="of" id="unit"></div></div>
     </div>
     <div class="glyph" id="glyph"></div>
@@ -245,6 +246,29 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   document.getElementById('glyph').innerHTML='<svg viewBox="0 0 24 24"><path d="'+G[d.g]+'"/></svg>';
   document.getElementById('statusText').textContent=d.st;
   document.getElementById('gauge').style.setProperty('--arc', d.arc);
+  // ---- dashed tick-ring (zone colour = the metric's accent) ----
+  (function(){
+    var cv=document.getElementById('ringcv'); if(!cv) return;
+    var probe=document.createElement('span'); probe.style.color=d.c; document.body.appendChild(probe);
+    var m=getComputedStyle(probe).color.match(/\d+/g); probe.remove();
+    var rgb=(m?m.slice(0,3).join(','):'34,197,94');
+    var frac=Math.max(.06,Math.min(1,(452-d.arc)/452));
+    var host=cv.parentElement, size=host.clientWidth||158, dpr=window.devicePixelRatio||1;
+    cv.width=Math.round(size*dpr); cv.height=Math.round(size*dpr); cv.style.width=size+'px'; cv.style.height=size+'px';
+    var ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+    var TICKS=Math.max(24,Math.min(60,Math.round(size*0.4))), len=0.11, w=Math.max(1.4,size*0.012);
+    var cx=size/2, cy=size/2, R=size/2-Math.max(3,size*0.03), tickLen=R*len, startA=150*Math.PI/180, sweep=240*Math.PI/180;
+    var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function frame(prog){ ctx.clearRect(0,0,size,size); var lit=frac*prog;
+      for(var i=0;i<TICKS;i++){ var t=i/(TICKS-1), a=startA+t*sweep;
+        var x1=cx+(R-tickLen)*Math.cos(a),y1=cy+(R-tickLen)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=w;ctx.lineCap='round';
+        if(t<=lit){ctx.strokeStyle='rgba('+rgb+',.72)';ctx.shadowColor='rgba('+rgb+',.45)';ctx.shadowBlur=3;}
+        else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;} ctx.stroke(); }
+      ctx.shadowBlur=0; }
+    if(rm){ frame(1); return; }
+    var s0=null; setTimeout(function(){ (function fr(ts){ if(!s0)s0=ts; var p=Math.min(1,(ts-s0)/1200),e=1-Math.pow(1-p,3); frame(e); if(p<1)requestAnimationFrame(fr); })(window.performance.now()); }, 450);
+  })();
   document.getElementById('rail').innerHTML=d.rail.map(function(s,i){
     return (i?'<div class="rsep"></div>':'')+'<div class="ri"><span class="si"><svg viewBox="0 0 24 24"><path d="'+G[s[0]]+'"/></svg></span><span class="rv'+(s[3]?' g':'')+'">'+s[1]+'</span><span class="rk">'+s[2]+'</span></div>';
   }).join('');
