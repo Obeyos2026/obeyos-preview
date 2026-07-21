@@ -152,8 +152,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
 /* A · STATEMENT — Bebas headline + tight support + tip chips */
 .rd-eye{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
-.rd-big{font-family:var(--head);font-size:42px;letter-spacing:.02em;color:var(--sig);line-height:.9;margin-top:8px;text-shadow:0 0 24px color-mix(in srgb,var(--sig) 30%,transparent);}
-.rd-sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--mid);text-transform:uppercase;margin:9px 0 16px;}
+.rd-big{font-family:var(--head);font-size:34px;letter-spacing:.02em;color:var(--sig);line-height:.9;margin-top:8px;text-shadow:0 0 20px color-mix(in srgb,var(--sig) 28%,transparent);}
+.rd-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--mid);text-transform:uppercase;margin:8px 0 14px;}
 .rd-line{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);margin-top:12px;}
 .rd-line b{color:var(--white);font-weight:600;}
 .chips{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
@@ -176,11 +176,11 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .rcard .arow .ar{color:var(--sig);font-family:var(--mono);flex-shrink:0;}
 
 /* C · SPEC — labelled rows, no paragraph */
-.spec{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.015);}
-.spec .r{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:baseline;padding:15px 16px;border-top:1px solid var(--hair);}
+.spec{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.015);}
+.spec .r{display:grid;grid-template-columns:78px 1fr;gap:12px;align-items:center;padding:11px 15px;border-top:1px solid var(--hair);}
 .spec .r:first-child{border-top:none;}
-.spec .r .rk{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
-.spec .r .rv{font-family:var(--body);font-weight:400;font-size:14px;line-height:1.4;color:var(--muted);}
+.spec .r .rk{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
+.spec .r .rv{font-family:var(--body);font-weight:400;font-size:12.5px;line-height:1.35;color:var(--muted);}
 .spec .r .rv b{color:var(--white);font-weight:600;}
 .spec .r .rv .g{color:var(--sig);font-weight:600;}
 
@@ -243,10 +243,10 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="rd-big">WELL RECOVERED</div>
   <div class="rd-sub">Resting HR · 2 bpm below baseline</div>
   <div class="spec">
-    <div class="r"><span class="rk">Means</span><span class="rv"><b>Recovery marker</b> — lower is more recovered</span></div>
-    <div class="r"><span class="rk">Today</span><span class="rv"><span class="g">2&nbsp;bpm below</span> baseline · in band</span></div>
-    <div class="r"><span class="rk">Verdict</span><span class="rv">Green input to today's <b style="color:var(--mint)">READY</b></span></div>
-    <div class="r"><span class="rk">Watch</span><span class="rv">A <b>+5&nbsp;bpm</b> spike = poor sleep or alcohol</span></div>
+    <div class="r"><span class="rk">Means</span><span class="rv"><b>Recovery marker</b> · lower = better</span></div>
+    <div class="r"><span class="rk">Today</span><span class="rv"><span class="g">2 bpm below</span> baseline · in band</span></div>
+    <div class="r"><span class="rk">Verdict</span><span class="rv">Feeds today's <b style="color:var(--mint)">READY</b></span></div>
+    <div class="r"><span class="rk">Watch</span><span class="rv"><b>+5 bpm</b> spike = poor sleep / alcohol</span></div>
     <div class="r"><span class="rk">Measure</span><span class="rv"><b>Right after waking</b></span></div>
   </div>
 
@@ -336,11 +336,10 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
       return 0;
     }
     function paint(phase){
-      ctx.clearRect(0,0,W,H); var mid=H*0.5, AMP=H*0.32;
+      ctx.clearRect(0,0,W,H); var mid=H*0.5, AMP=H*0.24;
       ctx.beginPath();
       for(var x=-BEAT;x<=W+BEAT;x++){ var f=((((x+phase)%BEAT)+BEAT)%BEAT)/BEAT; var y=mid+beatY(f)*AMP; if(x===-BEAT)ctx.moveTo(x,y);else ctx.lineTo(x,y); }
-      ctx.strokeStyle='rgba(34,197,94,.17)'; ctx.lineWidth=1.4; ctx.lineJoin='round';
-      ctx.shadowColor='rgba(34,197,94,.5)'; ctx.shadowBlur=6; ctx.stroke(); ctx.shadowBlur=0;
+      ctx.strokeStyle='rgba(255,255,255,.075)'; ctx.lineWidth=1; ctx.lineJoin='round'; ctx.stroke();
     }
     if(rm){ paint(0); return; }
     var start=null;
