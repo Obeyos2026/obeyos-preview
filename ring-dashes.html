@@ -76,8 +76,8 @@ h1{font-family:var(--head);font-size:30px;letter-spacing:.03em;margin-bottom:4px
       var lit=t<=litFrac;
       ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
       ctx.lineWidth=S.w; ctx.lineCap='round';
-      if(lit){ ctx.strokeStyle='rgb('+rgb+')'; ctx.shadowColor='rgb('+rgb+')'; ctx.shadowBlur=7; }
-      else { ctx.strokeStyle='rgba('+rgb+',.16)'; ctx.shadowBlur=0; }
+      if(lit){ ctx.strokeStyle='rgba('+rgb+',.7)'; ctx.shadowColor='rgba('+rgb+',.5)'; ctx.shadowBlur=3; }
+      else { ctx.strokeStyle='rgba('+rgb+',.12)'; ctx.shadowBlur=0; }
       ctx.stroke();
     }
     ctx.shadowBlur=0;
