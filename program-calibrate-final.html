@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Calibration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--sig:var(--lime);--head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#000;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{position:relative;width:100%;max-width:430px;height:100dvh;min-height:720px;overflow:hidden;
+  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.024) 1px,transparent 1px);background-size:28px 28px;}
+.screen::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;background:radial-gradient(120% 60% at 50% 8%,rgba(200,255,0,.05),transparent 55%),radial-gradient(100% 60% at 50% 46%,transparent,rgba(0,0,0,.55));}
+
+.chead{position:absolute;top:6.5%;left:0;right:0;text-align:center;z-index:8;}
+.chead .k{font-family:var(--mono);font-size:9px;letter-spacing:.32em;color:var(--sig);text-transform:uppercase;}
+.chead .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:10px;height:12px;}
+.pbar{width:128px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);margin:14px auto 0;overflow:hidden;}
+.pbar i{display:block;height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+
+/* body (hero) */
+model-viewer{position:absolute;top:12.5%;left:0;right:0;height:33%;background:transparent;--poster-color:transparent;outline:none;
+  filter:brightness(.46) contrast(1.12) saturate(.72);z-index:2;}
+.scanglow{position:absolute;left:0;right:0;height:74px;background:linear-gradient(180deg,rgba(200,255,0,.14),transparent);z-index:3;pointer-events:none;opacity:0;}
+.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sig) 20%,var(--sig) 80%,transparent);box-shadow:0 0 20px 3px rgba(200,255,0,.55);z-index:4;pointer-events:none;opacity:0;}
+/* V4 — raw signal lifted off the body at the scan band */
+.lift{position:absolute;left:8%;right:8%;height:22px;z-index:4;pointer-events:none;overflow:hidden;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:rgba(200,255,0,.55);text-align:center;white-space:nowrap;opacity:0;}
+
+/* readouts pinned to region as the scan crosses */
+.ro{position:absolute;z-index:6;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);opacity:0;white-space:nowrap;transition:opacity .45s var(--ease);}
+.ro.show{opacity:1;}
+.ro .rl{color:var(--dim);}.ro b{color:var(--sig);font-family:var(--head);font-size:15px;letter-spacing:.02em;margin-left:5px;}
+.ro::before{content:"";position:absolute;top:50%;width:22px;height:1px;background:var(--sig);opacity:.5;}
+.ro.l::before{right:100%;margin-right:7px;}.ro.r::before{left:100%;margin-left:7px;}
+
+/* V1 — the record building at the base */
+.log{position:absolute;left:26px;right:26px;top:49%;z-index:7;font-family:var(--mono);}
+.foot{position:absolute;left:0;right:0;bottom:5%;z-index:7;text-align:center;}
+.foot .b{width:16px;height:16px;margin:0 auto 8px;filter:drop-shadow(0 0 6px rgba(200,255,0,.6));}
+.foot .b svg{width:100%;height:100%;}
+.foot .t{font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase;}
+.log .hdln{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--hair);}
+.ln{display:flex;align-items:baseline;font-size:11.5px;line-height:2.05;opacity:0;transform:translateX(-5px);}
+.ln.in{opacity:1;transform:none;transition:opacity .3s var(--ease),transform .3s var(--ease);}
+.ln .k{color:var(--mid);white-space:nowrap;}
+.ln .lead{flex:1;overflow:hidden;color:var(--dim);letter-spacing:2px;margin:0 8px;height:1em;}
+.ln .v{color:var(--dim);white-space:nowrap;transition:color .2s;}
+.ln.done .k{color:var(--muted);}
+.ln.done .v{color:var(--white);}
+.ln .v b{color:var(--sig);font-weight:500;}
+@media(prefers-reduced-motion:reduce){model-viewer{filter:brightness(.5) contrast(1.1) saturate(.72);}}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
+
+  <div class="scanglow" id="glow"></div>
+  <div class="scanline" id="line"></div>
+  <div class="lift" id="lift"></div>
+
+  <div class="ro r" id="ro-muscle" data-y="23" style="left:63%;top:22%"><span class="rl">Muscle</span><b>42%</b></div>
+  <div class="ro l" id="ro-fat" data-y="31" style="right:63%;top:30%"><span class="rl">Body fat</span><b>22%</b></div>
+  <div class="ro r" id="ro-knee" data-y="39" style="left:61%;top:38%"><span class="rl">L-knee</span><b>Flagged</b></div>
+
+  <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st">Powering the engine</div><div class="pbar"><i id="pf"></i></div></div>
+
+  <div class="log" id="log">
+    <div class="hdln">Read · your signals</div>
+  </div>
+
+  <div class="foot">
+    <div class="b"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#C8FF00"/></svg></div>
+    <div class="t">ZEAL engine · do not close</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var screen=document.getElementById('screen'),line=document.getElementById('line'),glow=document.getElementById('glow'),lift=document.getElementById('lift'),st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
+  var GL='0123456789ABCDEF·%.HKRVSLPMGZ';
+  function noise(n){var s='';for(var i=0;i<n;i++)s+=GL[Math.floor(Math.random()*GL.length)];return s;}
+
+  // The record — each line locks in sequence, its value resolving from noise (V4)
+  var LOG=[['read body composition','22% <b>BF</b>','22% BF'],
+    ['estimate skeletal muscle','42% <b>SMM</b>','42% SMM'],
+    ['pull overnight recovery','68 · 8.1H','68 8.1H'],
+    ['map injury history','<b>L-KNEE</b>','L-KNEE'],
+    ['match program library','31 → <b>1</b>','31 1'],
+    ['lock training tier','TIER <b>2</b>','TIER 2']];
+  LOG.forEach(function(r,i){var d=document.createElement('div');d.className='ln';d.id='ln'+i;
+    d.innerHTML='<span class="k">'+r[0]+'</span><span class="lead"></span><span class="v" id="lv'+i+'"></span>';log.appendChild(d);});
+
+  var timers=[];
+  function T(f,m){var id=setTimeout(f,m);timers.push(id);return id;}
+  function raf(f){var id=requestAnimationFrame(f);timers.push(id);return id;}
+  function clr(){timers.forEach(function(t){clearTimeout(t);cancelAnimationFrame(t);});timers=[];}
+
+  function printLine(i){
+    var ln=document.getElementById('ln'+i),lead=ln.querySelector('.lead'),v=document.getElementById('lv'+i);
+    ln.classList.add('in');lead.textContent=new Array(26).join('.');
+    // value emerges from noise → locks
+    var clean=LOG[i][2],html=LOG[i][1],ticks=0;
+    var iv=setInterval(function(){v.textContent=noise(clean.replace(/\s/g,'').length+1);ticks++;if(ticks>7){clearInterval(iv);v.innerHTML=html;ln.classList.add('done');}},45);
+    timers.push(iv);
+  }
+
+  function play(){
+    clr();
+    LOG.forEach(function(r,i){var ln=document.getElementById('ln'+i);ln.className='ln';document.getElementById('lv'+i).textContent='';ln.querySelector('.lead').textContent='';});
+    ['ro-muscle','ro-fat','ro-knee'].forEach(function(id){document.getElementById(id).classList.remove('show');});
+    var mv=document.getElementById('mv');var box=mv.getBoundingClientRect(),sc=screen.getBoundingClientRect();
+    var top=box.top-sc.top, bot=box.bottom-sc.top, H=sc.height;
+    st.textContent='Powering the engine';pf.style.transition='none';pf.style.width='0';
+    line.style.opacity='0';glow.style.opacity='0';lift.style.opacity='0';
+
+    var SCAN=3600, LOGSTART=900, LOGGAP=780, TOTAL=LOGSTART+LOG.length*LOGGAP+500;
+    // scan the body once
+    T(function(){
+      line.style.opacity='1';glow.style.opacity='1';lift.style.opacity='1';
+      pf.style.transition='width '+(TOTAL/1000)+'s linear';pf.style.width='100%';
+      var start=null;
+      function step(ts){
+        if(!start)start=ts;var t=Math.min(1,(ts-start)/SCAN);
+        var y=top+(bot-top)*t;
+        line.style.top=y+'px';glow.style.top=(y-68)+'px';
+        lift.style.top=(y-11)+'px';lift.textContent=noise(18+((Math.floor(t*40))%6));
+        var pct=(y/H)*100;
+        if(pct>34)document.getElementById('ro-muscle').classList.add('show');
+        if(pct>46)document.getElementById('ro-fat').classList.add('show');
+        if(pct>55)document.getElementById('ro-knee').classList.add('show');
+        if(pct<box.top-sc.top+ (bot-top)*0.34) st.textContent='Reading upper body';
+        else if(t<0.7) st.textContent='Reading midsection';
+        else st.textContent='Reading lower body';
+        if(t<1)raf(step); else {line.style.transition='opacity .5s';line.style.opacity='0';lift.style.opacity='0';glow.style.opacity='0';}
+      }
+      raf(step);
+    },260);
+
+    // the record builds alongside/after the scan
+    LOG.forEach(function(r,i){T(function(){printLine(i);},LOGSTART+i*LOGGAP);});
+    T(function(){st.textContent='Calibration locked';},LOGSTART+LOG.length*LOGGAP);
+    T(function(){line.style.transition='';play();},TOTAL+1500);
+  }
+
+  var mv=document.getElementById('mv');
+  if(mv.updateComplete){mv.updateComplete.then(function(){setTimeout(play,200);});} else {setTimeout(play,700);}
+})();
+</script>
+</body>
+</html>
