@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Strain 7-day · design variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--sig:var(--lime);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;max-width:430px;margin:0 auto;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;padding:18px 20px 70px;}
+h1{font-family:var(--head);font-size:24px;letter-spacing:.03em;}
+.top{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:4px 0 6px;}
+.note{font-family:var(--body);font-weight:300;font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+.note b{color:var(--sig);font-weight:500;}
+.card{margin-top:16px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.ch .vn{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.ch .vn b{color:var(--sig);font-weight:500;}
+.ch .lg{font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:5px;}
+.ch .lg i{width:16px;height:8px;border-radius:2px;background:rgba(200,255,0,.12);border-top:1px dashed rgba(200,255,0,.5);border-bottom:1px dashed rgba(200,255,0,.5);}
+svg{display:block;width:100%;overflow:visible;margin-top:6px;}
+</style>
+</head>
+<body>
+<h1>STRAIN · 7 DAYS</h1>
+<div class="top">same chart · same values · design only</div>
+<div class="note">Not bars, not traffic-light. One accent — <b>inside the corridor = lime</b>, a miss sits above (over) or below (under), dim. Every day keeps its real number.</div>
+
+<div class="card"><div class="ch"><span class="vn"><b>V1</b> · DOT PLOT</span><span class="lg"><i></i>target</span></div><svg id="v1" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V2</b> · LOLLIPOP</span><span class="lg"><i></i>target</span></div><svg id="v2" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V3</b> · LINE</span><span class="lg"><i></i>target</span></div><svg id="v3" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V4</b> · STEP TRACE</span><span class="lg"><i></i>target</span></div><svg id="v4" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V5</b> · FLOATING NUMBERS</span><span class="lg"><i></i>target</span></div><svg id="v5" viewBox="0 0 380 150"></svg></div>
+
+<script>
+(function(){
+  var D=[['TUE',11],['WED',16],['THU',9],['FRI',14],['SAT',18],['SUN',12],['TODAY',14.2]];
+  var LO=13,HI=16,mn=6,mx=21,N=7,W=380,H=150,PL=14,PR=14,PT=26,PB=24;
+  function inb(v){return v>=LO&&v<=HI;}
+  function X(i){return PL+(W-PL-PR)*(i/(N-1));}
+  function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
+  var LIME='#C8FF00', DIM='rgba(249,250,251,.34)', yHI=Y(HI), yLO=Y(LO);
+  function band(){return '<rect x="0" y="'+yHI+'" width="'+W+'" height="'+(yLO-yHI)+'" fill="rgba(200,255,0,.09)"/>'+
+    '<line x1="0" y1="'+yHI+'" x2="'+W+'" y2="'+yHI+'" stroke="rgba(200,255,0,.32)" stroke-width="1" stroke-dasharray="3 4"/>'+
+    '<line x1="0" y1="'+yLO+'" x2="'+W+'" y2="'+yLO+'" stroke="rgba(200,255,0,.32)" stroke-width="1" stroke-dasharray="3 4"/>';}
+  function days(){return D.map(function(d,i){var now=d[0]==='TODAY';return '<text x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'#5C6679')+'">'+d[0]+'</text>';}).join('');}
+  function vlabel(i,v,on,dy){return '<text x="'+X(i)+'" y="'+(Y(v)+(dy||-9))+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="'+(on?LIME:'rgba(249,250,251,.6)')+'">'+v.toFixed(1)+'</text>';}
+  var glow='<defs><filter id="gl" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#C8FF00" flood-opacity="0.8"/></filter></defs>';
+
+  // V1 dot plot
+  (function(){var h=band();D.forEach(function(d,i){var v=d[1],on=inb(v),now=d[0]==='TODAY';
+    h+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="'+(now?5.5:4.5)+'" fill="'+(on?LIME:'#0A0D12')+'" stroke="'+(on?'none':DIM)+'" stroke-width="1.5"'+(on?' filter="url(#gl)"':'')+'/>';
+    h+=vlabel(i,v,on);});
+    document.getElementById('v1').innerHTML=glow+h+days();})();
+
+  // V2 lollipop
+  (function(){var h=band();D.forEach(function(d,i){var v=d[1],on=inb(v),now=d[0]==='TODAY',x=X(i),y=Y(v);
+    h+='<line x1="'+x+'" y1="'+(H-PB)+'" x2="'+x+'" y2="'+y+'" stroke="'+(on?'rgba(200,255,0,.5)':'rgba(255,255,255,.16)')+'" stroke-width="1.5"/>';
+    h+='<circle cx="'+x+'" cy="'+y+'" r="'+(now?5:4)+'" fill="'+(on?LIME:'#0A0D12')+'" stroke="'+(on?'none':DIM)+'" stroke-width="1.5"'+(on?' filter="url(#gl)"':'')+'/>';
+    h+=vlabel(i,v,on);});
+    document.getElementById('v2').innerHTML=glow+h+days();})();
+
+  // V3 line (single accent, dots)
+  (function(){var pts=D.map(function(d,i){return [X(i),Y(d[1])];});
+    function sm(p){var d='M'+p[0][0]+','+p[0][1];for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;d+='C'+(p1[0]+(p2[0]-p0[0])/6)+','+(p1[1]+(p2[1]-p0[1])/6)+' '+(p2[0]-(p3[0]-p1[0])/6)+','+(p2[1]-(p3[1]-p1[1])/6)+' '+p2[0]+','+p2[1];}return d;}
+    var h=band();
+    h+='<path d="'+sm(pts)+'" fill="none" stroke="var(--lime)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#gl)"/>';
+    D.forEach(function(d,i){var v=d[1],on=inb(v),now=d[0]==='TODAY';
+      h+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="'+(now?4.5:3.4)+'" fill="'+(on?LIME:'#0A0D12')+'" stroke="'+(on?'#0A0D12':DIM)+'" stroke-width="1.5"/>';
+      h+=vlabel(i,v,on);});
+    document.getElementById('v3').innerHTML=glow+h+days();})();
+
+  // V4 step trace (sample & hold)
+  (function(){var h=band(),seg=(W-PL-PR)/(N-1),d='';
+    D.forEach(function(dd,i){var x=X(i),y=Y(dd[1]),xl=x-seg*0.42,xr=x+seg*0.42;
+      d+=(i===0?'M':'L')+Math.max(PL,xl)+','+y+' L'+Math.min(W-PR,xr)+','+y+' ';});
+    // connect steps with faint risers
+    var risers='';for(var i=0;i<N-1;i++){risers+='<line x1="'+(X(i)+seg*0.42)+'" y1="'+Y(D[i][1])+'" x2="'+(X(i+1)-seg*0.42)+'" y2="'+Y(D[i+1][1])+'" stroke="rgba(200,255,0,.28)" stroke-width="1.4"/>';}
+    h+=risers+'<path d="'+d+'" fill="none" stroke="var(--lime)" stroke-width="2.6" stroke-linecap="round" filter="url(#gl)"/>';
+    D.forEach(function(dd,i){var v=dd[1],on=inb(v);h+=vlabel(i,v,on);});
+    document.getElementById('v4').innerHTML=glow+h+days();})();
+
+  // V5 floating numbers (the value IS the mark)
+  (function(){var h=band();D.forEach(function(d,i){var v=d[1],on=inb(v),now=d[0]==='TODAY',x=X(i),y=Y(v);
+    h+='<line x1="'+(x-10)+'" y1="'+y+'" x2="'+(x+10)+'" y2="'+y+'" stroke="'+(on?'rgba(200,255,0,.55)':DIM)+'" stroke-width="1.4"/>';
+    h+='<text x="'+x+'" y="'+(y-7)+'" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="'+(now?20:17)+'" fill="'+(on?LIME:'#F9FAFB')+'">'+v.toFixed(1)+'</text>';});
+    document.getElementById('v5').innerHTML=h+days();})();
+})();
+</script>
+</body>
+</html>
