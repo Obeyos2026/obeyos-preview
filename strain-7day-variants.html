@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Strain 7-day · 5 variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--sig:var(--lime);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;max-width:430px;margin:0 auto;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;padding:18px 20px 70px;}
+h1{font-family:var(--head);font-size:24px;letter-spacing:.03em;}
+.top{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:4px 0 6px;}
+.note{font-family:var(--body);font-weight:300;font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:18px;}
+.note b{color:var(--sig);font-weight:500;}
+.card{margin-top:16px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.vh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;}
+.vh .vn{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.vh .vn b{color:var(--sig);font-weight:500;}
+.vd{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);line-height:1.45;margin-bottom:14px;}
+.leg{display:flex;gap:14px;margin-top:12px;font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;}
+.leg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+.leg .a i{background:var(--lime);box-shadow:0 0 6px var(--lime);}
+.leg .b i{background:transparent;border:1px solid rgba(255,255,255,.4);}
+svg{display:block;width:100%;overflow:visible;}
+canvas{display:block;}
+.dials{display:flex;justify-content:space-between;align-items:flex-end;}
+.dial{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.dial .dl{font-family:var(--mono);font-size:8px;letter-spacing:.04em;color:var(--dim);text-transform:uppercase;}
+.dial .dl.now{color:var(--sig);}
+</style>
+</head>
+<body>
+<h1>STRAIN · 7 DAYS</h1>
+<div class="top">5 variants · hero untouched · one accent</div>
+<div class="note">No traffic-light, no WHOOP bars. <b>Position</b> carries the read: inside the corridor = matched (lime), <b>below</b> = under-reached, <b>above</b> = over-reached. Colour stays one accent.</div>
+
+<div class="card">
+  <div class="vh"><span class="vn"><b>V1</b> · INSTRUMENT LOG</span></div>
+  <div class="vd">Seven rows, one per day — each a mini scale with the target band and your marker. Reads like a control-room log.</div>
+  <svg id="v1" viewBox="0 0 380 214"></svg>
+  <div class="leg"><span class="a"><i></i>matched</span><span class="b"><i></i>missed (position = under / over)</span></div>
+</div>
+
+<div class="card">
+  <div class="vh"><span class="vn"><b>V2</b> · DOT PLOT</span></div>
+  <div class="vd">The corridor as a band; each day a single dot at its load. In-band lights lime, misses sit above or below, dim.</div>
+  <svg id="v2" viewBox="0 0 380 160"></svg>
+</div>
+
+<div class="card">
+  <div class="vh"><span class="vn"><b>V3</b> · MINI DIALS</span></div>
+  <div class="vd">Seven small dashed rings — the hero dial, repeated. Each fills to its load with the band marked. Most cohesive with the top.</div>
+  <div class="dials" id="v3"></div>
+</div>
+
+<div class="card">
+  <div class="vh"><span class="vn"><b>V4</b> · TICK COLUMNS</span></div>
+  <div class="vd">The ring unrolled vertically — stacked dashes lit to the load, two bright ticks mark the band. Instrument, not a bar.</div>
+  <svg id="v4" viewBox="0 0 380 150"></svg>
+</div>
+
+<div class="card">
+  <div class="vh"><span class="vn"><b>V5</b> · DEVIATION</span></div>
+  <div class="vd">The band is the centreline. A tick rises when you over-reached, drops when you under-reached; matched days rest as a flat lime node.</div>
+  <svg id="v5" viewBox="0 0 380 150"></svg>
+</div>
+
+<script>
+(function(){
+  var D=[['TUE',11],['WED',16],['THU',9],['FRI',14],['SAT',18],['SUN',12],['TODAY',14.2]];
+  var LO=13,HI=16,SC=21, N=7;
+  var LIME='#C8FF00', DIM='rgba(249,250,251,.32)', HAIR='rgba(255,255,255,.12)', BANDF='rgba(200,255,0,.10)', BANDE='rgba(200,255,0,.34)';
+  function inb(v){return v>=LO&&v<=HI;}
+  function esc(s){return s;}
+
+  // V1 — instrument log (rows)
+  (function(){var W=380,rH=30,PT=6,tx0=54,tx1=W-54,H=PT*2+rH*N;
+    function X(v){return tx0+(tx1-tx0)*(v/SC);}
+    var h='';
+    D.forEach(function(d,i){var v=d[1],ry=PT+rH*i+rH/2,on=inb(v),now=d[0]==='TODAY';
+      h+='<text x="4" y="'+(ry+3)+'" font-family="DM Mono,monospace" font-size="9" letter-spacing="1" fill="'+(now?LIME:'#8A93A6')+'">'+d[0]+'</text>';
+      h+='<line x1="'+tx0+'" y1="'+ry+'" x2="'+tx1+'" y2="'+ry+'" stroke="'+HAIR+'" stroke-width="1.5" stroke-linecap="round"/>';
+      h+='<line x1="'+X(LO)+'" y1="'+ry+'" x2="'+X(HI)+'" y2="'+ry+'" stroke="'+BANDE+'" stroke-width="4" stroke-linecap="round"/>';
+      h+='<circle cx="'+X(v)+'" cy="'+ry+'" r="4" fill="'+(on?LIME:'#0A0D12')+'" stroke="'+(on?'none':DIM)+'" stroke-width="1.4"'+(on?' filter="url(#g1)"':'')+'/>';
+      h+='<text x="'+(W-4)+'" y="'+(ry+3)+'" text-anchor="end" font-family="Bebas Neue,sans-serif" font-size="15" fill="'+(on?LIME:'#F9FAFB')+'">'+v.toFixed(1)+'</text>';
+    });
+    document.getElementById('v1').setAttribute('viewBox','0 0 '+W+' '+H);
+    document.getElementById('v1').innerHTML='<defs><filter id="g1" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#C8FF00" flood-opacity="0.7"/></filter></defs>'+h;
+  })();
+
+  // V2 — dot plot
+  (function(){var W=380,H=160,PL=10,PR=10,PT=16,PB=26;
+    function X(i){return PL+(W-PL-PR)*(i/(N-1));}
+    function Y(v){return (H-PB)-(H-PT-PB)*(v/SC);}
+    var yHI=Y(HI),yLO=Y(LO),h='';
+    h+='<rect x="0" y="'+yHI+'" width="'+W+'" height="'+(yLO-yHI)+'" fill="'+BANDF+'"/>';
+    h+='<line x1="0" y1="'+yHI+'" x2="'+W+'" y2="'+yHI+'" stroke="'+BANDE+'" stroke-width="1" stroke-dasharray="3 4"/>';
+    h+='<line x1="0" y1="'+yLO+'" x2="'+W+'" y2="'+yLO+'" stroke="'+BANDE+'" stroke-width="1" stroke-dasharray="3 4"/>';
+    D.forEach(function(d,i){var v=d[1],x=X(i),y=Y(v),on=inb(v),now=d[0]==='TODAY';
+      h+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,.07)" stroke-width="1"/>';
+      h+='<circle cx="'+x+'" cy="'+y+'" r="'+(now?6:4.5)+'" fill="'+(on?LIME:'#0A0D12')+'" stroke="'+(on?'none':DIM)+'" stroke-width="1.5"'+(on?' filter="url(#g2)"':'')+'/>';
+      h+='<text x="'+x+'" y="'+(H-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'#5C6679')+'">'+d[0]+'</text>';
+    });
+    document.getElementById('v2').innerHTML='<defs><filter id="g2" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="0" stdDeviation="2.6" flood-color="#C8FF00" flood-opacity="0.8"/></filter></defs>'+h;
+  })();
+
+  // V3 — mini dials (canvas each)
+  (function(){var host=document.getElementById('v3'),dpr=devicePixelRatio||1;
+    D.forEach(function(d){var v=d[1],on=inb(v),now=d[0]==='TODAY';
+      var wrap=document.createElement('div');wrap.className='dial';
+      var cv=document.createElement('canvas');var size=44;
+      cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';
+      var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+      var T=18,cx=size/2,cy=size/2,R=size/2-2,tl=R*0.34,sa=150*Math.PI/180,sw=240*Math.PI/180;
+      var fill=v/SC,lo=LO/SC,hi=HI/SC;
+      for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.6;ctx.lineCap='round';
+        if(t<=fill){ctx.strokeStyle=on?'rgba(200,255,0,.85)':'rgba(249,250,251,.4)';ctx.shadowColor=on?'rgba(200,255,0,.5)':'transparent';ctx.shadowBlur=on?3:0;}
+        else if(t>=lo&&t<=hi){ctx.strokeStyle='rgba(200,255,0,.24)';ctx.shadowBlur=0;}
+        else{ctx.strokeStyle='rgba(255,255,255,.1)';ctx.shadowBlur=0;}
+        ctx.stroke();}
+      ctx.shadowBlur=0;
+      // band edge ticks
+      [lo,hi].forEach(function(t){var a=sa+t*sw,x1=cx+(R-tl*1.6)*Math.cos(a),y1=cy+(R-tl*1.6)*Math.sin(a),x2=cx+(R+1.5)*Math.cos(a),y2=cy+(R+1.5)*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.4;ctx.strokeStyle='rgba(249,250,251,.7)';ctx.stroke();});
+      // center value
+      ctx.fillStyle=on?LIME:'#F9FAFB';ctx.font='400 13px "Bebas Neue",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(v.toFixed(1),cx,cy+1);
+      wrap.appendChild(cv);
+      var lab=document.createElement('div');lab.className='dl'+(now?' now':'');lab.textContent=d[0];wrap.appendChild(lab);
+      host.appendChild(wrap);
+    });
+  })();
+
+  // V4 — tick columns
+  (function(){var W=380,H=150,PL=10,PR=10,PT=22,PB=24,nD=13,dw=17;
+    function X(i){return PL+(W-PL-PR)*(i/(N-1));}
+    function Y(f){return (H-PB)-(H-PT-PB)*f;} // f: 0..1 fraction of SC
+    var h='';
+    D.forEach(function(d,i){var v=d[1],x=X(i),on=inb(v),now=d[0]==='TODAY',frac=v/SC;
+      for(var k=0;k<nD;k++){var f=(k+0.5)/nD,y=Y(f),litOn=f<=frac;
+        h+='<line x1="'+(x-dw/2)+'" y1="'+y+'" x2="'+(x+dw/2)+'" y2="'+y+'" stroke="'+(litOn?(on?'rgba(200,255,0,.82)':'rgba(249,250,251,.42)'):'rgba(255,255,255,.1)')+'" stroke-width="2.4" stroke-linecap="round"'+(litOn&&on?' filter="url(#g4)"':'')+'/>';
+      }
+      // band edges (bright ticks)
+      [LO/SC,HI/SC].forEach(function(f){var y=Y(f);h+='<line x1="'+(x-dw/2-2)+'" y1="'+y+'" x2="'+(x+dw/2+2)+'" y2="'+y+'" stroke="rgba(249,250,251,.68)" stroke-width="1"/>';});
+      h+='<text x="'+x+'" y="'+(Y(frac)-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'rgba(249,250,251,.55)')+'">'+v.toFixed(1)+'</text>';
+      h+='<text x="'+x+'" y="'+(H-7)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'#5C6679')+'">'+d[0]+'</text>';
+    });
+    document.getElementById('v4').innerHTML='<defs><filter id="g4" x="-40%" y="-120%" width="180%" height="340%"><feDropShadow dx="0" dy="0" stdDeviation="1.6" flood-color="#C8FF00" flood-opacity="0.6"/></filter></defs>'+h;
+  })();
+
+  // V5 — deviation from centreline
+  (function(){var W=380,H=150,PL=10,PR=10,PB=24,mid=(LO+HI)/2,k=6.4,Yc=(H-PB+22)/2;
+    function X(i){return PL+(W-PL-PR)*(i/(N-1));}
+    function Yv(v){return Yc-(v-mid)*k;}
+    var h='';
+    // band zone around centreline
+    h+='<rect x="0" y="'+Yv(HI)+'" width="'+W+'" height="'+(Yv(LO)-Yv(HI))+'" fill="'+BANDF+'"/>';
+    h+='<line x1="0" y1="'+Yc+'" x2="'+W+'" y2="'+Yc+'" stroke="'+BANDE+'" stroke-width="1" stroke-dasharray="2 4"/>';
+    D.forEach(function(d,i){var v=d[1],x=X(i),on=inb(v),now=d[0]==='TODAY',y=Yv(v);
+      if(!on){h+='<line x1="'+x+'" y1="'+Yc+'" x2="'+x+'" y2="'+y+'" stroke="'+DIM+'" stroke-width="1.6" stroke-linecap="round"/>';
+        h+='<circle cx="'+x+'" cy="'+y+'" r="3.2" fill="#0A0D12" stroke="'+DIM+'" stroke-width="1.4"/>';}
+      else{h+='<circle cx="'+x+'" cy="'+Yc+'" r="'+(now?5:4)+'" fill="'+LIME+'" filter="url(#g5)"/>';}
+      h+='<text x="'+x+'" y="'+(H-7)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'#5C6679')+'">'+d[0]+'</text>';
+    });
+    // tiny over/under hints
+    h+='<text x="'+(W-4)+'" y="14" text-anchor="end" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#5C6679">OVER</text>';
+    h+='<text x="'+(W-4)+'" y="'+(H-30)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#5C6679">UNDER</text>';
+    document.getElementById('v5').innerHTML='<defs><filter id="g5" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="0" stdDeviation="2.6" flood-color="#C8FF00" flood-opacity="0.8"/></filter></defs>'+h;
+  })();
+})();
+</script>
+</body>
+</html>
