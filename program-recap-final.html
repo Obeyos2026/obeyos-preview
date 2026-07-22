@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Recap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--sig:var(--lime);--panel:rgba(255,255,255,.022);
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 40% at 50% -4%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:22px 20px 40px;overflow-x:hidden;}
+.eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;display:flex;align-items:center;gap:7px;}
+.eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
+.h{font-family:var(--head);font-size:36px;line-height:.9;letter-spacing:.01em;margin-top:8px;}
+
+/* ── hero: two floating bodies · arch · 12-week ring ── */
+.hero{position:relative;margin-top:14px;padding-top:78px;}
+.arch{position:absolute;top:0;left:-4px;width:calc(100% + 8px);height:104px;overflow:visible;pointer-events:none;}
+.arch .ap{fill:none;stroke:var(--sig);stroke-width:1.4;stroke-dasharray:420;stroke-dashoffset:420;opacity:.55;}
+.play .arch .ap{animation:draw 1.6s var(--ease) .3s forwards;}
+@keyframes draw{to{stroke-dashoffset:0}}
+.ring12{position:absolute;top:4px;left:50%;transform:translateX(-50%);width:72px;height:72px;}
+.ring12 .tk{stroke:rgba(200,255,0,.28);stroke-width:1.6;stroke-linecap:round;}
+.ring12 .tk.on{stroke:var(--sig);}
+.ring12 .n{font-family:var(--head);font-size:22px;fill:var(--white);}
+.ring12 .wl{font-family:var(--mono);font-size:5.5px;letter-spacing:.14em;fill:var(--dim);}
+.cards{display:flex;gap:10px;align-items:stretch;}
+.bc{flex:1;border-radius:15px;padding:12px 6px 12px;text-align:center;position:relative;}
+.bc.now{border:1px solid var(--hair);background:var(--panel);}
+.bc.tgt{border:1px solid color-mix(in srgb,var(--sig) 32%,transparent);background:color-mix(in srgb,var(--sig) 6%,transparent);}
+.bc .bl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.bc.tgt .bl{color:var(--sig);}
+.bfloat{height:158px;display:flex;align-items:flex-end;justify-content:center;margin:8px 0;}
+.bc img{height:150px;width:auto;object-fit:contain;animation:floatB 4.6s var(--ease) infinite;}
+.bc.now img{opacity:.8;filter:grayscale(.28);}
+.bc.tgt img{filter:drop-shadow(0 0 16px rgba(200,255,0,.4));animation-delay:-2.3s;}
+@keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.bc .bv{font-family:var(--head);font-size:26px;line-height:.85;}
+.bc.now .bv{color:var(--white);}.bc.tgt .bv{color:var(--sig);}
+.bc .bk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:26px 0 14px;}
+
+/* ── the path (animated) ── */
+.path{position:relative;padding-left:26px;}
+.path .rail{position:absolute;left:7px;top:6px;bottom:12px;width:1px;background:linear-gradient(var(--sig),var(--hair));transform:scaleY(0);transform-origin:top;}
+.play .path .rail{transition:transform 1.5s var(--ease) .3s;transform:scaleY(1);}
+.step{position:relative;padding:11px 0;opacity:0;transform:translateX(-10px);}
+.play .step{animation:stepIn .5s var(--ease) var(--d,0s) forwards;}
+@keyframes stepIn{to{opacity:1;transform:none}}
+.step .dot{position:absolute;left:-23px;top:15px;width:9px;height:9px;border-radius:50%;background:#0C0F15;border:1.5px solid var(--dim);}
+.step.on .dot{background:var(--sig);border-color:var(--sig);box-shadow:0 0 8px var(--sig);}
+.step .sw{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;}
+.step .st{font-family:var(--head);font-size:18px;letter-spacing:.02em;margin-top:1px;}
+.step .sd{font-family:var(--body);font-weight:300;font-size:11.5px;color:var(--mid);margin-top:2px;line-height:1.4;}
+.step .sdelta{display:inline-block;font-family:var(--mono);font-size:8.5px;color:var(--sig);margin-top:5px;letter-spacing:.04em;border:1px solid color-mix(in srgb,var(--sig) 26%,transparent);border-radius:6px;padding:2px 7px;}
+
+/* ── what to expect (redesigned — outcome tiles) ── */
+.exp{display:flex;gap:8px;}
+.et{flex:1;border-radius:13px;border:1px solid var(--hair);background:var(--panel);padding:14px 8px;text-align:center;opacity:0;transform:translateY(10px);}
+.play .et{animation:stepIn .5s var(--ease) var(--d,0s) forwards;}
+.et svg{width:20px;height:20px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.et .ev{font-family:var(--head);font-size:24px;color:var(--sig);line-height:.85;margin-top:9px;}
+.et .ek{font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+.expnote{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:12px;}
+
+.cta{display:block;width:100%;margin-top:26px;height:50px;border:none;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="eb">Before we build</div>
+  <div class="h">YOUR NEXT<br>12 WEEKS</div>
+
+  <div class="hero">
+    <svg class="arch" viewBox="0 0 360 104" preserveAspectRatio="none"><path class="ap" d="M64 96 C64 24, 296 24, 296 96"/><circle r="3.5" fill="#C8FF00" style="filter:drop-shadow(0 0 5px #C8FF00)"><animateMotion dur="3.4s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.4 0 0.2 1" path="M64 96 C64 24, 296 24, 296 96"/></circle></svg>
+    <svg class="ring12" id="ring12" viewBox="0 0 72 72"></svg>
+    <div class="cards">
+      <div class="bc now"><span class="bl">Start · today</span><div class="bfloat"><img src="brand-assets/body-model/grid-clean/obeyos-model-male-f2m1.webp" alt=""></div><div class="bv">22%</div><div class="bk">body fat</div></div>
+      <div class="bc tgt"><span class="bl">Finish · wk 12</span><div class="bfloat"><img src="brand-assets/body-model/grid-clean/obeyos-model-male-f1m2.webp" alt=""></div><div class="bv">18%</div><div class="bk">body fat</div></div>
+    </div>
+  </div>
+
+  <div class="sl">The path</div>
+  <div class="path" id="path"><div class="rail"></div></div>
+
+  <div class="sl">What to expect · by week 12</div>
+  <div class="exp" id="exp"></div>
+  <div class="expnote">Projected on your tier + adherence · re-checked each phase</div>
+
+  <button class="cta" onclick="location.href='program.html'">Build my program →</button>
+</div>
+
+<script>
+(function(){
+  var scr=document.getElementById('screen');
+  // 12-week ring — 12 ticks + center
+  (function(){var cx=36,cy=36,R=30,h='';
+    for(var i=0;i<12;i++){var a=(-90+i*30)*Math.PI/180;var x1=cx+(R-4)*Math.cos(a),y1=cy+(R-4)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
+      h+='<line class="tk on" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"/>';}
+    h+='<text class="n" x="36" y="37" text-anchor="middle">12</text><text class="wl" x="36" y="46" text-anchor="middle">WEEKS</text>';
+    document.getElementById('ring12').innerHTML=h;})();
+
+  // the path
+  var STEPS=[
+    ['WK 0','Where you are','22% body fat · Tier 2 · left knee flagged','','on'],
+    ['WK 1–4','Foundation','Groove the patterns, build work capacity.','−1.5% fat','on'],
+    ['WK 5–8','Build','Add load and volume — drive the muscle.','−1.5% · +1kg lean',''],
+    ['WK 9–12','Peak','Intensify, express strength, then deload.','−1% · +1kg lean',''],
+    ['WK 12','Where it takes you','18% body fat · +2kg lean · stronger.','','']
+  ];
+  document.getElementById('path').innerHTML='<div class="rail"></div>'+STEPS.map(function(s,i){
+    return '<div class="step'+(s[4]?' on':'')+'" style="--d:'+(0.4+i*0.16)+'s"><span class="dot"></span><div class="sw">'+s[0]+'</div><div class="st">'+s[1]+'</div><div class="sd">'+s[2]+'</div>'+(s[3]?'<span class="sdelta">'+s[3]+'</span>':'')+'</div>';
+  }).join('');
+
+  // what to expect tiles
+  var IC={fat:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/><path d="M9 15l6-4"/>',lean:'<path d="M4 16h16M7 11h10M10 6h4"/>',str:'<path d="M4 18l6-9 4 5 6-9"/>'};
+  var EXP=[['fat','−4%','Body fat'],['lean','+2kg','Lean mass'],['str','+12%','Est. strength']];
+  document.getElementById('exp').innerHTML=EXP.map(function(e,i){
+    return '<div class="et" style="--d:'+(0.5+i*0.14)+'s"><svg viewBox="0 0 24 24">'+IC[e[0]]+'</svg><div class="ev">'+e[1]+'</div><div class="ek">'+e[2]+'</div></div>';
+  }).join('');
+
+  requestAnimationFrame(function(){requestAnimationFrame(function(){scr.classList.add('play');});});
+})();
+</script>
+</body>
+</html>
