@@ -26,15 +26,24 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
 .hd .win{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);margin-left:auto;}
 
+/* DATE BAR */
+.datebar{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.datebar .dnav{width:34px;height:34px;border:1px solid var(--hair);background:var(--panel);border-radius:10px;color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.datebar .dnav:disabled{opacity:.28;cursor:default;}
+.datebar .dlabel{flex:1;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;background:none;border:none;cursor:pointer;padding:8px 0;}
+.datebar .dlabel b{color:var(--white);font-weight:500;}
+.datebar .dcal{width:34px;height:34px;border:1px solid var(--hair);background:var(--panel);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.datebar .dcal svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;}
+
 /* VERDICT hero — editorial (word left, dial right) */
-.hero{display:grid;grid-template-columns:1fr auto;grid-template-areas:"eb ga" "vw ga" "fu fu";align-items:center;column-gap:14px;margin-top:18px;}
+.hero{display:grid;grid-template-columns:1fr auto;grid-template-areas:"eb ga" "vw ga" "fu fu";align-items:center;column-gap:14px;margin-top:14px;}
 .hero .eyebrow{grid-area:eb;align-self:end;font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
 .word-wrap{grid-area:vw;align-self:start;position:relative;display:inline-block;line-height:.8;margin-top:6px;}
 .vscan{position:absolute;inset:-18px -18px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);}
 .vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%, var(--sig) 0%, transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);}
 .screen.play .vscan::after{animation:sweep 5.5s linear .6s infinite;}
 @keyframes sweep{0%{opacity:0;transform:translateX(-58%);}6%{opacity:.85;}30%{opacity:.5;}44%{opacity:0;transform:translateX(58%);}100%{opacity:0;transform:translateX(58%);}}
-.word{position:relative;z-index:2;font-family:var(--head);font-size:52px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.word{position:relative;z-index:2;font-family:var(--head);font-size:50px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
 .hero .gauge{grid-area:ga;position:relative;width:120px;height:120px;}
 .hero .gauge .ring-cv{position:absolute;top:0;left:0;pointer-events:none;}
 .hero .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
@@ -45,7 +54,6 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .fc:first-child{border-left:none;}
 .fv{font-family:var(--head);font-size:23px;color:var(--white);}
 .fv small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:2px;}
-.fv.g{color:var(--sig);}
 .fk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
 
 .card{margin-top:14px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
@@ -57,8 +65,6 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .def{font-family:var(--body);font-weight:300;font-size:12px;line-height:1.55;color:var(--muted);margin-top:14px;}
 .def b{color:var(--white);font-weight:500;}
 .trend{width:100%;height:150px;display:block;overflow:visible;}
-.taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
-.taxis .now{color:var(--sig);}
 
 /* drivers spec */
 .drv-sp .r{display:grid;grid-template-columns:14px 74px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--hair);}
@@ -70,7 +76,6 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .drv-sp .val small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:1px;}
 .drv-sp .base{font-family:var(--mono);font-size:8.5px;color:var(--dim);letter-spacing:.02em;}
 .drv-sp .st{font-family:var(--head);font-size:17px;text-align:right;color:var(--muted);}
-/* total row */
 .tot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid var(--sig);}
 .tot .l{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
 .tot .l b{color:var(--white);font-weight:500;}
@@ -81,6 +86,32 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .drv{margin-top:8px;padding:2px 0 2px 14px;border-left:2px solid var(--sig);}
 .drv .t{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);}
 .drv .t b{color:var(--white);font-weight:600;}
+
+/* CALENDAR SHEET */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .4s;z-index:15;}
+.scrim.open{opacity:1;pointer-events:auto;}
+.sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;height:80dvh;background:#0C0F15;border-top:1px solid var(--hair);border-radius:22px 22px 0 0;z-index:20;transition:transform .5s var(--ease);padding:16px 20px 30px;overflow-y:auto;box-shadow:0 -20px 60px -20px rgba(0,0,0,.8);}
+.sheet.open{transform:translateX(-50%) translateY(0);}
+.sh-hd{display:flex;align-items:center;justify-content:space-between;position:relative;}
+.sh-hd .grab{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);}
+.sh-hd h2{font-family:var(--head);font-size:26px;letter-spacing:.02em;}
+.sh-hd .x{width:32px;height:32px;border-radius:50%;border:1px solid var(--hair);background:var(--panel);color:var(--muted);font-size:15px;cursor:pointer;}
+.sh-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:2px;}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin:20px 0 12px;}
+.mnav button{background:none;border:1px solid var(--hair);border-radius:10px;width:34px;height:34px;color:var(--muted);cursor:pointer;font-size:15px;}
+.mnav .mo{font-family:var(--head);font-size:22px;letter-spacing:.03em;}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;}
+.cal-dow span{text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--dim);}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cell{aspect-ratio:1;border-radius:11px;border:1px solid var(--hair);background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.cell .n{font-family:var(--mono);font-size:11px;color:var(--mid);}
+.cell .vd{width:7px;height:7px;border-radius:50%;background:var(--cvc);box-shadow:0 0 6px var(--cvc);}
+.cell.empty{opacity:.3;} .cell.empty .vd{display:none;}
+.cell.today .n{color:var(--white);}
+.cell.sel{border-color:var(--sig);box-shadow:0 0 10px color-mix(in srgb,var(--sig) 26%,transparent);}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--hair);}
+.legend span{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.legend i{width:8px;height:8px;border-radius:50%;}
 </style>
 </head>
 <body>
@@ -88,115 +119,223 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="hd">
     <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <svg class="ico" viewBox="0 0 24 24"><path d="M12 22a6 6 0 006-6c0-4-4-5-3.5-10C11 8 9 10 9 13c0-1.5-1-2.5-1-2.5C6.5 12 6 14 6 16a6 6 0 006 6z"/></svg>
-    <span class="tt">Strain</span><span class="win">as of 21:40</span>
+    <span class="tt">Strain</span><span class="win" id="asof">as of 21:40</span>
+  </div>
+
+  <!-- DATE BAR -->
+  <div class="datebar">
+    <button class="dnav" id="dPrev" aria-label="Previous day">‹</button>
+    <button class="dlabel" id="dLabel">Today</button>
+    <button class="dnav" id="dNext" aria-label="Next day">›</button>
+    <button class="dcal" id="dCal" aria-label="Open calendar"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></button>
   </div>
 
   <!-- VERDICT hero -->
   <div class="hero fade">
-    <div class="eyebrow">Today's strain read</div>
-    <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn">14.2</div><div class="ru">Strain</div></div></div>
-    <div class="word-wrap"><span class="vscan"></span><span class="word">OPTIMAL</span></div>
+    <div class="eyebrow" id="eyebrow">Today's strain read</div>
+    <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn" id="heroNum">14.2</div><div class="ru">Strain</div></div></div>
+    <div class="word-wrap"><span class="vscan"></span><span class="word" id="heroWord">OPTIMAL</span></div>
     <div class="furn">
-      <div class="fc"><div class="fv g">13&ndash;16</div><div class="fk">Target band</div></div>
-      <div class="fc"><div class="fv">168<small>BPM</small></div><div class="fk">Peak HR</div></div>
-      <div class="fc"><div class="fv">1:42</div><div class="fk">In load</div></div>
+      <div class="fc"><div class="fv">13&ndash;16</div><div class="fk">Target band</div></div>
+      <div class="fc"><div class="fv" id="fPeak">168<small>BPM</small></div><div class="fk">Peak HR</div></div>
+      <div class="fc"><div class="fv" id="fLoad">1:42</div><div class="fk">In load</div></div>
     </div>
   </div>
 
   <!-- THE STRAIN SCALE (definition) -->
   <div class="card fade" style="transition-delay:.06s">
-    <div class="ch"><span class="k">The strain scale</span><span class="kv">today · <b style="color:var(--white)">HIGH</b></span></div>
+    <div class="ch"><span class="k">The strain scale</span><span class="kv">intensity · <b style="color:var(--white)" id="zoneName">HIGH</b></span></div>
     <svg class="scale" id="scale" viewBox="0 0 380 70" preserveAspectRatio="none"></svg>
-    <p class="def">Cardiovascular load on a <b>0&ndash;21</b> scale &mdash; how hard your body worked today, from all activity, not just training. Your <b style="color:var(--mint)">READY</b> verdict set today's target band at <b>13&ndash;16</b>; landing inside it is <b style="color:var(--sig)">OPTIMAL</b>.</p>
+    <p class="def">Cardiovascular load on a <b>0&ndash;21</b> scale &mdash; how hard your body worked, from all activity, not just training. Your verdict sets a target band each day (here <b>13&ndash;16</b>); landing inside it is <b style="color:#C8FF00">OPTIMAL</b>.</p>
   </div>
 
   <!-- STRAIN TREND vs target corridor -->
   <div class="card fade" style="transition-delay:.1s">
-    <div class="ch"><span class="k">Strain · 7 days</span><span class="kv">today <b>14.2</b> · optimal</span></div>
+    <div class="ch"><span class="k">Strain · 7 days</span><span class="kv" id="trendKv">today <b>14.2</b> · optimal</span></div>
     <svg class="trend" id="trend" viewBox="0 0 380 150"></svg>
   </div>
 
   <!-- WHAT DROVE IT -->
   <div class="card fade" style="transition-delay:.16s">
-    <div class="ch"><span class="k">What drove today's strain</span><span class="kv">share of load</span></div>
+    <div class="ch"><span class="k">What drove the strain</span><span class="kv">share of load</span></div>
     <div class="drv-sp" id="drivers"></div>
-    <div class="tot"><span class="l">Total vs target <b>13&ndash;16</b></span><span class="rr">14.2<small>OPTIMAL</small></span></div>
+    <div class="tot"><span class="l">Total vs target <b>13&ndash;16</b></span><span class="rr" id="totRR">14.2<small>OPTIMAL</small></span></div>
   </div>
 
   <div class="sl fade">The read</div>
-  <div class="drv fade"><div class="t"><b>You landed 14.2 inside your 13&ndash;16 band</b> — the load your <b style="color:var(--mint)">READY</b> verdict called for. The push session did the work; you didn't dig into recovery. Tomorrow's target resets at your next verdict.</div></div>
+  <div class="drv fade"><div class="t" id="readT"></div></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<!-- CALENDAR SHEET -->
+<div class="sheet" id="sheet">
+  <div class="sh-hd"><div class="grab"></div>
+    <div><h2>Strain history</h2><div class="sh-sub">Since you joined · 14 Jul</div></div>
+    <button class="x" id="shClose">✕</button>
+  </div>
+  <div class="mnav"><button id="prevMo">‹</button><span class="mo" id="moLabel">July 2026</span><button id="nextMo">›</button></div>
+  <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+  <div class="cal" id="cal"></div>
+  <div class="legend">
+    <span><i style="background:#C8FF00"></i>Optimal</span>
+    <span><i style="background:#F59E0B"></i>Under</span>
+    <span><i style="background:#EF4444"></i>Over</span>
+    <span><i style="background:#5C6679"></i>No data</span>
+  </div>
 </div>
 
 <script>
 (function(){
   var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var SC=21, STR=14.2, LO=13, HI=16; // 0..21 strain scale, target band
-  // hero dial — fill to strain + target-band bracket (lime = landed in band = OPTIMAL)
-  (function(){ var cv=document.getElementById('hring'); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+  var LO=13,HI=16,SC=21;
+  var JOIN=new Date(2026,6,14), TODAY=new Date(2026,6,21);
+  var SERIES={'2026-6-14':12.0,'2026-6-15':15.4,'2026-6-16':8.8,'2026-6-17':16.2,'2026-6-18':18.1,'2026-6-19':11.0,'2026-6-20':13.4,'2026-6-21':14.2};
+  var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function keyd(dt){return dt.getFullYear()+'-'+dt.getMonth()+'-'+dt.getDate();}
+  function strainOf(dt){return SERIES[keyd(dt)];}
+  function outcome(s){return s<LO?{w:'UNDER<br>REACHED',sh:'UNDER',c:'#F59E0B'}:s>HI?{w:'OVER<br>REACHED',sh:'OVER',c:'#EF4444'}:{w:'OPTIMAL',sh:'OPTIMAL',c:'#C8FF00'};}
+  function zoneName(s){return s<9?'LIGHT':s<13?'MODERATE':s<17?'HIGH':'ALL-OUT';}
+  function fmtHM(min){var h=Math.floor(min/60),m=Math.round(min%60);if(m===60){h++;m=0;}return h+':'+(m<10?'0':'')+m;}
+  function hexRgb(hex){var n=parseInt(hex.slice(1),16);return ((n>>16)&255)+','+((n>>8)&255)+','+(n&255);}
+  function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+  function addDays(dt,n){var d=new Date(dt);d.setDate(d.getDate()+n);return d;}
+  var sel=new Date(TODAY), firstDraw=true;
+
+  // ---- hero dial ----
+  function drawDial(strain,colour,animate){
+    var cv=document.getElementById('hring'); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
     cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
     var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.12,sa=150*Math.PI/180,sw=240*Math.PI/180;
-    var fill=STR/SC, lo=LO/SC, hi=HI/SC;
+    var fill=strain/SC, lo=LO/SC, hi=HI/SC, rgb=hexRgb(colour);
     function fr(p){ctx.clearRect(0,0,size,size);var lit=fill*p;
       for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
         ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';
-        if(t<=lit){ctx.strokeStyle='rgba(200,255,0,.72)';ctx.shadowColor='rgba(200,255,0,.45)';ctx.shadowBlur=3;}
-        else if(t>=lo&&t<=hi){ctx.strokeStyle='rgba(200,255,0,.26)';ctx.shadowBlur=0;} // ghost band ahead of fill
+        if(t<=lit){ctx.strokeStyle='rgba('+rgb+',.72)';ctx.shadowColor='rgba('+rgb+',.45)';ctx.shadowBlur=3;}
+        else if(t>=lo&&t<=hi){ctx.strokeStyle='rgba(255,255,255,.14)';ctx.shadowBlur=0;}
         else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}
         ctx.stroke();}
       ctx.shadowBlur=0;
-      // band boundary markers (brighter, longer ticks at LO and HI)
       [lo,hi].forEach(function(t){var a=sa+t*sw,x1=cx+(R-tl*1.9)*Math.cos(a),y1=cy+(R-tl*1.9)*Math.sin(a),x2=cx+(R+2)*Math.cos(a),y2=cy+(R+2)*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.6;ctx.strokeStyle='rgba(249,250,251,.72)';ctx.stroke();});
     }
-    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
-  })();
-  // 7-day strain — step trace; target zone neutral (reference), lime reserved for today
-  (function(){ var svg=document.getElementById('trend'),D7=[['TUE',11],['WED',16],['THU',9],['FRI',14],['SAT',18],['SUN',12],['TODAY',14.2]];
-    var W=380,H=150,GUT=48,PL=56,PR=14,PT=26,PB=24,mn=6,mx=21,N=7,LIME='#C8FF00';
-    function X(i){return PL+(W-PL-PR)*(i/(N-1));}
+    if(rm||!animate){fr(1);return;}
+    var s0=null;(function f(ts){if(!s0)s0=ts;var p=Math.min(1,(ts-s0)/1000),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());
+  }
+
+  // ---- strain scale (definition) ----
+  function drawScale(strain,colour){
+    var svg=document.getElementById('scale'); if(!svg)return; var W=380,PL=8,PR=8,y=44;
+    function X(v){return PL+(W-PL-PR)*(v/21);}
+    var zones=[['LIGHT',0,9],['MODERATE',9,13],['HIGH',13,17],['ALL-OUT',17,21]], cur=zoneName(strain), h='';
+    h+='<line x1="'+X(0)+'" y1="'+y+'" x2="'+X(21)+'" y2="'+y+'" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-linecap="round"/>';
+    zones.forEach(function(z){var xm=X((z[1]+z[2])/2),active=z[0]===cur;
+      h+='<text x="'+xm+'" y="13" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" letter-spacing="1" fill="'+(active?'#F9FAFB':'#5C6679')+'">'+z[0]+'</text>';
+      if(z[1]>0)h+='<line x1="'+X(z[1])+'" y1="'+(y-3.5)+'" x2="'+X(z[1])+'" y2="'+(y+3.5)+'" stroke="rgba(255,255,255,.15)" stroke-width="1"/>';
+    });
+    h+='<rect x="'+X(13)+'" y="'+(y-6)+'" width="'+(X(16)-X(13))+'" height="12" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.22)" stroke-width="1"/>';
+    h+='<text x="'+((X(13)+X(16))/2)+'" y="'+(y+20)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#747E8C">TARGET</text>';
+    var tx=X(strain);
+    h+='<line x1="'+tx+'" y1="'+(y-14)+'" x2="'+tx+'" y2="'+(y+7)+'" stroke="'+colour+'" stroke-width="1.5"/>';
+    h+='<circle cx="'+tx+'" cy="'+y+'" r="4" fill="'+colour+'" stroke="#0A0D12" stroke-width="1.5"/>';
+    h+='<text x="'+tx+'" y="'+(y-18)+'" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="15" fill="#F9FAFB">'+strain.toFixed(1)+'</text>';
+    svg.innerHTML=h;
+  }
+
+  // ---- 7-day step trace (window ending on sel) ----
+  function drawTrend(colour){
+    var svg=document.getElementById('trend'); var W=380,H=150,GUT=48,PL=56,PR=14,PT=26,PB=24,mn=6,mx=21;
+    var days=[]; for(var k=6;k>=0;k--){var dt=addDays(sel,-k); if(dt<JOIN)continue; days.push(dt);}
+    var N=days.length, vals=days.map(strainOf);
+    function X(i){return N===1?(PL+(W-PL-PR)/2):PL+(W-PL-PR)*(i/(N-1));}
     function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
-    var yHI=Y(HI),yLO=Y(LO),ym=(yHI+yLO)/2,seg=(W-PL-PR)/(N-1),h='';
-    // neutral target zone (labelled reference)
+    var yHI=Y(HI),yLO=Y(LO),ym=(yHI+yLO)/2,seg=(W-PL-PR)/Math.max(1,(N-1)),h='';
     h+='<rect x="'+GUT+'" y="'+yHI+'" width="'+((W-PR)-GUT)+'" height="'+(yLO-yHI)+'" fill="rgba(255,255,255,.045)"/>';
     h+='<line x1="'+GUT+'" y1="'+yHI+'" x2="'+(W-PR)+'" y2="'+yHI+'" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
     h+='<line x1="'+GUT+'" y1="'+yLO+'" x2="'+(W-PR)+'" y2="'+yLO+'" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
     h+='<line x1="'+(GUT-4)+'" y1="'+yHI+'" x2="'+(GUT-4)+'" y2="'+yLO+'" stroke="rgba(255,255,255,.28)" stroke-width="1.4"/>';
     h+='<text x="'+(GUT-9)+'" y="'+(ym-2)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#5C6679">TARGET</text>';
     h+='<text x="'+(GUT-9)+'" y="'+(ym+9)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="8" fill="#747E8C">13–16</text>';
-    // muted step trace (the week is history)
-    var d='';D7.forEach(function(dd,i){var x=X(i),y=Y(dd[1]),xl=Math.max(GUT,x-seg*0.42),xr=Math.min(W-PR,x+seg*0.42);d+=(i===0?'M':'L')+xl+','+y+' L'+xr+','+y+' ';});
-    for(var i=0;i<N-1;i++){h+='<line x1="'+(X(i)+seg*0.42)+'" y1="'+Y(D7[i][1])+'" x2="'+(X(i+1)-seg*0.42)+'" y2="'+Y(D7[i+1][1])+'" stroke="rgba(255,255,255,.16)" stroke-width="1.3"/>';}
-    h+='<path d="'+d+'" fill="none" stroke="rgba(249,250,251,.44)" stroke-width="2.4" stroke-linecap="round"/>';
-    // today lit lime — the one signal
-    var xt=X(6),yt=Y(14.2),xtl=Math.max(GUT,xt-seg*0.42);
-    h+='<line x1="'+xtl+'" y1="'+yt+'" x2="'+(W-PR)+'" y2="'+yt+'" stroke="'+LIME+'" stroke-width="2.6" stroke-linecap="round" filter="url(#slgl)"/>';
-    h+='<circle cx="'+(W-PR)+'" cy="'+yt+'" r="4" fill="'+LIME+'" filter="url(#slgl)"/>';
-    D7.forEach(function(dd,i){var now=i===6;
-      h+='<text x="'+X(i)+'" y="'+(Y(dd[1])-9)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="'+(now?LIME:'rgba(249,250,251,.5)')+'">'+dd[1].toFixed(1)+'</text>';
-      h+='<text x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'#5C6679')+'">'+dd[0]+'</text>';});
-    svg.innerHTML='<defs><filter id="slgl" x="-90%" y="-90%" width="280%" height="280%"><feDropShadow dx="0" dy="0" stdDeviation="2.6" flood-color="#C8FF00" flood-opacity="0.85"/></filter></defs>'+h;
-  })();
-  // the strain scale — 0..21 with intensity zones + today marker + target band
-  (function(){ var svg=document.getElementById('scale'); if(!svg)return; var W=380,PL=8,PR=8,y=44;
-    function X(v){return PL+(W-PL-PR)*(v/21);}
-    var zones=[['LIGHT',0,9],['MODERATE',9,13],['HIGH',13,17],['ALL-OUT',17,21]], cur='HIGH', h='';
-    h+='<line x1="'+X(0)+'" y1="'+y+'" x2="'+X(21)+'" y2="'+y+'" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-linecap="round"/>';
-    zones.forEach(function(z){var xm=X((z[1]+z[2])/2),active=z[0]===cur;
-      h+='<text x="'+xm+'" y="13" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" letter-spacing="1" fill="'+(active?'#F9FAFB':'#5C6679')+'">'+z[0]+'</text>';
-      if(z[1]>0)h+='<line x1="'+X(z[1])+'" y1="'+(y-3.5)+'" x2="'+X(z[1])+'" y2="'+(y+3.5)+'" stroke="rgba(255,255,255,.15)" stroke-width="1"/>';
-    });
-    h+='<rect x="'+X(13)+'" y="'+(y-6)+'" width="'+(X(16)-X(13))+'" height="12" rx="2" fill="rgba(200,255,0,.14)" stroke="rgba(200,255,0,.5)" stroke-width="1" stroke-dasharray="3 3"/>';
-    h+='<text x="'+((X(13)+X(16))/2)+'" y="'+(y+20)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#C8FF00">TARGET</text>';
-    var tx=X(14.2);
-    h+='<line x1="'+tx+'" y1="'+(y-14)+'" x2="'+tx+'" y2="'+(y+7)+'" stroke="#C8FF00" stroke-width="1.5"/>';
-    h+='<circle cx="'+tx+'" cy="'+y+'" r="4" fill="#C8FF00" stroke="#0A0D12" stroke-width="1.5"/>';
-    h+='<text x="'+tx+'" y="'+(y-18)+'" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="15" fill="#F9FAFB">14.2</text>';
-    svg.innerHTML=h;
-  })();
-  // drivers — share of load
-  var D=[['Main session','#C8FF00','8.9','PTS','push · 1:12','63%'],['Zone-2 cardio','#00E5A0','3.1','PTS','34 min','22%'],['All-day load','#F59E0B','2.2','PTS','steps + NEAT','15%']];
-  document.getElementById('drivers').innerHTML=D.map(function(d){
-    return '<div class="r"><span class="dot" style="background:'+d[1]+'"></span><span class="nm">'+d[0]+'</span><span class="mid"><span class="val">'+d[2]+'<small>'+d[3]+'</small></span><span class="base">'+d[4]+'</span></span><span class="st">'+d[5]+'</span></div>';
-  }).join('');
+    if(N>1){var d='';days.forEach(function(dt,i){var x=X(i),yy=Y(vals[i]),xl=Math.max(GUT,x-seg*0.42),xr=Math.min(W-PR,x+seg*0.42);d+=(i===0?'M':'L')+xl+','+yy+' L'+xr+','+yy+' ';});
+      for(var i=0;i<N-1;i++){h+='<line x1="'+(X(i)+seg*0.42)+'" y1="'+Y(vals[i])+'" x2="'+(X(i+1)-seg*0.42)+'" y2="'+Y(vals[i+1])+'" stroke="rgba(255,255,255,.16)" stroke-width="1.3"/>';}
+      h+='<path d="'+d+'" fill="none" stroke="rgba(249,250,251,.44)" stroke-width="2.4" stroke-linecap="round"/>';}
+    var li=N-1, xt=X(li), yt=Y(vals[li]), xtl=(N>1?Math.max(GUT,xt-seg*0.42):GUT+6), xtr=Math.min(W-PR,xt+seg*0.42);
+    h+='<line x1="'+xtl+'" y1="'+yt+'" x2="'+xtr+'" y2="'+yt+'" stroke="'+colour+'" stroke-width="2.6" stroke-linecap="round" filter="url(#slgl)"/>';
+    h+='<circle cx="'+xtr+'" cy="'+yt+'" r="4" fill="'+colour+'" filter="url(#slgl)"/>';
+    days.forEach(function(dt,i){var now=i===li;
+      h+='<text x="'+X(i)+'" y="'+(Y(vals[i])-9)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="'+(now?colour:'rgba(249,250,251,.5)')+'">'+vals[i].toFixed(1)+'</text>';
+      h+='<text x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?colour:'#5C6679')+'">'+WD[dt.getDay()].toUpperCase()+'</text>';});
+    svg.innerHTML='<defs><filter id="slgl" x="-90%" y="-90%" width="280%" height="280%"><feDropShadow dx="0" dy="0" stdDeviation="2.6" flood-color="'+colour+'" flood-opacity="0.85"/></filter></defs>'+h;
+  }
+
+  // ---- drivers (neutral), total, read ----
+  function renderRest(strain,o){
+    var sess=strain*0.63, cardio=strain*0.22, allday=strain*0.15;
+    var D=[['Main session','rgba(255,255,255,.5)',sess.toFixed(1),'push · '+fmtHM(strain*5.1),'63%'],
+           ['Zone-2 cardio','rgba(255,255,255,.34)',cardio.toFixed(1),'34 min','22%'],
+           ['All-day load','rgba(255,255,255,.24)',allday.toFixed(1),'steps + NEAT','15%']];
+    document.getElementById('drivers').innerHTML=D.map(function(d){
+      return '<div class="r"><span class="dot" style="background:'+d[1]+'"></span><span class="nm">'+d[0]+'</span><span class="mid"><span class="val">'+d[2]+'<small>PTS</small></span><span class="base">'+d[3]+'</span></span><span class="st">'+d[4]+'</span></div>';
+    }).join('');
+    var tr=document.getElementById('totRR'); tr.innerHTML=strain.toFixed(1)+'<small>'+o.sh+'</small>'; tr.style.color=o.c;
+    var read;
+    if(o.sh==='OPTIMAL') read='<b>You landed '+strain.toFixed(1)+' inside your 13&ndash;16 band</b> — the load your verdict called for. The session did the work; you didn\'t dig into recovery.';
+    else if(o.sh==='UNDER') read='<b>You logged '+strain.toFixed(1)+', under your 13&ndash;16 band</b> — you left capacity on the table. A lighter day than the verdict allowed for.';
+    else read='<b>You hit '+strain.toFixed(1)+', over your 13&ndash;16 band</b> — you pushed past what recovery set. Expect that to show in tomorrow\'s readiness.';
+    document.getElementById('readT').innerHTML=read;
+  }
+
+  // ---- master render for the selected day ----
+  function render(){
+    var dt=sel, s=strainOf(dt), o=outcome(s), isToday=sameDay(dt,TODAY);
+    scr.style.setProperty('--sig', o.c);
+    document.getElementById('eyebrow').textContent=isToday?"Today's strain read":('Strain read · '+WD[dt.getDay()]+' '+dt.getDate()+' '+MO[dt.getMonth()]);
+    document.getElementById('asof').textContent=isToday?'as of 21:40':'end of day';
+    document.getElementById('heroNum').textContent=s.toFixed(1);
+    document.getElementById('heroWord').innerHTML=o.w;
+    document.getElementById('fPeak').innerHTML=Math.round(140+s*1.95)+'<small>BPM</small>';
+    document.getElementById('fLoad').textContent=fmtHM(Math.round(s*7.2));
+    document.getElementById('zoneName').textContent=zoneName(s);
+    document.getElementById('trendKv').innerHTML=(isToday?'today ':(WD[dt.getDay()]+' '))+'<b>'+s.toFixed(1)+'</b> · '+o.sh.toLowerCase();
+    drawDial(s,o.c,firstDraw); drawScale(s,o.c); drawTrend(o.c); renderRest(s,o);
+    // date bar
+    document.getElementById('dLabel').innerHTML=(isToday?'<b>Today</b> · ':'')+WD[dt.getDay()]+' '+dt.getDate()+' '+MO[dt.getMonth()];
+    document.getElementById('dPrev').disabled = sel<=JOIN;
+    document.getElementById('dNext').disabled = isToday;
+    firstDraw=false;
+  }
+
+  // ---- date nav ----
+  document.getElementById('dPrev').addEventListener('click',function(){ var p=addDays(sel,-1); if(p>=JOIN){sel=p;render();} });
+  document.getElementById('dNext').addEventListener('click',function(){ if(!sameDay(sel,TODAY)){sel=addDays(sel,1);render();} });
+
+  // ---- calendar sheet ----
+  var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim');
+  var viewY=sel.getFullYear(), viewM=sel.getMonth();
+  function calRender(){
+    document.getElementById('moLabel').textContent=MO[viewM]+' '+viewY;
+    var first=new Date(viewY,viewM,1), startDow=(first.getDay()+6)%7, dim=new Date(viewY,viewM+1,0).getDate();
+    var cal=document.getElementById('cal'); cal.innerHTML='';
+    for(var i=0;i<startDow;i++){var e=document.createElement('div');e.className='cell empty';cal.appendChild(e);}
+    for(var dn=1;dn<=dim;dn++){var dt=new Date(viewY,viewM,dn), s=strainOf(dt), cell=document.createElement('div'); cell.className='cell';
+      var inRange=(dt>=JOIN&&dt<=TODAY&&s!=null);
+      if(!inRange)cell.classList.add('empty');
+      if(sameDay(dt,TODAY))cell.classList.add('today');
+      if(sameDay(dt,sel))cell.classList.add('sel');
+      cell.style.setProperty('--cvc', inRange?outcome(s).c:'#5C6679');
+      cell.innerHTML='<span class="n">'+dn+'</span>'+(inRange?'<span class="vd"></span>':'');
+      if(inRange)(function(d){cell.style.cursor='pointer';cell.addEventListener('click',function(){sel=new Date(d);closeSheet();render();});})(dt);
+      cal.appendChild(cell);
+    }
+  }
+  function openSheet(){ viewY=sel.getFullYear(); viewM=sel.getMonth(); calRender(); sheet.classList.add('open'); scrim.classList.add('open'); }
+  function closeSheet(){ sheet.classList.remove('open'); scrim.classList.remove('open'); }
+  document.getElementById('dCal').addEventListener('click',openSheet);
+  document.getElementById('dLabel').addEventListener('click',openSheet);
+  document.getElementById('shClose').addEventListener('click',closeSheet);
+  scrim.addEventListener('click',closeSheet);
+  document.getElementById('prevMo').addEventListener('click',function(){ viewM--; if(viewM<0){viewM=11;viewY--;} calRender(); });
+  document.getElementById('nextMo').addEventListener('click',function(){ viewM++; if(viewM>11){viewM=0;viewY++;} calRender(); });
+
+  render();
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
 })();
 </script>
