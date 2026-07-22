@@ -29,12 +29,9 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .zone{position:absolute;top:12%;left:0;right:0;height:34%;z-index:2;}
 .hold{position:absolute;inset:0;}
 .hold model-viewer{position:absolute;inset:0;width:100%;height:100%;background:transparent;--poster-color:transparent;outline:none;filter:brightness(.46) contrast(1.12) saturate(.72);}
-/* designed data field — aligned monospace grid, dim, reads with the body */
-.field{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:6px;
-  font-family:var(--mono);font-size:10px;letter-spacing:3px;line-height:1.62;color:rgba(200,255,0,.22);white-space:pre;pointer-events:none;}
-.field b{color:rgba(200,255,0,.72);font-weight:400;}
-.scanglow{position:absolute;left:0;right:0;height:56px;background:linear-gradient(180deg,rgba(200,255,0,.14),transparent);z-index:4;pointer-events:none;opacity:0;}
-.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sig) 20%,var(--sig) 80%,transparent);box-shadow:0 0 18px 3px rgba(200,255,0,.55);z-index:5;pointer-events:none;opacity:0;}
+/* scan line + glow — sized to the body only, not the full screen */
+.scanglow{position:absolute;left:29%;right:29%;height:56px;background:linear-gradient(180deg,rgba(200,255,0,.16),transparent);z-index:4;pointer-events:none;opacity:0;}
+.scanline{position:absolute;left:29%;right:29%;height:2px;background:linear-gradient(90deg,transparent,var(--sig) 16%,var(--sig) 84%,transparent);box-shadow:0 0 18px 3px rgba(200,255,0,.55);z-index:5;pointer-events:none;opacity:0;}
 
 /* V5 — region pins (light up as the scan crosses each) */
 .ro{position:absolute;z-index:7;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);opacity:0;white-space:nowrap;transition:opacity .45s var(--ease);}
@@ -66,7 +63,6 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <body>
 <div class="screen" id="screen">
   <div class="zone" id="zone">
-    <div class="field" id="field"></div>
     <div class="hold" id="hold">
       <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="16deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
     </div>
@@ -91,15 +87,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <script>
 (function(){
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var screen=document.getElementById('screen'),zone=document.getElementById('zone'),hold=document.getElementById('hold'),field=document.getElementById('field'),line=document.getElementById('line'),glow=document.getElementById('glow'),st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
-
-  /* designed data field — aligned rows, occasional lime highlight (looks intentional, not noise) */
-  var HEX='0123456789ABCDEF';
-  function tok(){return HEX[Math.floor(Math.random()*16)]+HEX[Math.floor(Math.random()*16)];}
-  function row(){var t=[];for(var c=0;c<4;c++){var s=tok();t.push(Math.random()<0.12?'<b>'+s+'</b>':s);}return t.join(' · ');}
-  var ROWS=14;
-  function buildField(){var out=[];for(var r=0;r<ROWS;r++)out.push(row());field.innerHTML=out.join('\n');}
-  buildField();
+  var screen=document.getElementById('screen'),zone=document.getElementById('zone'),hold=document.getElementById('hold'),line=document.getElementById('line'),glow=document.getElementById('glow'),st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
 
   /* the record */
   var LOG=[['read body composition','22% <b>BF</b>'],
@@ -119,11 +107,10 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     ln.classList.add('in');lead.textContent=new Array(26).join('.');T(function(){v.innerHTML=LOG[i][1];ln.classList.add('done');},240);}
 
   function setReveal(fracFromTopPx){
-    // reveal body + data from the top down to fracFromTopPx (in px within the zone)
+    // the scan reveals the body from the top down to fracFromTopPx (px within the zone)
     var h=zone.clientHeight, revPct=Math.max(0,Math.min(100,(fracFromTopPx/h)*100));
     var mask='linear-gradient(180deg,#000 '+revPct+'%,transparent '+Math.min(100,revPct+3)+'%)';
     hold.style.webkitMaskImage=mask;hold.style.maskImage=mask;
-    field.style.webkitMaskImage=mask;field.style.maskImage=mask;
   }
 
   var PINS=[document.getElementById('ro-muscle'),document.getElementById('ro-fat'),document.getElementById('ro-knee')];
@@ -132,7 +119,6 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     clr();
     LOG.forEach(function(r,i){var ln=document.getElementById('ln'+i);ln.className='ln';document.getElementById('lv'+i).innerHTML='';ln.querySelector('.lead').textContent='';});
     PINS.forEach(function(p){p.classList.remove('show');});
-    buildField();
     line.style.opacity='0';glow.style.opacity='0';line.style.transition='';
     st.textContent='Powering the engine';pf.style.transition='none';pf.style.width='0';
     setReveal(0);
@@ -152,9 +138,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
         // V5 pins light up as the scan crosses each region
         var boundaryPct=((zoneTop+yPx)/screen.clientHeight)*100;
         PINS.forEach(function(p){if(boundaryPct> +p.dataset.y)p.classList.add('show');});
-        // gently drift the highlighted tokens so the field feels live (not static)
-        if(Math.floor(t*ROWS)!==step._r){step._r=Math.floor(t*ROWS);}
-        st.textContent = t<0.5?'Assembling upper body':'Assembling lower body';
+        st.textContent = t<0.5?'Scanning upper body':'Scanning lower body';
         if(t<1)raf(step);
         else{ setReveal(zone.clientHeight+8); line.style.transition='opacity .5s';line.style.opacity='0';glow.style.opacity='0';st.textContent='Reading your signals'; }
       }
