@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Calibration variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--cyan:#00D4FF;--sig:var(--lime);--panel:rgba(255,255,255,.022);
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;min-height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;padding:34px 0 90px;}
+.stage{display:flex;flex-direction:column;align-items:center;gap:54px;}
+.vlabel{max-width:430px;margin:0 auto 12px;padding:0 18px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.vlabel b{color:var(--white);}.vlabel span{color:var(--mid);font-weight:400;letter-spacing:.05em;text-transform:none;}
+.frame{position:relative;width:100%;max-width:430px;height:740px;overflow:hidden;border-radius:26px;border:1px solid var(--hair);
+  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.028) 1px,transparent 1px);background-size:28px 28px;}
+.frame::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 70% at 50% 10%,rgba(200,255,0,.05),transparent 60%),radial-gradient(100% 60% at 50% 50%,transparent,rgba(0,0,0,.45));}
+.chead{position:absolute;top:8%;left:0;right:0;text-align:center;z-index:4;}
+.chead .k{font-family:var(--mono);font-size:9px;letter-spacing:.32em;color:var(--sig);text-transform:uppercase;}
+.chead .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:11px;height:12px;}
+.pbar{width:132px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);margin:15px auto 0;overflow:hidden;}
+.pbar i{display:block;height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+.replay{position:fixed;top:14px;right:14px;z-index:50;background:rgba(255,255,255,.05);border:1px solid var(--hair);color:var(--muted);
+  font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:16px;cursor:pointer;}
+
+/* ---- V1 TERMINAL BOOT ---- */
+.term{position:absolute;left:26px;right:26px;top:31%;z-index:3;font-family:var(--mono);}
+.tln{display:flex;align-items:baseline;gap:0;font-size:12px;line-height:2.15;opacity:0;transform:translateX(-6px);}
+.tln.in{opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease);}
+.tln .k{color:var(--mid);white-space:nowrap;}
+.tln .lead{flex:1;overflow:hidden;color:var(--dim);letter-spacing:2px;margin:0 8px;}
+.tln .v{color:var(--dim);white-space:nowrap;transition:color .25s;}
+.tln.done .v{color:var(--white);}
+.tln.done .k{color:var(--muted);}
+.tln .v b{color:var(--sig);font-weight:500;}
+.tcur{display:inline-block;width:7px;height:13px;background:var(--sig);margin-left:4px;vertical-align:middle;animation:tblink 1s steps(1) infinite;box-shadow:0 0 6px var(--sig);}
+@keyframes tblink{50%{opacity:0}}
+
+/* ---- V3 SIGNAL CONSOLE rows ---- */
+.chan{position:absolute;left:0;right:0;top:28%;z-index:3;padding:0 24px;display:flex;flex-direction:column;gap:2px;}
+.crow{display:grid;grid-template-columns:74px 1fr 62px;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.crow .cl{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;}
+.crow.lk .cl{color:var(--muted);}
+.crow canvas{width:100%;height:26px;display:block;}
+.crow .cv{font-family:var(--head);font-size:18px;text-align:right;color:var(--mid);letter-spacing:.02em;}
+.crow.lk .cv{color:var(--white);}
+.crow .cv small{font-family:var(--mono);font-size:8px;color:var(--dim);}
+
+/* ---- V4 STREAM + EXTRACT ---- */
+.sx{position:absolute;inset:0;top:26%;z-index:3;display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0 20px;}
+.sxstream{position:relative;overflow:hidden;-webkit-mask:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);mask:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);border-right:1px solid var(--hair);padding-right:14px;}
+.sxstream .col{position:absolute;top:0;left:0;right:14px;font-family:var(--mono);font-size:10px;line-height:1.75;color:var(--dim);white-space:pre;}
+.sxstream .col .hot{color:var(--sig);}
+.sxlbl{position:absolute;top:-22px;left:0;font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.sxres{padding-left:16px;position:relative;}
+.sxres .rlbl{position:absolute;top:-22px;left:16px;font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--sig);text-transform:uppercase;}
+.rr{padding:11px 0;border-bottom:1px solid var(--hair);opacity:0;transform:translateY(6px);}
+.rr.in{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .5s var(--ease);}
+.rr .rk{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.rr .rv{font-family:var(--head);font-size:22px;color:var(--white);line-height:.95;margin-top:3px;}
+.rr .rv em{font-style:normal;color:var(--sig);}
+
+/* ---- V5 BODY SCAN ---- */
+.bs{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;}
+.bs .fig{position:relative;height:64%;top:2%;}
+.bs .fig img{height:100%;width:auto;display:block;opacity:.5;filter:grayscale(.4) brightness(.8);}
+.bs .fig .lit{position:absolute;inset:0;height:100%;width:100%;-webkit-mask:var(--m);mask:var(--m);background:transparent;}
+.bs .scanline{position:absolute;left:-40%;right:-40%;height:2px;background:linear-gradient(90deg,transparent,var(--sig),transparent);box-shadow:0 0 16px 3px rgba(200,255,0,.5);top:0;z-index:5;}
+.bs .scanglow{position:absolute;left:-40%;right:-40%;height:60px;background:linear-gradient(180deg,rgba(200,255,0,.14),transparent);top:0;z-index:4;transform:translateY(-58px);}
+.bs .readout{position:absolute;z-index:6;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);opacity:0;white-space:nowrap;}
+.bs .readout.show{opacity:1;transition:opacity .4s var(--ease);}
+.bs .readout .rl{color:var(--dim);}.bs .readout b{color:var(--sig);font-family:var(--head);font-size:15px;letter-spacing:.02em;margin-left:4px;}
+.bs .readout::before{content:"";position:absolute;top:50%;width:26px;height:1px;background:var(--sig);opacity:.5;}
+.bs .readout.l::before{right:100%;margin-right:8px;}
+.bs .readout.r::before{left:100%;margin-left:8px;}
+</style>
+</head>
+<body>
+<button class="replay" id="replay">▸ Replay all</button>
+<div class="stage">
+
+  <!-- V1 -->
+  <div>
+    <div class="vlabel"><b>V1</b> · Diagnostic boot log <span>— a control panel initializing. Dense, sequential, no empty space.</span></div>
+    <div class="frame" data-v="1">
+      <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st1">Booting engine</div><div class="pbar"><i id="pf1"></i></div></div>
+      <div class="term" id="term1"></div>
+    </div>
+  </div>
+
+  <!-- V2 -->
+  <div>
+    <div class="vlabel"><b>V2</b> · Radar acquisition <span>— a sweep rotates; each signal locks as the beam crosses it.</span></div>
+    <div class="frame" data-v="2">
+      <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st2">Acquiring signals</div><div class="pbar"><i id="pf2"></i></div></div>
+      <canvas id="radar" width="860" height="1480" style="position:absolute;inset:0;width:100%;height:100%;z-index:2;"></canvas>
+    </div>
+  </div>
+
+  <!-- V3 -->
+  <div>
+    <div class="vlabel"><b>V3</b> · Signal console <span>— each channel reads noisy, then calms to a locked value.</span></div>
+    <div class="frame" data-v="3">
+      <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st3">Reading channels</div><div class="pbar"><i id="pf3"></i></div></div>
+      <div class="chan" id="chan3"></div>
+    </div>
+  </div>
+
+  <!-- V4 -->
+  <div>
+    <div class="vlabel"><b>V4</b> · Signal from noise <span>— raw data streams left; ZEAL crystallizes the result right.</span></div>
+    <div class="frame" data-v="4">
+      <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st4">Extracting signal</div><div class="pbar"><i id="pf4"></i></div></div>
+      <div class="sx">
+        <div class="sxstream"><span class="sxlbl">Raw · your data</span><div class="col" id="stream4"></div></div>
+        <div class="sxres"><span class="rlbl">Locked · read</span><div id="res4"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- V5 -->
+  <div>
+    <div class="vlabel"><b>V5</b> · Body scan <span>— reads your actual figure top-to-bottom, pinning each metric it crosses.</span></div>
+    <div class="frame" data-v="5">
+      <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st5">Scanning composition</div><div class="pbar"><i id="pf5"></i></div></div>
+      <div class="bs" id="bs5">
+        <div class="fig">
+          <img src="brand-assets/body-model/grid-clean/obeyos-model-male-f2m1.webp" alt="">
+          <div class="scanglow" id="glow5"></div>
+          <div class="scanline" id="line5"></div>
+          <div class="readout r" id="ro-muscle" style="top:30%;left:66%"><span class="rl">Muscle</span><b>42%</b></div>
+          <div class="readout l" id="ro-fat" style="top:52%;right:66%"><span class="rl">Body fat</span><b>22%</b></div>
+          <div class="readout r" id="ro-knee" style="top:70%;left:64%"><span class="rl">L-knee</span><b>Flagged</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var loops=[];
+  function clearLoops(){loops.forEach(function(l){clearTimeout(l);cancelAnimationFrame(l);});loops=[];}
+  function T(fn,ms){var id=setTimeout(fn,ms);loops.push(id);return id;}
+
+  /* ===== V1 · TERMINAL ===== */
+  var T1=[['read body composition','22% <b>BF</b>'],['estimate skeletal muscle','42% <b>SMM</b>'],
+    ['pull overnight recovery','68 HRV · 8.1H'],['map injury history','<b>L-KNEE</b>'],
+    ['match program library','31 → <b>1</b>'],['lock training tier','TIER <b>2</b>']];
+  var term1=document.getElementById('term1');
+  term1.innerHTML=T1.map(function(r,i){return '<div class="tln" id="t1-'+i+'"><span class="k">'+r[0]+'</span><span class="lead"></span><span class="v" id="t1v-'+i+'"></span></div>';}).join('')+'<div class="tln in" style="opacity:.001"><span class="tcur"></span></div>';
+  function playV1(){
+    var pf=document.getElementById('pf1'),st=document.getElementById('st1');
+    T1.forEach(function(r,i){var ln=document.getElementById('t1-'+i);ln.className='tln';document.getElementById('t1v-'+i).innerHTML='';var l=ln.querySelector('.lead');l.textContent='';});
+    st.textContent='Booting engine';pf.style.transition='none';pf.style.width='0';
+    T(function(){pf.style.transition='width 6.2s linear';pf.style.width='100%';},60);
+    T1.forEach(function(r,i){
+      T(function(){
+        var ln=document.getElementById('t1-'+i);ln.classList.add('in');
+        var lead=ln.querySelector('.lead');lead.textContent=new Array(30).join('.');
+        st.textContent='Reading · '+r[0];
+        T(function(){document.getElementById('t1v-'+i).innerHTML=r[1];ln.classList.add('done');},360);
+      },300+i*950);
+    });
+    T(function(){st.textContent='Calibration locked';},300+T1.length*950);
+    T(function(){playV1();},300+T1.length*950+1400);
+  }
+
+  /* ===== V2 · RADAR ===== */
+  var rc=document.getElementById('radar'),rx=rc.getContext('2d');
+  var BLIPS=[{a:-90,l:'HRV',v:'68'},{a:-18,l:'SLEEP',v:'8.1H'},{a:54,l:'RECOVERY',v:'72%'},{a:126,l:'STRAIN',v:'11.4'},{a:198,l:'BODY',v:'22%'}];
+  function playV2(){
+    var W=rc.width,H=rc.height,cx=W/2,cy=H*0.5,R=Math.min(W,H)*0.30;
+    var st=document.getElementById('st2'),pf=document.getElementById('pf2');
+    st.textContent='Acquiring signals';pf.style.transition='none';pf.style.width='0';
+    T(function(){pf.style.transition='width 4.6s linear';pf.style.width='100%';},60);
+    var start=null,DUR=4600,acq=BLIPS.map(function(){return 0;});
+    function toRad(d){return (d-90)*Math.PI/180;} // sweep starts at top
+    function frame(ts){
+      if(!start)start=ts;var t=(ts-start)/DUR;var sweep=(t*1.15)%1; // ~1.15 rotations
+      var ang=sweep*Math.PI*2 - Math.PI/2;
+      rx.clearRect(0,0,W,H);
+      // rings
+      rx.strokeStyle='rgba(255,255,255,.06)';rx.lineWidth=1.5;
+      for(var k=1;k<=3;k++){rx.beginPath();rx.arc(cx,cy,R*k/3,0,Math.PI*2);rx.stroke();}
+      // cross ticks
+      rx.strokeStyle='rgba(255,255,255,.05)';
+      for(var d=0;d<360;d+=30){var a2=d*Math.PI/180;rx.beginPath();rx.moveTo(cx+Math.cos(a2)*(R*0.94),cy+Math.sin(a2)*(R*0.94));rx.lineTo(cx+Math.cos(a2)*R,cy+Math.sin(a2)*R);rx.stroke();}
+      // sweep wedge (trailing gradient)
+      for(var s=0;s<28;s++){var aa=ang-s*0.05,al=(1-s/28)*0.22;rx.beginPath();rx.moveTo(cx,cy);rx.arc(cx,cy,R,aa-0.02,aa+0.02);rx.closePath();rx.fillStyle='rgba(200,255,0,'+al+')';rx.fill();}
+      rx.strokeStyle='rgba(200,255,0,.8)';rx.lineWidth=2;rx.beginPath();rx.moveTo(cx,cy);rx.lineTo(cx+Math.cos(ang)*R,cy+Math.sin(ang)*R);rx.stroke();
+      // blips
+      BLIPS.forEach(function(b,i){
+        var ba=toRad(b.a),bx=cx+Math.cos(ba)*R*0.72,by=cy+Math.sin(ba)*R*0.72;
+        var diff=Math.abs(((ang-ba+Math.PI*3)%(Math.PI*2))-Math.PI); // angular closeness
+        if(Math.abs(((sweep*360-(b.a))%360+360)%360)<8 && t>0.05) acq[i]=Math.min(1,acq[i]+0.5);
+        var on=acq[i];
+        rx.beginPath();rx.arc(bx,by,on?9:6,0,Math.PI*2);
+        rx.fillStyle=on?'rgba(200,255,0,'+(0.5+on*0.5)+')':'rgba(255,255,255,.14)';
+        rx.shadowColor='#C8FF00';rx.shadowBlur=on?16*on:0;rx.fill();rx.shadowBlur=0;
+        if(on>0.5){
+          rx.font='500 20px "DM Mono",monospace';rx.fillStyle='rgba(255,255,255,'+on+')';rx.textAlign='center';
+          rx.fillText(b.v,bx,by-20);
+          rx.font='400 15px "DM Mono",monospace';rx.fillStyle='rgba(200,255,0,'+(on*0.85)+')';
+          rx.fillText(b.l,bx,by+30);
+        }
+      });
+      // center
+      var allon=acq.reduce(function(a,b){return a+b;},0)/BLIPS.length;
+      rx.beginPath();rx.arc(cx,cy,5,0,Math.PI*2);rx.fillStyle='#C8FF00';rx.shadowColor='#C8FF00';rx.shadowBlur=12;rx.fill();rx.shadowBlur=0;
+      if(allon>0.98)st.textContent='All signals acquired';
+      if(t<1.02){loops.push(requestAnimationFrame(frame));}else{T(playV2,900);}
+    }
+    loops.push(requestAnimationFrame(frame));
+  }
+
+  /* ===== V3 · SIGNAL CONSOLE ===== */
+  var C3=[['HRV','68','MS'],['SLEEP','8.1','H'],['RECOVERY','72','%'],['STRAIN','11.4',''],['COMPOSITION','22','% BF']];
+  var chan3=document.getElementById('chan3');
+  chan3.innerHTML=C3.map(function(c,i){return '<div class="crow" id="c3-'+i+'"><span class="cl">'+c[0]+'</span><canvas id="c3c-'+i+'" width="440" height="52"></canvas><span class="cv">—</span></div>';}).join('');
+  function playV3(){
+    var st=document.getElementById('st3'),pf=document.getElementById('pf3');
+    st.textContent='Reading channels';pf.style.transition='none';pf.style.width='0';
+    T(function(){pf.style.transition='width 5s linear';pf.style.width='100%';},60);
+    var locks=C3.map(function(){return 0;}),phase=Math.random()*10;
+    C3.forEach(function(c,i){document.getElementById('c3-'+i).className='crow';document.getElementById('c3-'+i).querySelector('.cv').innerHTML='—';
+      T(function(){locks[i]=0.0001;st.textContent='Locking · '+c[0];},400+i*820);
+      T(function(){var row=document.getElementById('c3-'+i);row.classList.add('lk');row.querySelector('.cv').innerHTML=c[1]+'<small> '+c[2]+'</small>';},400+i*820+700);
+    });
+    var start=null;
+    function frame(ts){
+      if(!start)start=ts;var el=(ts-start)/1000;
+      C3.forEach(function(c,i){
+        if(locks[i]>0&&locks[i]<1)locks[i]=Math.min(1,locks[i]+0.012);
+        var cv=document.getElementById('c3c-'+i),g=cv.getContext('2d'),W=cv.width,Hh=cv.height,mid=Hh/2;
+        g.clearRect(0,0,W,Hh);
+        var lk=locks[i],amp=(Hh*0.36)*(1-lk*0.82),noise=1-lk;
+        g.beginPath();
+        for(var x=0;x<=W;x+=2){
+          var nx=x/W;
+          var y=mid+Math.sin(nx*18+el*4+phase+i)*amp*0.5+Math.sin(nx*47+el*7)*amp*0.5*noise+(Math.random()-0.5)*amp*0.25*noise;
+          x===0?g.moveTo(x,y):g.lineTo(x,y);
+        }
+        var col=lk>0.5?'200,255,0':'138,147,166';
+        g.strokeStyle='rgba('+col+','+(0.35+lk*0.5)+')';g.lineWidth=1.5;
+        if(lk>0.5){g.shadowColor='#C8FF00';g.shadowBlur=6;}g.stroke();g.shadowBlur=0;
+      });
+      var done=locks.every(function(l){return l>=1;});
+      if(done)st.textContent='Channels locked';
+      if(el<6.4){loops.push(requestAnimationFrame(frame));}else{T(playV3,700);}
+    }
+    loops.push(requestAnimationFrame(frame));
+  }
+
+  /* ===== V4 · STREAM + EXTRACT ===== */
+  var R4=[['Body fat','<em>22</em>%'],['Skeletal muscle','<em>42</em>%'],['Recovery','68 · 8.1H'],['Program match','31 → <em>1</em>'],['Training tier','TIER <em>2</em>']];
+  document.getElementById('res4').innerHTML=R4.map(function(r,i){return '<div class="rr" id="r4-'+i+'"><div class="rk">'+r[0]+'</div><div class="rv">'+r[1]+'</div></div>';}).join('');
+  var GL='0123456789ABCDEF·%.HRVSLPKG';
+  function streamRow(){var s='';for(var i=0;i<9;i++){var ch=GL[Math.floor(Math.random()*GL.length)];s+= Math.random()<0.08?'<span class="hot">'+ch+'</span>':ch;}return s;}
+  function playV4(){
+    var st=document.getElementById('st4'),pf=document.getElementById('pf4'),col=document.getElementById('stream4');
+    st.textContent='Extracting signal';pf.style.transition='none';pf.style.width='0';
+    T(function(){pf.style.transition='width 5.2s linear';pf.style.width='100%';},60);
+    R4.forEach(function(r,i){document.getElementById('r4-'+i).className='rr';});
+    // build stream
+    var lines=[];for(var i=0;i<26;i++)lines.push(streamRow());
+    col.innerHTML=lines.join('\n');col.style.transform='translateY(0)';
+    var start=null;
+    function frame(ts){
+      if(!start)start=ts;var el=(ts-start)/1000;
+      col.style.transform='translateY(-'+((el*46)%460)+'px)';
+      if(Math.random()<0.4){lines.push(streamRow());if(lines.length>40)lines.shift();col.innerHTML=lines.join('\n');}
+      if(el<6){loops.push(requestAnimationFrame(frame));}
+    }
+    loops.push(requestAnimationFrame(frame));
+    R4.forEach(function(r,i){T(function(){document.getElementById('r4-'+i).classList.add('in');st.textContent='Locked · '+r[0];},700+i*900);});
+    T(function(){st.textContent='Read complete';},700+R4.length*900);
+    T(playV4,700+R4.length*900+1400);
+  }
+
+  /* ===== V5 · BODY SCAN ===== */
+  function playV5(){
+    var line=document.getElementById('line5'),glow=document.getElementById('glow5'),st=document.getElementById('st5'),pf=document.getElementById('pf5');
+    var fig=document.querySelector('#bs5 .fig'),Hh=fig.offsetHeight||420;
+    var ros={30:'ro-muscle',52:'ro-fat',70:'ro-knee'};
+    ['ro-muscle','ro-fat','ro-knee'].forEach(function(id){document.getElementById(id).classList.remove('show');});
+    st.textContent='Scanning composition';pf.style.transition='none';pf.style.width='0';
+    T(function(){pf.style.transition='width 4.4s linear';pf.style.width='100%';},60);
+    var start=null,DUR=4400;
+    function frame(ts){
+      if(!start)start=ts;var t=(ts-start)/DUR;var y=Math.min(1,t)* (Hh);
+      line.style.top=y+'px';glow.style.transform='translateY('+(y-58)+'px)';
+      var pct=y/Hh*100;
+      if(pct>30)document.getElementById('ro-muscle').classList.add('show');
+      if(pct>52)document.getElementById('ro-fat').classList.add('show');
+      if(pct>70)document.getElementById('ro-knee').classList.add('show');
+      if(pct>15&&pct<40)st.textContent='Reading upper body';
+      else if(pct>=40&&pct<62)st.textContent='Reading midsection';
+      else if(pct>=62&&pct<90)st.textContent='Reading lower body';
+      if(t<1){loops.push(requestAnimationFrame(frame));}
+      else{line.style.opacity='0';st.textContent='Read complete';T(function(){line.style.opacity='1';playV5();},1500);}
+    }
+    loops.push(requestAnimationFrame(frame));
+  }
+
+  function playAll(){clearLoops();playV1();playV2();playV3();playV4();playV5();}
+  document.getElementById('replay').addEventListener('click',playAll);
+  playAll();
+})();
+</script>
+</body>
+</html>
