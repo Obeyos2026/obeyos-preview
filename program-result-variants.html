@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Result variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--sig:var(--lime);--head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;min-height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;padding:34px 0 80px;}
+.lab{max-width:430px;margin:0 auto 12px;padding:0 18px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.lab b{color:var(--white);}.lab span{color:var(--mid);font-weight:400;letter-spacing:.06em;text-transform:none;}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:56px;}
+.screen{position:relative;width:100%;max-width:430px;height:720px;overflow:hidden;border-radius:26px;border:1px solid var(--hair);
+  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.03) 1px,transparent 1px),radial-gradient(130% 70% at 50% 12%,rgba(200,255,0,.06),transparent 60%);background-size:28px 28px,100% 100%;}
+.topo{position:absolute;inset:0;opacity:.5;background:radial-gradient(70% 50% at 50% 62%,rgba(200,255,0,.03),transparent 70%);}
+.eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;}
+.eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
+.cta{display:block;width:calc(100% - 44px);position:absolute;left:22px;bottom:26px;height:50px;border:none;border-radius:25px;background:var(--sig);color:#0A0D12;
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;line-height:50px;text-align:center;cursor:pointer;}
+.corner{position:absolute;font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;}
+
+/* scan-land (reused from verdict-preview) */
+.pname{position:relative;display:inline-block;}
+.pname .scan{position:absolute;inset:-8px -14px;z-index:0;pointer-events:none;overflow:hidden;}
+.pname .scan::after{content:"";position:absolute;inset:0;opacity:0;
+  background:radial-gradient(circle at 50% 50%,var(--sig) 0%,transparent 56%),radial-gradient(circle at 42% 46%,var(--sig) 0%,transparent 40%),radial-gradient(circle at 60% 56%,var(--sig) 0%,transparent 44%);
+  mix-blend-mode:screen;filter:blur(7px);}
+.play .pname.land .scan::after{animation:scanSweep 2.1s cubic-bezier(.5,.75,.4,1) forwards;}
+@keyframes scanSweep{0%{opacity:0;transform:translateX(-64%);}14%{opacity:.9;}55%{opacity:.7;}82%{opacity:.35;}100%{opacity:0;transform:translateX(64%);}}
+.pname .txt{position:relative;z-index:2;font-family:var(--head);line-height:.88;opacity:0;}
+.play .pname.land .txt{animation:nameIn 1.5s var(--ease) .25s forwards;}
+@keyframes nameIn{0%{opacity:0;filter:blur(12px);transform:translateY(8px) scale(.95);}55%{opacity:1;text-shadow:0 0 40px color-mix(in srgb,var(--sig) 50%,transparent);}100%{opacity:1;filter:blur(0);transform:none;text-shadow:none;}}
+
+/* ---- V1 SPEC SHEET ---- */
+.v1{padding:64px 30px 0;display:flex;flex-direction:column;}
+.v1 .pname .txt{font-size:52px;letter-spacing:.01em;margin-top:10px;}
+.spec{margin-top:30px;border-top:1px solid var(--hair);}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:16px 2px;border-bottom:1px solid var(--hair);opacity:0;transform:translateX(-8px);}
+.play .srow.in{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .5s var(--ease);}
+.srow .sk{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.srow .sk svg{width:15px;height:15px;stroke:var(--sig);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.srow .sv{font-family:var(--head);font-size:22px;color:var(--white);letter-spacing:.02em;}
+.srow .sv em{font-style:normal;color:var(--sig);}
+.srow .su{font-family:var(--mono);font-size:9px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase;margin-left:5px;}
+
+/* ---- V2 FIT RING ---- */
+.v2{padding:56px 30px 0;text-align:center;display:flex;flex-direction:column;align-items:center;}
+.v2 .pname .txt{font-size:46px;letter-spacing:.01em;}
+.ringwrap{position:relative;width:230px;height:230px;margin:22px 0 6px;}
+.ringwrap canvas{position:absolute;inset:0;width:100%;height:100%;}
+.ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ringc .rn{font-family:var(--head);font-size:74px;line-height:.8;color:var(--white);opacity:0;}
+.play .ringc .rn{animation:nameIn 1.2s var(--ease) .5s forwards;}
+.ringc .rl{font-family:var(--mono);font-size:9px;letter-spacing:.28em;color:var(--sig);text-transform:uppercase;margin-top:8px;}
+.ringc .rs{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.v2 .metaline{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--mid);text-transform:uppercase;margin-top:14px;opacity:0;}
+.play .v2 .metaline{animation:nameIn 1s var(--ease) .9s forwards;}
+.v2 .metaline b{color:var(--white);}.v2 .metaline i{color:var(--dim);font-style:normal;margin:0 8px;}
+
+/* ---- V3 MINIMAL ARRIVAL ---- */
+.v3{padding:0 30px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.v3 .bolt{width:46px;height:46px;margin-bottom:26px;filter:drop-shadow(0 0 12px rgba(200,255,0,.6));opacity:0;}
+.play .v3 .bolt{animation:nameIn 1s var(--ease) forwards;}
+.v3 .bolt svg{width:100%;height:100%;}
+.v3 .eb{margin-bottom:16px;opacity:0;}
+.play .v3 .eb{animation:nameIn 1s var(--ease) .15s forwards;}
+.v3 .pname .txt{font-size:58px;letter-spacing:.005em;}
+.v3 .metaline{margin-top:22px;display:flex;align-items:center;gap:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--mid);text-transform:uppercase;opacity:0;}
+.play .v3 .metaline{animation:nameIn 1s var(--ease) 1s forwards;}
+.v3 .metaline b{color:var(--white);}.v3 .metaline i{width:1px;height:11px;background:var(--hair);font-style:normal;margin:0 12px;}
+.v3 .metaline em{color:var(--sig);font-style:normal;}
+
+.replay{position:fixed;top:14px;right:14px;z-index:50;background:rgba(255,255,255,.05);border:1px solid var(--hair);color:var(--muted);
+  font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:16px;cursor:pointer;}
+</style>
+</head>
+<body>
+<button class="replay" id="replay">▸ Replay all</button>
+<div class="wrap">
+
+  <!-- V1 -->
+  <div>
+    <div class="lab"><b>V1</b> · Spec sheet <span>— the program opens like a file. Data table, hairlines, no pills.</span></div>
+    <div class="screen play" id="s1">
+      <div class="topo"></div>
+      <div class="corner" style="top:18px;left:20px;">ZEAL · ASSIGNED</div>
+      <div class="corner" style="top:18px;right:20px;">FORGE 01</div>
+      <div class="v1">
+        <span class="eb">Your program</span>
+        <div class="pname land" style="margin-top:2px;"><span class="scan"></span><span class="txt">UPPER<br>/ LOWER</span></div>
+        <div class="spec" id="spec1"></div>
+      </div>
+      <button class="cta">See your plan →</button>
+    </div>
+  </div>
+
+  <!-- V2 -->
+  <div>
+    <div class="lab"><b>V2</b> · Fit ring <span>— the match score is the hero. Dashed instrument gauge fills to 95%.</span></div>
+    <div class="screen play" id="s2">
+      <div class="topo"></div>
+      <div class="corner" style="top:18px;left:20px;">ZEAL · ASSIGNED</div>
+      <div class="v2">
+        <span class="eb" style="margin-top:2px;">Your program</span>
+        <div class="pname land" style="margin-top:12px;"><span class="scan"></span><span class="txt">UPPER / LOWER</span></div>
+        <div class="ringwrap"><canvas id="ring2" width="460" height="460"></canvas>
+          <div class="ringc"><div class="rn">95</div><div class="rl">Fit score</div><div class="rs">matched to your signals</div></div>
+        </div>
+        <div class="metaline"><b>SPLIT U/L</b><i>·</i><b>4 DAYS</b><i>·</i><b>TIER 2</b></div>
+      </div>
+      <button class="cta">See your plan →</button>
+    </div>
+  </div>
+
+  <!-- V3 -->
+  <div>
+    <div class="lab"><b>V3</b> · Arrival <span>— minimal. The program name is everything; one instrument line beneath.</span></div>
+    <div class="screen play" id="s3">
+      <div class="topo"></div>
+      <div class="corner" style="top:18px;left:20px;">ZEAL · ASSIGNED</div>
+      <div class="corner" style="top:18px;right:20px;">FIT 95%</div>
+      <div class="v3">
+        <div class="bolt"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#C8FF00"/></svg></div>
+        <span class="eb">ZEAL assigned your program</span>
+        <div class="pname land"><span class="scan"></span><span class="txt">UPPER<br>/ LOWER</span></div>
+        <div class="metaline"><b>4 DAYS</b><i></i><b>TIER <em>2</em></b><i></i><b>UPPER · LOWER SPLIT</b></div>
+      </div>
+      <button class="cta">See your plan →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var ICO={split:'<path d="M4 16h16M7 11h10M10 6h4"/>',freq:'<path d="M4 12h3l2-5 3 10 2-5h5"/>',tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',fit:'<path d="M4 18l6-9 4 5 6-9"/>'};
+  var SPEC=[['split','Split','Upper / Lower',''],['freq','Frequency','4','days / week'],['tier','Tier','2',''],['fit','Fit','<em>95%</em>','']];
+  function fillSpec(){
+    document.getElementById('spec1').innerHTML=SPEC.map(function(r){
+      return '<div class="srow"><span class="sk"><svg viewBox="0 0 24 24">'+ICO[r[0]]+'</svg>'+r[1]+'</span><span class="sv">'+r[2]+(r[3]?'<span class="su">'+r[3]+'</span>':'')+'</span></div>';
+    }).join('');
+  }
+
+  // dashed tick ring
+  function drawRing(cv,frac,t){
+    var ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=W*0.40,N=72;
+    ctx.clearRect(0,0,W,H);
+    var lit=Math.floor(N*frac*t);
+    for(var i=0;i<N;i++){
+      var a=-Math.PI/2+ (i/N)*Math.PI*2;
+      var on=i<lit;
+      var r1=R-(on?13:8), r2=R+(on?7:5);
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);
+      ctx.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2);
+      ctx.lineWidth=on?3:2;
+      ctx.strokeStyle=on?'rgba(200,255,0,'+(0.85)+')':'rgba(255,255,255,0.10)';
+      if(on){ctx.shadowColor='#C8FF00';ctx.shadowBlur=8;}else{ctx.shadowBlur=0;}
+      ctx.stroke();
+    }
+    ctx.shadowBlur=0;
+  }
+  function animRing(){
+    var cv=document.getElementById('ring2');if(!cv)return;
+    var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){drawRing(cv,0.95,1);return;}
+    var start=null,DUR=1600;
+    function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/DUR); var e=1-Math.pow(1-p,3); drawRing(cv,0.95,e); if(p<1)requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+
+  function playAll(){
+    fillSpec();
+    // V1 spec rows stagger
+    var rows=document.querySelectorAll('#spec1 .srow');
+    rows.forEach(function(r,i){ r.classList.remove('in'); setTimeout(function(){r.classList.add('in');}, 700+i*150); });
+    // re-trigger scan-land by toggling .land
+    document.querySelectorAll('.pname').forEach(function(p){ p.classList.remove('land'); void p.offsetWidth; p.classList.add('land'); });
+    animRing();
+  }
+  document.getElementById('replay').addEventListener('click',playAll);
+  playAll();
+})();
+</script>
+</body>
+</html>
