@@ -57,13 +57,14 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .leg{display:inline-flex;align-items:center;gap:5px;}
 .leg i{width:16px;height:8px;border-radius:2px;background:color-mix(in srgb,var(--sig) 16%,transparent);border-top:1px dashed color-mix(in srgb,var(--sig) 50%,transparent);border-bottom:1px dashed color-mix(in srgb,var(--sig) 50%,transparent);}
 
-.trend{width:100%;height:118px;display:block;overflow:visible;}
-.trend .band{fill:color-mix(in srgb,var(--sig) 12%,transparent);}
-.trend .bedge{stroke:color-mix(in srgb,var(--sig) 42%,transparent);stroke-width:1;stroke-dasharray:3 4;}
-.trend .ln{fill:none;stroke:rgba(255,255,255,.34);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset 1.7s var(--ease) .3s;}
-.screen.play .trend .ln{stroke-dashoffset:0;}
-.trend .pt{opacity:0;transition:opacity .4s ease;}
-.screen.play .trend .pt{opacity:1;}
+.scale{width:100%;height:70px;display:block;overflow:visible;}
+.def{font-family:var(--body);font-weight:300;font-size:12px;line-height:1.55;color:var(--muted);margin-top:14px;}
+.def b{color:var(--white);font-weight:500;}
+.trend{width:100%;height:140px;display:block;overflow:visible;}
+.trend .bar{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom;transition:transform .7s var(--ease);}
+.screen.play .trend .bar{transform:scaleY(1);}
+.trend .bl{opacity:0;transition:opacity .4s ease;}
+.screen.play .trend .bl{opacity:1;}
 .taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
 .taxis .now{color:var(--sig);}
 
@@ -110,10 +111,17 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     </div>
   </div>
 
+  <!-- THE STRAIN SCALE (definition) -->
+  <div class="card fade" style="transition-delay:.06s">
+    <div class="ch"><span class="k">The strain scale</span><span class="kv">today · <b style="color:var(--white)">HIGH</b></span></div>
+    <svg class="scale" id="scale" viewBox="0 0 380 70" preserveAspectRatio="none"></svg>
+    <p class="def">Cardiovascular load on a <b>0&ndash;21</b> scale &mdash; how hard your body worked today, from all activity, not just training. Your <b style="color:var(--mint)">READY</b> verdict set today's target band at <b>13&ndash;16</b>; landing inside it is <b style="color:var(--sig)">OPTIMAL</b>.</p>
+  </div>
+
   <!-- STRAIN TREND vs target corridor -->
   <div class="card fade" style="transition-delay:.1s">
     <div class="ch"><span class="k">Strain · 7 days</span><span class="kv leg"><i></i>&nbsp;target corridor</span></div>
-    <svg class="trend" id="trend" viewBox="0 0 380 118" preserveAspectRatio="none"></svg>
+    <svg class="trend" id="trend" viewBox="0 0 380 140" preserveAspectRatio="none"></svg>
     <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
   </div>
 
@@ -150,17 +158,36 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     }
     if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
   })();
-  // 7-day strain vs corridor
-  (function(){ var svg=document.getElementById('trend'),d7=[11,16,9,14,18,12,14.2],W=380,H=118,PL=6,PR=6,PT=12,PB=12,mn=6,mx=21;
-    function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
+  // 7-day strain — bars vs target corridor (bar top inside band = matched)
+  (function(){ var svg=document.getElementById('trend'),d7=[11,16,9,14,18,12,14.2],W=380,H=140,PL=8,PR=8,PT=24,PB=8,mx=21;
+    function Y(v){return (H-PB)-(H-PT-PB)*(v/mx);}
     function col(v){return (v>=LO&&v<=HI)?'#C8FF00':(v<LO?'#F59E0B':'#EF4444');}
-    function sm(p){if(p.length<2)return '';var d='M'+p[0][0]+','+p[0][1];for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;d+='C'+(p1[0]+(p2[0]-p0[0])/6)+','+(p1[1]+(p2[1]-p0[1])/6)+' '+(p2[0]-(p3[0]-p1[0])/6)+','+(p2[1]-(p3[1]-p1[1])/6)+' '+p2[0]+','+p2[1];}return d;}
-    var pts=d7.map(function(v,i){return [PL+(W-PL-PR)*(i/6),Y(v)];});
-    var yHI=Y(HI),yLO=Y(LO);
-    svg.innerHTML='<rect class="band" x="0" y="'+yHI+'" width="'+W+'" height="'+(yLO-yHI)+'"/>'+
-      '<line class="bedge" x1="0" y1="'+yHI+'" x2="'+W+'" y2="'+yHI+'"/><line class="bedge" x1="0" y1="'+yLO+'" x2="'+W+'" y2="'+yLO+'"/>'+
-      '<path class="ln" d="'+sm(pts)+'"/>'+
-      pts.map(function(p,i){var last=i===6;return '<circle class="pt" style="transition-delay:'+(1.2+i*0.08)+'s" cx="'+p[0]+'" cy="'+p[1]+'" r="'+(last?5:3.6)+'" fill="'+col(d7[i])+'" stroke="#0A0D12" stroke-width="'+(last?2:1.4)+'"/>';}).join('');
+    var slot=(W-PL-PR)/7, bw=slot*0.44, yHI=Y(HI),yLO=Y(LO), h='';
+    h+='<rect x="0" y="'+yHI+'" width="'+W+'" height="'+(yLO-yHI)+'" fill="rgba(200,255,0,.10)"/>';
+    h+='<line x1="0" y1="'+yHI+'" x2="'+W+'" y2="'+yHI+'" stroke="rgba(200,255,0,.34)" stroke-width="1" stroke-dasharray="3 4"/>';
+    h+='<line x1="0" y1="'+yLO+'" x2="'+W+'" y2="'+yLO+'" stroke="rgba(200,255,0,.34)" stroke-width="1" stroke-dasharray="3 4"/>';
+    d7.forEach(function(v,i){var cx=PL+slot*i+slot/2, x=cx-bw/2, y=Y(v), last=i===6, c=col(v);
+      h+='<rect class="bar" style="transition-delay:'+(0.4+i*0.08)+'s" x="'+x+'" y="'+y+'" width="'+bw+'" height="'+((H-PB)-y)+'" rx="3" fill="'+c+'" opacity="'+(last?1:0.85)+'"/>';
+      h+='<text class="bl" style="transition-delay:'+(0.9+i*0.08)+'s" x="'+cx+'" y="'+(y-6)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="'+(last?'#F9FAFB':'rgba(249,250,251,.55)')+'">'+v.toFixed(1)+'</text>';
+    });
+    svg.innerHTML=h;
+  })();
+  // the strain scale — 0..21 with intensity zones + today marker + target band
+  (function(){ var svg=document.getElementById('scale'); if(!svg)return; var W=380,PL=8,PR=8,y=44;
+    function X(v){return PL+(W-PL-PR)*(v/21);}
+    var zones=[['LIGHT',0,9],['MODERATE',9,13],['HIGH',13,17],['ALL-OUT',17,21]], cur='HIGH', h='';
+    h+='<line x1="'+X(0)+'" y1="'+y+'" x2="'+X(21)+'" y2="'+y+'" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-linecap="round"/>';
+    zones.forEach(function(z){var xm=X((z[1]+z[2])/2),active=z[0]===cur;
+      h+='<text x="'+xm+'" y="13" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" letter-spacing="1" fill="'+(active?'#F9FAFB':'#5C6679')+'">'+z[0]+'</text>';
+      if(z[1]>0)h+='<line x1="'+X(z[1])+'" y1="'+(y-3.5)+'" x2="'+X(z[1])+'" y2="'+(y+3.5)+'" stroke="rgba(255,255,255,.15)" stroke-width="1"/>';
+    });
+    h+='<rect x="'+X(13)+'" y="'+(y-6)+'" width="'+(X(16)-X(13))+'" height="12" rx="2" fill="rgba(200,255,0,.14)" stroke="rgba(200,255,0,.5)" stroke-width="1" stroke-dasharray="3 3"/>';
+    h+='<text x="'+((X(13)+X(16))/2)+'" y="'+(y+20)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#C8FF00">TARGET</text>';
+    var tx=X(14.2);
+    h+='<line x1="'+tx+'" y1="'+(y-14)+'" x2="'+tx+'" y2="'+(y+7)+'" stroke="#C8FF00" stroke-width="1.5"/>';
+    h+='<circle cx="'+tx+'" cy="'+y+'" r="4" fill="#C8FF00" stroke="#0A0D12" stroke-width="1.5"/>';
+    h+='<text x="'+tx+'" y="'+(y-18)+'" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="15" fill="#F9FAFB">14.2</text>';
+    svg.innerHTML=h;
   })();
   // drivers — share of load
   var D=[['Main session','#C8FF00','8.9','PTS','push · 1:12','63%'],['Zone-2 cardio','#00E5A0','3.1','PTS','34 min','22%'],['All-day load','#F59E0B','2.2','PTS','steps + NEAT','15%']];
