@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Session</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--sig:var(--mint);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 50% at 50% -6%,rgba(0,229,160,.06),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 40px;position:relative;}
+.hd{display:flex;align-items:center;gap:11px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.hd .clock{font-family:var(--head);font-size:20px;color:var(--sig);margin-left:auto;letter-spacing:.03em;}
+/* progress */
+.prog{margin-top:16px;}
+.prog .pt{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-bottom:7px;}
+.prog .pbar{height:4px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden;}
+.prog .pfill{height:100%;border-radius:2px;background:var(--sig);box-shadow:0 0 8px color-mix(in srgb,var(--sig) 55%,transparent);transition:width .5s var(--ease);}
+/* exercise */
+.exhd{margin-top:26px;}
+.exhd .eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--sig);text-transform:uppercase;}
+.exhd .nm{font-family:var(--head);font-size:46px;line-height:.92;letter-spacing:.01em;margin-top:6px;}
+.exhd .tg{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:8px;}
+.exhd .tg b{color:var(--white);}
+/* set list */
+.sets{margin-top:22px;display:flex;flex-direction:column;gap:8px;}
+.set{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:13px 14px;border-radius:13px;border:1px solid var(--hair);background:var(--panel);}
+.set .sn{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;}
+.set .sv{font-family:var(--head);font-size:19px;color:var(--mid);}
+.set .sr{font-family:var(--mono);font-size:9px;color:var(--dim);text-transform:uppercase;text-align:right;}
+.set.done{border-color:color-mix(in srgb,var(--sig) 30%,transparent);background:color-mix(in srgb,var(--sig) 6%,transparent);}
+.set.done .sv{color:var(--white);}
+.set.done .chk{color:var(--sig);}
+.set.done .sr{color:var(--sig);}
+/* active set */
+.active{margin-top:22px;padding:18px 16px;border-radius:16px;background:var(--glass);border:1px solid color-mix(in srgb,var(--sig) 34%,transparent);box-shadow:0 0 24px -8px color-mix(in srgb,var(--sig) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.06);}
+.active .ah{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;}
+.active .ah .an{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--sig);text-transform:uppercase;}
+.active .ah .at{font-family:var(--mono);font-size:9px;color:var(--dim);text-transform:uppercase;}
+.steppers{display:flex;gap:12px;}
+.acol{flex:1;text-align:center;}
+.alab{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+.astep{display:flex;align-items:center;justify-content:center;gap:10px;}
+.astep button{width:34px;height:34px;border-radius:10px;border:1px solid var(--hair);background:var(--panel);color:var(--white);font-size:19px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
+.astep button:active{background:rgba(255,255,255,.06);}
+.aval{font-family:var(--head);font-size:30px;color:var(--white);min-width:58px;line-height:.8;}
+.aval small{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:2px;}
+.arpe{margin-top:18px;}
+.rpe-row{display:flex;gap:6px;}
+.rpe-row .rp{flex:1;padding:11px 0;text-align:center;border-radius:10px;border:1px solid var(--hair);background:var(--panel);font-family:var(--head);font-size:17px;color:var(--mid);cursor:pointer;transition:all .12s;}
+.rpe-row .rp.sel{border-color:var(--sig);background:color-mix(in srgb,var(--sig) 12%,transparent);color:var(--sig);}
+.logbtn{display:block;width:100%;margin-top:20px;height:48px;border:none;border-radius:24px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+.logbtn:active{transform:scale(.99);}
+.exnav{display:flex;justify-content:space-between;margin-top:20px;}
+.exnav button{background:none;border:none;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;cursor:pointer;padding:8px;}
+.exnav button:disabled{opacity:.3;}
+
+/* REST overlay */
+.ov{position:fixed;inset:0;max-width:430px;margin:0 auto;background:#0A0D12;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:30;opacity:0;pointer-events:none;transition:opacity .4s;}
+.ov.on{opacity:1;pointer-events:auto;}
+.ov .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--sig);text-transform:uppercase;}
+.rtimer{position:relative;width:230px;height:230px;margin:26px 0;}
+.rtimer canvas{position:absolute;top:0;left:0;}
+.rtimer .rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.rtimer .rt{font-family:var(--head);font-size:64px;color:var(--white);line-height:.8;letter-spacing:.02em;}
+.rtimer .ru{font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-top:6px;}
+.rnext{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.rnext b{color:var(--white);}
+.rbtns{display:flex;gap:12px;margin-top:30px;}
+.rbtns button{padding:13px 22px;border-radius:22px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;}
+.rbtns .add{background:var(--panel);border:1px solid var(--hair);color:var(--muted);}
+.rbtns .skip{background:var(--sig);border:none;color:#0A0D12;}
+
+/* DONE overlay */
+.done .big{font-family:var(--head);font-size:60px;line-height:.9;letter-spacing:.02em;color:var(--sig);text-align:center;text-shadow:0 0 30px color-mix(in srgb,var(--sig) 34%,transparent);}
+.done .sub{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:10px;}
+.dstats{display:flex;width:100%;margin-top:34px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.dstats .dc{flex:1;text-align:center;padding:16px 4px;border-left:1px solid var(--hair);}
+.dstats .dc:first-child{border-left:none;}
+.dstats .dv{font-family:var(--head);font-size:26px;color:var(--white);}
+.dstats .dv.g{color:var(--sig);}
+.dstats .dv small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:2px;}
+.dstats .dk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+.dnote{font-family:var(--body);font-weight:300;font-size:13px;line-height:1.55;color:var(--muted);text-align:center;margin-top:24px;max-width:300px;}
+.dnote b{color:var(--white);font-weight:600;}
+.dcta{display:block;width:100%;max-width:340px;margin-top:30px;height:46px;border:none;border-radius:23px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-align:center;line-height:46px;text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="hd">
+    <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="tt">Upper body · session</span><span class="clock" id="clock">0:00</span>
+  </div>
+  <div class="prog">
+    <div class="pt"><span id="pLabel">Exercise 1 of 5</span><span id="pPct">0%</span></div>
+    <div class="pbar"><div class="pfill" id="pFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="exhd">
+    <div class="eb" id="exEb">Exercise 1 of 5</div>
+    <div class="nm" id="exName">Barbell bench press</div>
+    <div class="tg" id="exTarget"><b>4 sets × 5 reps</b> · last 80kg</div>
+  </div>
+
+  <div class="sets" id="sets"></div>
+
+  <div class="active" id="active">
+    <div class="ah"><span class="an" id="setLabel">Set 1</span><span class="at">tap to log</span></div>
+    <div class="steppers">
+      <div class="acol"><div class="alab">Weight</div><div class="astep"><button data-a="w-">−</button><div class="aval" id="wVal">80<small>KG</small></div><button data-a="w+">+</button></div></div>
+      <div class="acol"><div class="alab">Reps</div><div class="astep"><button data-a="r-">−</button><div class="aval" id="rVal">5</div><button data-a="r+">+</button></div></div>
+    </div>
+    <div class="arpe"><div class="alab">RPE · effort</div><div class="rpe-row" id="rpeRow"></div></div>
+    <button class="logbtn" id="logBtn">Log set →</button>
+  </div>
+
+  <div class="exnav">
+    <button id="exPrev">‹ Prev exercise</button>
+    <button id="exNext">Skip exercise ›</button>
+  </div>
+</div>
+
+<!-- REST -->
+<div class="ov" id="rest">
+  <span class="lbl">Rest</span>
+  <div class="rtimer"><canvas id="rcv"></canvas><div class="rc"><div class="rt" id="rClock">2:00</div><div class="ru">recover</div></div></div>
+  <div class="rnext" id="rNext">Next · <b>Set 2</b> · 4 × 5</div>
+  <div class="rbtns"><button class="add" id="rAdd">+30s</button><button class="skip" id="rSkip">Skip rest →</button></div>
+</div>
+
+<!-- DONE -->
+<div class="ov done" id="done">
+  <div class="big">SESSION<br>COMPLETE</div>
+  <div class="sub" id="dVerdict">You executed your READY session</div>
+  <div class="dstats">
+    <div class="dc"><div class="dv" id="dTime">52<small>MIN</small></div><div class="dk">Duration</div></div>
+    <div class="dc"><div class="dv" id="dSets">17</div><div class="dk">Sets</div></div>
+    <div class="dc"><div class="dv g" id="dStrain">8.9</div><div class="dk">Strain earned</div></div>
+  </div>
+  <div class="dnote">This session becomes <b>today's strain</b> — ZEAL folds it into tomorrow's verdict. Avg RPE <b id="dRpe">8.1</b>.</div>
+  <a class="dcta" href="dash-live.html">Back to dashboard →</a>
+</div>
+
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var EX=[
+    {n:'Barbell bench press',sets:4,reps:5,kg:80,rest:150},
+    {n:'Weighted pull-up',sets:4,reps:6,kg:15,rest:120},
+    {n:'Overhead press',sets:3,reps:8,kg:45,rest:120},
+    {n:'Incline DB press',sets:3,reps:10,kg:26,rest:90},
+    {n:'Face pull · superset',sets:3,reps:15,kg:20,rest:75}
+  ];
+  var TOTAL=EX.reduce(function(a,e){return a+e.sets;},0);
+  var exIdx=0,setIdx=0,cur={kg:0,reps:0,rpe:8},logs=EX.map(function(){return [];});
+  var t0=Date.now(), restLeft=0, restTotal=0, restTimer=null;
+
+  // elapsed clock
+  function fmtClock(s){var m=Math.floor(s/60);return m+':'+(''+(s%60)).padStart(2,'0');}
+  setInterval(function(){document.getElementById('clock').textContent=fmtClock(Math.floor((Date.now()-t0)/1000));},1000);
+
+  function doneSets(){var d=0;logs.forEach(function(l){d+=l.length;});return d;}
+  function renderProg(){
+    var d=doneSets(), pct=Math.round(d/TOTAL*100);
+    document.getElementById('pLabel').textContent='Exercise '+(exIdx+1)+' of '+EX.length;
+    document.getElementById('pPct').textContent=pct+'%';
+    document.getElementById('pFill').style.width=pct+'%';
+  }
+  function renderRpe(){
+    document.getElementById('rpeRow').innerHTML=[6,7,8,9,10].map(function(v){return '<div class="rp'+(cur.rpe===v?' sel':'')+'" data-v="'+v+'">'+v+'</div>';}).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('#rpeRow .rp'),function(o){o.addEventListener('click',function(){cur.rpe=+o.dataset.v;renderRpe();});});
+  }
+  function render(){
+    var e=EX[exIdx];
+    document.getElementById('exEb').textContent='Exercise '+(exIdx+1)+' of '+EX.length;
+    document.getElementById('exName').textContent=e.n;
+    document.getElementById('exTarget').innerHTML='<b>'+e.sets+' sets × '+e.reps+' reps</b> · last '+e.kg+'kg';
+    // set rows
+    var rows='';
+    for(var i=0;i<e.sets;i++){
+      if(i<logs[exIdx].length){var g=logs[exIdx][i];rows+='<div class="set done"><span class="sn">Set '+(i+1)+'</span><span class="sv">'+g.kg+'<small style="font-family:var(--mono);font-size:9px;color:var(--dim)">KG</small> × '+g.reps+'</span><span class="sr">RPE '+g.rpe+'</span></div>';}
+      else if(i===logs[exIdx].length){rows+='<div class="set" style="opacity:.4"><span class="sn">Set '+(i+1)+'</span><span class="sv">— now —</span><span class="sr">'+e.reps+' reps</span></div>';}
+      else{rows+='<div class="set" style="opacity:.4"><span class="sn">Set '+(i+1)+'</span><span class="sv">—</span><span class="sr">'+e.reps+' reps</span></div>';}
+    }
+    document.getElementById('sets').innerHTML=rows;
+    setIdx=logs[exIdx].length;
+    cur={kg:e.kg,reps:e.reps,rpe:8};
+    document.getElementById('wVal').innerHTML=cur.kg+'<small>KG</small>';
+    document.getElementById('rVal').textContent=cur.reps;
+    document.getElementById('setLabel').textContent='Set '+(setIdx+1);
+    renderRpe(); renderProg();
+    document.getElementById('exPrev').disabled=exIdx===0;
+    document.getElementById('active').style.display=setIdx<e.sets?'block':'none';
+  }
+
+  document.querySelectorAll('.astep button').forEach(function(b){b.addEventListener('click',function(){
+    var a=b.dataset.a;
+    if(a==='w-')cur.kg=Math.max(0,cur.kg-2.5); if(a==='w+')cur.kg+=2.5;
+    if(a==='r-')cur.reps=Math.max(1,cur.reps-1); if(a==='r+')cur.reps+=1;
+    document.getElementById('wVal').innerHTML=(cur.kg%1?cur.kg:cur.kg)+'<small>KG</small>';
+    document.getElementById('rVal').textContent=cur.reps;
+  });});
+
+  document.getElementById('logBtn').addEventListener('click',function(){
+    logs[exIdx].push({kg:cur.kg,reps:cur.reps,rpe:cur.rpe});
+    if(navigator.vibrate)navigator.vibrate([10,40,10]);
+    var e=EX[exIdx];
+    render();
+    if(logs[exIdx].length>=e.sets){
+      // exercise complete
+      if(exIdx>=EX.length-1){ finish(); return; }
+      startRest(e.rest, EX[exIdx+1].n, EX[exIdx+1].sets, EX[exIdx+1].reps, true);
+    } else {
+      startRest(e.rest, e.n, e.sets, e.reps, false);
+    }
+  });
+  document.getElementById('exPrev').addEventListener('click',function(){ if(exIdx>0){exIdx--;render();} });
+  document.getElementById('exNext').addEventListener('click',function(){ if(exIdx<EX.length-1){exIdx++;render();}else finish(); });
+
+  // REST
+  var rcv=document.getElementById('rcv');
+  function drawRestRing(frac){
+    var size=230,dpr=devicePixelRatio||1;rcv.width=size*dpr;rcv.height=size*dpr;rcv.style.width=size+'px';rcv.style.height=size+'px';
+    var ctx=rcv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-6,tl=R*0.11,sa=150*Math.PI/180,sw=240*Math.PI/180;
+    ctx.clearRect(0,0,size,size);
+    for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
+      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.6;ctx.lineCap='round';
+      if(t<=frac){ctx.strokeStyle='rgba(0,229,160,.72)';ctx.shadowColor='rgba(0,229,160,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}
+    ctx.shadowBlur=0;
+  }
+  function tickRest(){
+    restLeft--;
+    document.getElementById('rClock').textContent=fmtClock(Math.max(0,restLeft));
+    drawRestRing(Math.max(0,restLeft/restTotal));
+    if(restLeft<=0){ endRest(); }
+  }
+  function startRest(sec,nextName,nsets,nreps,exDone){
+    restTotal=sec;restLeft=sec;
+    document.getElementById('rClock').textContent=fmtClock(sec);
+    document.getElementById('rNext').innerHTML='Next · <b>'+(exDone?nextName:('Set '+(setIdx+1)))+'</b> · '+(exDone?(nsets+' × '+nreps):(EX[exIdx].sets+' × '+EX[exIdx].reps));
+    drawRestRing(1);
+    document.getElementById('rest').classList.add('on');
+    if(restTimer)clearInterval(restTimer);
+    if(!rm)restTimer=setInterval(tickRest,1000);
+  }
+  function endRest(){
+    if(restTimer)clearInterval(restTimer);
+    document.getElementById('rest').classList.remove('on');
+    // advance exercise if it was completed
+    if(logs[exIdx].length>=EX[exIdx].sets && exIdx<EX.length-1){ exIdx++; }
+    render();
+  }
+  document.getElementById('rSkip').addEventListener('click',endRest);
+  document.getElementById('rAdd').addEventListener('click',function(){restLeft+=30;restTotal+=30;document.getElementById('rClock').textContent=fmtClock(restLeft);drawRestRing(restLeft/restTotal);});
+
+  function finish(){
+    var allSets=0,rpeSum=0,rpeN=0;
+    logs.forEach(function(l){allSets+=l.length;l.forEach(function(s){rpeSum+=s.rpe;rpeN++;});});
+    var avgRpe=rpeN?(rpeSum/rpeN):8;
+    var mins=Math.max(1,Math.round((Date.now()-t0)/60000));
+    var strain=(allSets*0.42+(avgRpe-5)*0.55).toFixed(1);
+    document.getElementById('dTime').innerHTML=mins+'<small>MIN</small>';
+    document.getElementById('dSets').textContent=allSets;
+    document.getElementById('dStrain').textContent=strain;
+    document.getElementById('dRpe').textContent=avgRpe.toFixed(1);
+    document.getElementById('done').classList.add('on');
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
