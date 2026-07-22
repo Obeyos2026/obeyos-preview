@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Your program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--sig:var(--lime);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 45% at 50% -6%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 110px;}
+.fade{opacity:0;transform:translateY(9px);transition:opacity .55s var(--ease),transform .55s var(--ease);}
+.screen.play .fade{opacity:1;transform:none;}
+.hd{display:flex;align-items:center;gap:11px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.hd .as{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;letter-spacing:.06em;}
+
+.eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;margin-top:20px;display:flex;align-items:center;gap:7px;}
+.eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
+.pname{font-family:var(--head);font-size:56px;line-height:.88;letter-spacing:.01em;margin-top:8px;}
+.pmeta{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.pmeta b{font-family:var(--head);font-size:15px;color:var(--sig);letter-spacing:.02em;}
+
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:30px 0 12px;}
+.card{padding:16px;border-radius:16px;background:var(--glass);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+
+/* why */
+.why .wy{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:baseline;padding:11px 0;border-top:1px solid var(--hair);}
+.why .wy:first-child{border-top:none;}
+.why .wy svg{width:20px;height:20px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;align-self:center;}
+.why .wt{font-family:var(--body);font-weight:300;font-size:12.5px;line-height:1.45;color:var(--muted);}
+.why .wt b{color:var(--white);font-weight:600;}
+
+/* phases */
+.phases{display:flex;flex-direction:column;gap:8px;}
+.ph{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;padding:14px 15px;border-radius:13px;border:1px solid var(--hair);background:var(--panel);position:relative;overflow:hidden;}
+.ph .pn{font-family:var(--head);font-size:26px;color:var(--dim);line-height:.8;width:24px;}
+.ph.cur{border-color:color-mix(in srgb,var(--sig) 40%,transparent);background:color-mix(in srgb,var(--sig) 6%,transparent);}
+.ph.cur .pn{color:var(--sig);}
+.ph .pt{font-family:var(--head);font-size:18px;letter-spacing:.02em;}
+.ph .pd{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);margin-top:2px;line-height:1.35;}
+.ph .pw{text-align:right;}
+.ph .pw .wk{font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;}
+.ph .pw .in{font-family:var(--head);font-size:16px;color:var(--white);margin-top:2px;}
+.ph .pw .in.cur{color:var(--sig);}
+.ph .ntag{position:absolute;top:0;right:0;font-family:var(--mono);font-size:7px;letter-spacing:.1em;color:#0A0D12;background:var(--sig);padding:3px 7px;border-bottom-left-radius:8px;text-transform:uppercase;}
+
+/* week */
+.week{display:flex;gap:5px;}
+.wd{flex:1;aspect-ratio:.72;border-radius:10px;border:1px solid var(--hair);background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
+.wd.on{border-color:color-mix(in srgb,var(--sig) 40%,transparent);background:color-mix(in srgb,var(--sig) 8%,transparent);}
+.wd svg{width:16px;height:16px;stroke:var(--mid);fill:none;stroke-width:1.6;}
+.wd.on svg{stroke:var(--sig);}
+.wd .dl{font-family:var(--mono);font-size:7px;letter-spacing:.04em;color:var(--dim);text-transform:uppercase;}
+.wd .df{font-family:var(--head);font-size:12px;color:var(--mid);}
+.wd.on .df{color:var(--white);}
+
+/* movements */
+.tabs{display:flex;gap:6px;margin-bottom:12px;}
+.tab{flex:1;padding:10px;text-align:center;border-radius:10px;border:1px solid var(--hair);background:var(--panel);font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--mid);text-transform:uppercase;cursor:pointer;}
+.tab.sel{border-color:var(--sig);background:color-mix(in srgb,var(--sig) 12%,transparent);color:var(--sig);}
+.mv{display:grid;grid-template-columns:22px 1fr auto;gap:11px;align-items:center;padding:11px 0;border-top:1px solid var(--hair);}
+.mv:first-child{border-top:none;}
+.mv .mn{font-family:var(--mono);font-size:9px;color:var(--dim);}
+.mv .mt{font-family:var(--body);font-weight:400;font-size:13.5px;color:var(--white);}
+.mv .mt small{display:block;font-family:var(--mono);font-size:8px;color:var(--sig);letter-spacing:.04em;margin-top:2px;text-transform:uppercase;}
+.mv .mx{font-family:var(--mono);font-size:10px;color:var(--mid);letter-spacing:.04em;}
+
+/* expected */
+.exp .er{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--hair);}
+.exp .er:first-child{border-top:none;}
+.exp .el{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--mid);text-transform:uppercase;width:92px;}
+.exp .track{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.07);position:relative;overflow:hidden;}
+.exp .now{position:absolute;left:0;top:0;bottom:0;background:rgba(255,255,255,.18);}
+.exp .proj{position:absolute;top:0;bottom:0;background:var(--sig);box-shadow:0 0 8px color-mix(in srgb,var(--sig) 55%,transparent);}
+.exp .ev{font-family:var(--head);font-size:16px;color:var(--sig);width:78px;text-align:right;}
+.exp .ev small{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:.04em;}
+.exp .cap{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;margin-top:12px;text-align:center;}
+
+/* alternatives */
+.alt{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--hair);}
+.alt:first-child{border-top:none;}
+.alt .ar{font-family:var(--head);font-size:20px;color:var(--dim);width:20px;}
+.alt .am{flex:1;}
+.alt .an{font-family:var(--head);font-size:17px;letter-spacing:.01em;}
+.alt .ay{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);line-height:1.35;margin-top:2px;}
+.alt .af{font-family:var(--head);font-size:18px;color:var(--muted);flex-shrink:0;}
+
+/* sticky CTA */
+.dock{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:14px 20px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#0A0D12 30%);z-index:10;}
+.lock{display:block;width:100%;height:50px;border:none;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+.adj{display:block;width:100%;background:none;border:none;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;cursor:pointer;padding:9px;}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="hd">
+    <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="tt">Your program</span><span class="as">Assigned by ZEAL</span>
+  </div>
+
+  <div class="eb fade">ZEAL assigned your program</div>
+  <div class="pname fade">UPPER / LOWER</div>
+  <div class="pmeta fade"><span>4-DAY</span><span>·</span><span>55 MIN</span><span>·</span><span>12 WEEKS</span><span>·</span><span>FIT <b>95%</b></span></div>
+
+  <div class="sl fade">Why this program</div>
+  <div class="card why fade" id="why"></div>
+
+  <div class="sl fade">The 12 weeks</div>
+  <div class="phases fade" id="phases"></div>
+
+  <div class="sl fade">Your week</div>
+  <div class="card fade"><div class="week" id="week"></div></div>
+
+  <div class="sl fade">The movements</div>
+  <div class="card fade">
+    <div class="tabs"><div class="tab sel" data-t="upper">Upper day</div><div class="tab" data-t="lower">Lower day</div></div>
+    <div id="movements"></div>
+  </div>
+
+  <div class="sl fade">Expected by week 12</div>
+  <div class="card exp fade" id="exp"></div>
+
+  <div class="sl fade">What ZEAL also weighed</div>
+  <div class="card fade" id="alts"></div>
+</div>
+
+<div class="dock">
+  <button class="lock" onclick="location.href='dash-live.html'">Lock it in →</button>
+  <button class="adj" onclick="location.href='program-forge.html'">Adjust the build</button>
+</div>
+
+<script>
+(function(){
+  var scr=document.getElementById('screen');
+  var IC={recomp:'<path d="M4 7l8 8 8-8M4 17l8-8 8 8"/>',tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',
+    knee:'<path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M8.5 11.5h7"/>',
+    days:'<path d="M2 12h4l2-6 3 12 2-6h9"/>',gym:'<path d="M3 12h18M6 8v8M18 8v8"/>',
+    upper:'<path d="M4 16h16M7 11h10M10 6h4"/>',lower:'<path d="M4 8h16M7 13h10M10 18h4"/>'};
+  function sv(n){return '<svg viewBox="0 0 24 24">'+IC[n]+'</svg>';}
+
+  document.getElementById('why').innerHTML=[
+    ['tier','<b>Tier 2</b> (SMM 42%) — moderate volume you can actually recover from, with room to add load.'],
+    ['recomp','<b>Recomp</b> — a strength base with short metabolic finishers, run at a slight energy deficit.'],
+    ['days','<b>4 days</b> as Upper / Lower — each muscle trained twice a week, the sweet spot for your level.'],
+    ['knee','<b>Left knee protected</b> — back-squat and deep lunges swapped for leg-press and hip-hinge work.']
+  ].map(function(w){return '<div class="wy">'+sv(w[0])+'<span class="wt">'+w[1]+'</span></div>';}).join('');
+
+  var PH=[['1','FOUNDATION','Groove the patterns, build work capacity.','WK 1–4','Moderate',true],
+          ['2','BUILD','Add load and volume, drive hypertrophy.','WK 5–8','High',false],
+          ['3','PEAK','Intensify, express strength, then deload.','WK 9–12','Peak',false]];
+  document.getElementById('phases').innerHTML=PH.map(function(p){
+    return '<div class="ph'+(p[5]?' cur':'')+'">'+(p[5]?'<span class="ntag">You are here</span>':'')+'<span class="pn">'+p[0]+'</span><div><div class="pt">'+p[1]+'</div><div class="pd">'+p[2]+'</div></div><div class="pw"><div class="wk">'+p[3]+'</div><div class="in'+(p[5]?' cur':'')+'">'+p[4]+'</div></div></div>';
+  }).join('');
+
+  var WK=[['Mon','upper','Upper'],['Tue','lower','Lower'],['Wed','','Rest'],['Thu','upper','Upper'],['Fri','lower','Lower'],['Sat','','Rest'],['Sun','','Rest']];
+  document.getElementById('week').innerHTML=WK.map(function(d){var t=!!d[1];
+    return '<div class="wd'+(t?' on':'')+'">'+(t?sv(d[1]):'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/></svg>')+'<span class="dl">'+d[0]+'</span><span class="df">'+d[2]+'</span></div>';}).join('');
+
+  var MV={upper:[['Barbell bench press','Primary','4 × 5'],['Weighted pull-up','Primary','4 × 6'],['Overhead press','Secondary','3 × 8'],['Incline DB press','Secondary','3 × 10'],['Face pull','Finisher','3 × 15']],
+          lower:[['Leg press','Primary · knee-safe','4 × 8'],['Romanian deadlift','Primary','4 × 6'],['Hip thrust','Secondary','3 × 10'],['Step-down','Secondary · knee-safe','3 × 12'],['Calf raise','Finisher','4 × 15']]};
+  function renderMv(t){document.getElementById('movements').innerHTML=MV[t].map(function(m,i){
+    return '<div class="mv"><span class="mn">'+('0'+(i+1))+'</span><span class="mt">'+m[0]+'<small>'+m[1]+'</small></span><span class="mx">'+m[2]+'</span></div>';}).join('');}
+  renderMv('upper');
+  document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('sel');});t.classList.add('sel');renderMv(t.dataset.t);});});
+
+  // expected — now vs projected on a shared axis
+  var EXP=[['Body fat','22%','18%',22,18,10,26,true],['Lean mass','58.1kg','60.1kg',58.1,60.1,55,62,false],['Est. strength','—','+12%',0,12,0,20,false]];
+  document.getElementById('exp').innerHTML=EXP.map(function(e){
+    var mn=e[5],mx=e[6],nowP=((e[3]-mn)/(mx-mn))*100,prP=((e[4]-mn)/(mx-mn))*100;
+    var lo=Math.min(nowP,prP),hi=Math.max(nowP,prP);
+    return '<div class="er"><span class="el">'+e[0]+'</span><div class="track"><div class="now" style="width:'+nowP+'%"></div><div class="proj" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div></div><span class="ev">'+e[2]+'<small> proj</small></span></div>';
+  }).join('')+'<div class="cap">Projected on your tier + adherence · re-forecast each phase</div>';
+
+  var ALT=[['2','PUSH / PULL / LEGS','Higher frequency — but needs 6 days you gave 4.','88%'],
+           ['3','FULL BODY · 3-DAY','Time-efficient — slower recomp at your tier.','84%'],
+           ['4','BODY-PART SPLIT','Too much isolation, too little frequency for recomp.','71%']];
+  document.getElementById('alts').innerHTML=ALT.map(function(a){
+    return '<div class="alt"><span class="ar">'+a[0]+'</span><div class="am"><div class="an">'+a[1]+'</div><div class="ay">'+a[2]+'</div></div><span class="af">'+a[3]+'</span></div>';}).join('');
+
+  requestAnimationFrame(function(){requestAnimationFrame(function(){scr.classList.add('play');});});
+})();
+</script>
+</body>
+</html>
