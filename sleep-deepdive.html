@@ -111,6 +111,40 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .drv{margin-top:8px;padding:2px 0 2px 14px;border-left:2px solid var(--sig);}
 .drv .t{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);}
 .drv .t b{color:var(--white);font-weight:600;}
+
+/* DATE BAR */
+.datebar{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.datebar .dnav{width:34px;height:34px;border:1px solid var(--hair);background:var(--panel);border-radius:10px;color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.datebar .dnav:disabled{opacity:.28;cursor:default;}
+.datebar .dlabel{flex:1;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;background:none;border:none;cursor:pointer;padding:8px 0;}
+.datebar .dlabel b{color:var(--white);font-weight:500;}
+.datebar .dcal{width:34px;height:34px;border:1px solid var(--hair);background:var(--panel);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.datebar .dcal svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;}
+/* CALENDAR SHEET */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .4s;z-index:15;}
+.scrim.open{opacity:1;pointer-events:auto;}
+.sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;height:80dvh;background:#0C0F15;border-top:1px solid var(--hair);border-radius:22px 22px 0 0;z-index:20;transition:transform .5s var(--ease);padding:16px 20px 30px;overflow-y:auto;box-shadow:0 -20px 60px -20px rgba(0,0,0,.8);}
+.sheet.open{transform:translateX(-50%) translateY(0);}
+.grab{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);}
+.sh-hd{display:flex;align-items:center;justify-content:space-between;position:relative;}
+.sh-hd h2{font-family:var(--head);font-size:26px;letter-spacing:.02em;}
+.sh-hd .x{width:32px;height:32px;border-radius:50%;border:1px solid var(--hair);background:var(--panel);color:var(--muted);font-size:15px;cursor:pointer;}
+.sh-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:2px;}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin:20px 0 12px;}
+.mnav button{background:none;border:1px solid var(--hair);border-radius:10px;width:34px;height:34px;color:var(--muted);cursor:pointer;font-size:15px;}
+.mnav .mo{font-family:var(--head);font-size:22px;letter-spacing:.03em;}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;}
+.cal-dow span{text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--dim);}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cell{aspect-ratio:1;border-radius:11px;border:1px solid var(--hair);background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.cell .n{font-family:var(--mono);font-size:11px;color:var(--mid);}
+.cell .vd{width:7px;height:7px;border-radius:50%;background:var(--cvc);box-shadow:0 0 6px var(--cvc);}
+.cell.empty{opacity:.3;} .cell.empty .vd{display:none;}
+.cell.today .n{color:var(--white);}
+.cell.sel{border-color:var(--sig);box-shadow:0 0 10px color-mix(in srgb,var(--sig) 26%,transparent);}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--hair);}
+.legend span{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.legend i{width:8px;height:8px;border-radius:50%;}
 </style>
 </head>
 <body>
@@ -118,26 +152,34 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="hd">
     <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <svg class="moon" viewBox="0 0 24 24"><path d="M20 15a8 8 0 11-9-11 6.5 6.5 0 009 11z"/></svg>
-    <span class="tt">Sleep</span><span class="win">22:51 → 06:20</span>
+    <span class="tt">Sleep</span><span class="win" id="asof">22:51 → 06:20</span>
+  </div>
+
+  <!-- DATE BAR -->
+  <div class="datebar">
+    <button class="dnav" id="dPrev" aria-label="Previous night">‹</button>
+    <button class="dlabel" id="dLabel">Last night</button>
+    <button class="dnav" id="dNext" aria-label="Next night">›</button>
+    <button class="dcal" id="dCal" aria-label="Open calendar"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></button>
   </div>
 
   <!-- VERDICT hero — editorial: word left, dashed ring right (matches home) -->
   <div class="hero fade">
-    <div class="eyebrow">Tonight's sleep read</div>
-    <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn">96<small>%</small></div><div class="ru">of need</div></div></div>
-    <div class="word-wrap"><span class="vscan"></span><span class="word">WELL<br>RESTED</span></div>
+    <div class="eyebrow" id="eyebrow">Tonight's sleep read</div>
+    <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn" id="heroNum">96<small>%</small></div><div class="ru">of need</div></div></div>
+    <div class="word-wrap"><span class="vscan"></span><span class="word" id="heroWord">WELL<br>RESTED</span></div>
     <div class="furn">
-      <div class="fc"><div class="fv">8:01</div><div class="fk">slept</div></div>
-      <div class="fc"><div class="fv g">8:20</div><div class="fk">needed</div></div>
-      <div class="fc"><div class="fv">8:34</div><div class="fk">in bed</div></div>
+      <div class="fc"><div class="fv" id="fSlept">8:01</div><div class="fk">slept</div></div>
+      <div class="fc"><div class="fv g" id="fNeed">8:20</div><div class="fk">needed</div></div>
+      <div class="fc"><div class="fv" id="fInbed">8:34</div><div class="fk">in bed</div></div>
     </div>
   </div>
 
   <!-- THE NIGHT — Lanes: stage timeline + duration -->
   <div class="card fade" style="transition-delay:.1s">
-    <div class="ch"><span class="k">The night · stage flow</span><span class="kv">7:29 asleep · restorative <b>41%</b></span></div>
+    <div class="ch"><span class="k">The night · stage flow</span><span class="kv" id="nightKv">7:29 asleep · restorative <b>41%</b></span></div>
     <div class="lanes" id="lanes"></div>
-    <div class="tax"><span>22:51</span><span>00:30</span><span>02:15</span><span>04:00</span><span>06:20</span></div>
+    <div class="tax" id="tax"><span>22:51</span><span>00:30</span><span>02:15</span><span>04:00</span><span>06:20</span></div>
   </div>
 
   <!-- STAGE BALANCE vs evidence -->
@@ -150,50 +192,154 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   <div class="card fade" style="transition-delay:.22s">
     <div class="ch"><span class="k">Efficiency &amp; body</span></div>
     <div class="ef4">
-      <div class="gauge"><canvas class="ring-cv" id="efring"></canvas><div class="v"><b>94<span style="font-size:12px">%</span></b><small>efficient</small></div></div>
-      <div class="rows">
-        <div class="r"><span class="ml">Asleep · in bed</span><span class="mv">8:01<small> / 8:34</small></span></div>
-        <div class="r"><span class="ml">Disturbances</span><span class="mv">7<small>× 22m</small></span></div>
-        <div class="r"><span class="ml">Resp rate</span><span class="mv">13.4<small>rpm</small></span></div>
-      </div>
+      <div class="gauge"><canvas class="ring-cv" id="efring"></canvas><div class="v"><b id="effVal">94<span style="font-size:12px">%</span></b><small>efficient</small></div></div>
+      <div class="rows" id="effRows"></div>
     </div>
   </div>
 
   <div class="sl fade">The read</div>
-  <div class="drv fade"><div class="t"><b>You hit 96% of your sleep need</b> — deep + REM made up 41% of the night, 94% efficient. That's the fuel behind today's <b style="color:var(--mint)">READY</b>.</div></div>
+  <div class="drv fade"><div class="t" id="readT"></div></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<!-- CALENDAR SHEET -->
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <div class="sh-hd">
+    <div><h2>Sleep history</h2><div class="sh-sub">Since you joined · 14 Jul</div></div>
+    <button class="x" id="shClose">✕</button>
+  </div>
+  <div class="mnav"><button id="prevMo">‹</button><span class="mo" id="moLabel">July 2026</span><button id="nextMo">›</button></div>
+  <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+  <div class="cal" id="cal"></div>
+  <div class="legend">
+    <span><i style="background:#C8FF00"></i>Fully rested</span>
+    <span><i style="background:#00E5A0"></i>Well rested</span>
+    <span><i style="background:#F59E0B"></i>Under-rested</span>
+    <span><i style="background:#EF4444"></i>Sleep debt</span>
+    <span><i style="background:#5C6679"></i>No data</span>
+  </div>
 </div>
 
 <script>
 (function(){
   var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var COL={awake:'#747E8C',rem:'#00D4FF',light:'rgba(0,229,160,.55)',deep:'#00E5A0'};
-  // reusable dashed ring (mint)
-  function drawRing(id,frac,delay){ var cv=document.getElementById(id); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
-    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
-    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.12,sa=150*Math.PI/180,sw=240*Math.PI/180;
-    function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba(0,229,160,.72)';ctx.shadowColor='rgba(0,229,160,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
-    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},delay||400);
+  var JOIN=new Date(2026,6,14), TODAY=new Date(2026,6,21), NEED=500;
+  var SERIES={'2026-6-14':470,'2026-6-15':388,'2026-6-16':505,'2026-6-17':452,'2026-6-18':340,'2026-6-19':475,'2026-6-20':490,'2026-6-21':481};
+  var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var SEQ=[[1,.4],[2,.9],[3,1.15],[2,.5],[1,.6],[0,.12],[2,.75],[3,.85],[2,.6],[1,.9],[0,.08],[2,.5],[3,.55],[2,.4],[1,.55]];
+  function keyd(dt){return dt.getFullYear()+'-'+dt.getMonth()+'-'+dt.getDate();}
+  function sleptOf(dt){return SERIES[keyd(dt)];}
+  function outcome(p){return p>=100?{w:'FULLY<br>RESTED',sh:'FULLY RESTED',c:'#C8FF00'}:p>=90?{w:'WELL<br>RESTED',sh:'WELL RESTED',c:'#00E5A0'}:p>=70?{w:'UNDER<br>RESTED',sh:'UNDER-RESTED',c:'#F59E0B'}:{w:'SLEEP<br>DEBT',sh:'SLEEP DEBT',c:'#EF4444'};}
+  function hexRgb(hex){var n=parseInt(hex.slice(1),16);return ((n>>16)&255)+','+((n>>8)&255)+','+(n&255);}
+  function fmtHM(min){min=Math.round(min);var h=Math.floor(min/60),mm=min%60;return h+':'+(mm<10?'0':'')+mm;}
+  function fmtBlk(m){m=Math.round(m);return m>=60?(Math.floor(m/60)+'h'+(m%60||'')):m+'m';}
+  function clockAt(min){min=Math.round(((min%1440)+1440)%1440);var h=Math.floor(min/60),mm=min%60;return (h<10?'0':'')+h+':'+(mm<10?'0':'')+mm;}
+  function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+  function addDays(dt,n){var d=new Date(dt);d.setDate(d.getDate()+n);return d;}
+  var sel=new Date(TODAY), firstDraw=true;
+
+  function model(dt){
+    var slept=sleptOf(dt), pct=Math.round(slept/NEED*100), o=outcome(pct);
+    var awake=Math.round(slept*0.065), inbed=slept+awake, eff=Math.round(slept/inbed*100), dist=Math.max(2,Math.round(awake/4.4));
+    var seed=dt.getDate(), awakeP=Math.round(awake/inbed*100);
+    var deepP=16+((seed*3)%6), remP=19+((seed*5)%7), lightP=100-awakeP-deepP-remP;
+    var MINS={3:Math.round(deepP/100*inbed),2:Math.round(lightP/100*inbed),1:Math.round(remP/100*inbed),0:awake};
+    return {slept:slept,pct:pct,o:o,awake:awake,inbed:inbed,eff:eff,dist:dist,deepP:deepP,remP:remP,lightP:lightP,awakeP:awakeP,restorative:deepP+remP,MINS:MINS};
   }
-  drawRing('hring',0.96,400);
-  drawRing('efring',0.94,700);
-  // THE NIGHT — Lanes: blocks per stage across the night + duration (no glow)
-  (function(){
-    var CN=['awake','rem','light','deep'];
-    var SEQ=[[1,.4],[2,.9],[3,1.15],[2,.5],[1,.6],[0,.12],[2,.75],[3,.85],[2,.6],[1,.9],[0,.08],[2,.5],[3,.55],[2,.4],[1,.55]];
-    var TOT=SEQ.reduce(function(a,s){return a+s[1];},0), DUR={3:'1:47',2:'3:37',1:'1:09',0:'0:32'}, MIN={3:107,2:217,1:69,0:32};
+
+  function drawRing(id,frac,colour,animate){
+    var cv=document.getElementById(id); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.12,sa=150*Math.PI/180,sw=240*Math.PI/180,rgb=hexRgb(colour);
+    frac=Math.min(1,frac);
+    function fr(p){ctx.clearRect(0,0,size,size);var lit=frac*p;for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';if(t<=lit){ctx.strokeStyle='rgba('+rgb+',.72)';ctx.shadowColor='rgba('+rgb+',.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}ctx.stroke();}ctx.shadowBlur=0;}
+    if(rm||!animate){fr(1);return;}var s0=null;(function f(ts){if(!s0)s0=ts;var p=Math.min(1,(ts-s0)/1000),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());
+  }
+
+  function renderLanes(m){
+    var CN=['awake','rem','light','deep'], TOT=SEQ.reduce(function(a,s){return a+s[1];},0), MIN=m.MINS;
+    var DUR={3:fmtHM(MIN[3]),2:fmtHM(MIN[2]),1:fmtHM(MIN[1]),0:fmtHM(MIN[0])};
     var sumBy={}; SEQ.forEach(function(s){sumBy[s[0]]=(sumBy[s[0]]||0)+s[1];});
-    function fmt(m){m=Math.round(m);return m>=60?(Math.floor(m/60)+'h'+(m%60||'')):m+'m';}
     var rows=[3,2,1,0].map(function(lv){ var blks='',x=0;
-      SEQ.forEach(function(s,i){ var w=s[1]/TOT*100; if(s[0]===lv){ var bm=MIN[lv]*(s[1]/sumBy[lv]); var lbl=w>6.5?'<span class="bd">'+fmt(bm)+'</span>':''; blks+='<span class="blk" style="left:'+x+'%;width:'+w+'%;background:'+COL[CN[lv]]+';--d:'+(0.2+i*0.05)+'s">'+lbl+'</span>'; } x+=w; });
+      SEQ.forEach(function(s,i){ var w=s[1]/TOT*100; if(s[0]===lv){ var bm=MIN[lv]*(s[1]/sumBy[lv]); var lbl=w>6.5?'<span class="bd">'+fmtBlk(bm)+'</span>':''; blks+='<span class="blk" style="left:'+x+'%;width:'+w+'%;background:'+COL[CN[lv]]+';--d:'+(0.2+i*0.05)+'s">'+lbl+'</span>'; } x+=w; });
       return '<div class="lane" style="--sc:'+COL[CN[lv]]+'"><span class="ln">'+CN[lv].toUpperCase()+'</span><div class="track">'+blks+'</div><span class="ld">'+DUR[lv]+'</span></div>';
     }).join('');
     document.getElementById('lanes').innerHTML=rows;
-  })();
-  // STAGE BALANCE vs evidence-based healthy adult ranges (Deep 15-20 · REM 20-25 · Light 50-55 · Awake <10)
-  var BAL=[['deep','Deep','25%','15–20%','hi','ample'],['light','Light','52%','50–55%','ok','in range'],['rem','REM','16%','20–25%','lo','slightly low'],['awake','Awake','7%','&lt; 10%','ok','in range']];
-  document.getElementById('bal').innerHTML=BAL.map(function(b){
-    return '<div class="r"><span class="dot" style="background:'+COL[b[0]]+'"></span><span class="nm">'+b[1]+'</span><span class="ac">'+b[2]+'</span><span class="rg">healthy '+b[3]+'</span><span class="st '+b[4]+'">'+b[5]+'</span></div>';
-  }).join('');
+  }
+  function renderBal(m){
+    function stat(p,lo,hi){return p<lo?'lo':(p>hi?'hi':'ok');}
+    function label(c){return c==='hi'?'ample':c==='lo'?'slightly low':'in range';}
+    var B=[['deep','Deep',m.deepP,'15–20%',stat(m.deepP,15,20)],['light','Light',m.lightP,'50–55%',stat(m.lightP,50,55)],['rem','REM',m.remP,'20–25%',stat(m.remP,20,25)],['awake','Awake',m.awakeP,'&lt; 10%',m.awakeP<10?'ok':'lo']];
+    document.getElementById('bal').innerHTML=B.map(function(b){return '<div class="r"><span class="dot" style="background:'+COL[b[0]]+'"></span><span class="nm">'+b[1]+'</span><span class="ac">'+b[2]+'%</span><span class="rg">healthy '+b[3]+'</span><span class="st '+b[4]+'">'+label(b[4])+'</span></div>';}).join('');
+  }
+  function renderEff(m){
+    document.getElementById('effVal').innerHTML=m.eff+'<span style="font-size:12px">%</span>';
+    document.getElementById('effRows').innerHTML=
+      '<div class="r"><span class="ml">Asleep · in bed</span><span class="mv">'+fmtHM(m.slept)+'<small> / '+fmtHM(m.inbed)+'</small></span></div>'+
+      '<div class="r"><span class="ml">Disturbances</span><span class="mv">'+m.dist+'<small>× '+m.awake+'m</small></span></div>'+
+      '<div class="r"><span class="ml">Resp rate</span><span class="mv">13.4<small>rpm</small></span></div>';
+  }
+
+  function render(){
+    var dt=sel, m=model(dt), o=m.o, isToday=sameDay(dt,TODAY), wake=380, bed=wake-m.inbed;
+    scr.style.setProperty('--sig',o.c);
+    document.getElementById('asof').textContent=clockAt(bed)+' → '+clockAt(wake);
+    document.getElementById('eyebrow').textContent=isToday?"Last night's sleep read":('Sleep read · '+WD[dt.getDay()]+' '+dt.getDate()+' '+MO[dt.getMonth()]);
+    document.getElementById('heroNum').innerHTML=m.pct+'<small>%</small>';
+    document.getElementById('heroWord').innerHTML=o.w;
+    document.getElementById('fSlept').textContent=fmtHM(m.slept);
+    document.getElementById('fNeed').textContent=fmtHM(NEED);
+    document.getElementById('fInbed').textContent=fmtHM(m.inbed);
+    document.getElementById('nightKv').innerHTML=fmtHM(m.slept)+' asleep · restorative <b>'+m.restorative+'%</b>';
+    var labs=[]; for(var i=0;i<5;i++)labs.push('<span>'+clockAt(bed+m.inbed*i/4)+'</span>');
+    document.getElementById('tax').innerHTML=labs.join('');
+    drawRing('hring',m.pct/100,o.c,firstDraw); drawRing('efring',m.eff/100,o.c,firstDraw);
+    renderLanes(m); renderBal(m); renderEff(m);
+    var r;
+    if(o.sh==='FULLY RESTED') r='<b>You cleared your full sleep need ('+m.pct+'%)</b> — deep + REM made up '+m.restorative+'% of the night at '+m.eff+'% efficiency. A complete recharge.';
+    else if(o.sh==='WELL RESTED') r='<b>You hit '+m.pct+'% of your sleep need</b> — restorative sleep '+m.restorative+'%, '+m.eff+'% efficient. A strong night; you\'re ready.';
+    else if(o.sh==='UNDER-RESTED') r='<b>You fell short — '+m.pct+'% of your need</b>, about '+fmtHM(NEED-m.slept)+' under. One short night is fine; don\'t stack another.';
+    else r='<b>Sleep debt — only '+m.pct+'% of your need</b>, '+fmtHM(NEED-m.slept)+' short. Expect recovery and readiness to take the hit. Protect tonight.';
+    document.getElementById('readT').innerHTML=r;
+    document.getElementById('dLabel').innerHTML=(isToday?'<b>Last night</b> · ':'')+WD[dt.getDay()]+' '+dt.getDate()+' '+MO[dt.getMonth()];
+    document.getElementById('dPrev').disabled = sel<=JOIN;
+    document.getElementById('dNext').disabled = isToday;
+    firstDraw=false;
+  }
+
+  document.getElementById('dPrev').addEventListener('click',function(){ var p=addDays(sel,-1); if(p>=JOIN){sel=p;render();} });
+  document.getElementById('dNext').addEventListener('click',function(){ if(!sameDay(sel,TODAY)){sel=addDays(sel,1);render();} });
+
+  var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim');
+  var viewY=sel.getFullYear(), viewM=sel.getMonth();
+  function calRender(){
+    document.getElementById('moLabel').textContent=MO[viewM]+' '+viewY;
+    var first=new Date(viewY,viewM,1), startDow=(first.getDay()+6)%7, dim=new Date(viewY,viewM+1,0).getDate();
+    var cal=document.getElementById('cal'); cal.innerHTML='';
+    for(var i=0;i<startDow;i++){var e=document.createElement('div');e.className='cell empty';cal.appendChild(e);}
+    for(var dn=1;dn<=dim;dn++){var dt=new Date(viewY,viewM,dn), s=sleptOf(dt), cell=document.createElement('div'); cell.className='cell';
+      var inRange=(dt>=JOIN&&dt<=TODAY&&s!=null);
+      if(!inRange)cell.classList.add('empty');
+      if(sameDay(dt,TODAY))cell.classList.add('today');
+      if(sameDay(dt,sel))cell.classList.add('sel');
+      cell.style.setProperty('--cvc', inRange?outcome(Math.round(s/NEED*100)).c:'#5C6679');
+      cell.innerHTML='<span class="n">'+dn+'</span>'+(inRange?'<span class="vd"></span>':'');
+      if(inRange)(function(d){cell.style.cursor='pointer';cell.addEventListener('click',function(){sel=new Date(d);closeSheet();render();});})(dt);
+      cal.appendChild(cell);
+    }
+  }
+  function openSheet(){ viewY=sel.getFullYear(); viewM=sel.getMonth(); calRender(); sheet.classList.add('open'); scrim.classList.add('open'); }
+  function closeSheet(){ sheet.classList.remove('open'); scrim.classList.remove('open'); }
+  document.getElementById('dCal').addEventListener('click',openSheet);
+  document.getElementById('dLabel').addEventListener('click',openSheet);
+  document.getElementById('shClose').addEventListener('click',closeSheet);
+  scrim.addEventListener('click',closeSheet);
+  document.getElementById('prevMo').addEventListener('click',function(){ viewM--; if(viewM<0){viewM=11;viewY--;} calRender(); });
+  document.getElementById('nextMo').addEventListener('click',function(){ viewM++; if(viewM>11){viewM=0;viewY++;} calRender(); });
+
+  render();
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
 })();
 </script>
