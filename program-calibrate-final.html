@@ -16,7 +16,7 @@
 html,body{background:#000;height:100%;}
 body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
 .screen{position:relative;width:100%;max-width:430px;height:100dvh;min-height:760px;overflow:hidden;
-  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.022) 1px,transparent 1px);background-size:28px 28px;}
+  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.02) 1px,transparent 1px);background-size:28px 28px;}
 .screen::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;background:radial-gradient(120% 55% at 50% 6%,rgba(200,255,0,.05),transparent 52%);}
 
 .chead{position:absolute;top:5.5%;left:0;right:0;text-align:center;z-index:8;}
@@ -25,36 +25,45 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .pbar{width:126px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);margin:13px auto 0;overflow:hidden;}
 .pbar i{display:block;height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);}
 
-/* V5 — body scan */
-model-viewer{position:absolute;top:12%;left:0;right:0;height:33%;background:transparent;--poster-color:transparent;outline:none;
-  filter:brightness(.46) contrast(1.12) saturate(.72);z-index:2;}
-.scanglow{position:absolute;left:0;right:0;height:60px;background:linear-gradient(180deg,rgba(200,255,0,.13),transparent);z-index:3;pointer-events:none;opacity:0;}
-.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sig) 22%,var(--sig) 78%,transparent);box-shadow:0 0 18px 3px rgba(200,255,0,.5);z-index:4;pointer-events:none;opacity:0;}
+/* construct zone (body + data share the same top-down reveal) */
+.zone{position:absolute;top:12%;left:0;right:0;height:34%;z-index:2;}
+.hold{position:absolute;inset:0;}
+.hold model-viewer{position:absolute;inset:0;width:100%;height:100%;background:transparent;--poster-color:transparent;outline:none;filter:brightness(.46) contrast(1.12) saturate(.72);}
+/* designed data field — aligned monospace grid, dim, reads with the body */
+.field{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:6px;
+  font-family:var(--mono);font-size:10px;letter-spacing:3px;line-height:1.62;color:rgba(200,255,0,.22);white-space:pre;pointer-events:none;}
+.field b{color:rgba(200,255,0,.72);font-weight:400;}
+.scanglow{position:absolute;left:0;right:0;height:56px;background:linear-gradient(180deg,rgba(200,255,0,.14),transparent);z-index:4;pointer-events:none;opacity:0;}
+.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sig) 20%,var(--sig) 80%,transparent);box-shadow:0 0 18px 3px rgba(200,255,0,.55);z-index:5;pointer-events:none;opacity:0;}
 
-/* V1 — the record */
-.log{position:absolute;left:26px;right:26px;top:49%;z-index:7;font-family:var(--mono);}
+/* the record */
+.log{position:absolute;left:26px;right:26px;top:50%;z-index:7;font-family:var(--mono);}
 .log .hdln{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--hair);}
 .ln{display:flex;align-items:baseline;font-size:11.5px;line-height:2.05;opacity:0;transform:translateX(-5px);}
 .ln.in{opacity:1;transform:none;transition:opacity .3s var(--ease),transform .3s var(--ease);}
 .ln .k{color:var(--mid);white-space:nowrap;}
 .ln .lead{flex:1;overflow:hidden;color:var(--dim);letter-spacing:2px;margin:0 8px;height:1em;}
 .ln .v{color:var(--dim);white-space:nowrap;transition:color .2s;}
-.ln.done .k{color:var(--muted);}
-.ln.done .v{color:var(--white);}
+.ln.done .k{color:var(--muted);}.ln.done .v{color:var(--white);}
 .ln .v b{color:var(--sig);font-weight:500;}
 
 .foot{position:absolute;left:0;right:0;bottom:5%;z-index:7;text-align:center;}
 .foot .b{width:16px;height:16px;margin:0 auto 8px;filter:drop-shadow(0 0 6px rgba(200,255,0,.6));}
 .foot .b svg{width:100%;height:100%;}
 .foot .t{font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase;}
-@media(prefers-reduced-motion:reduce){model-viewer{filter:brightness(.5) contrast(1.1) saturate(.72);}}
+@media(prefers-reduced-motion:reduce){.hold model-viewer{filter:brightness(.5) contrast(1.1) saturate(.72);}}
 </style>
 </head>
 <body>
 <div class="screen" id="screen">
-  <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
-  <div class="scanglow" id="glow"></div>
-  <div class="scanline" id="line"></div>
+  <div class="zone" id="zone">
+    <div class="field" id="field"></div>
+    <div class="hold" id="hold">
+      <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="16deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
+    </div>
+    <div class="scanglow" id="glow"></div>
+    <div class="scanline" id="line"></div>
+  </div>
 
   <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st">Powering the engine</div><div class="pbar"><i id="pf"></i></div></div>
 
@@ -69,8 +78,17 @@ model-viewer{position:absolute;top:12%;left:0;right:0;height:33%;background:tran
 <script>
 (function(){
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var screen=document.getElementById('screen'),line=document.getElementById('line'),glow=document.getElementById('glow'),st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
+  var screen=document.getElementById('screen'),zone=document.getElementById('zone'),hold=document.getElementById('hold'),field=document.getElementById('field'),line=document.getElementById('line'),glow=document.getElementById('glow'),st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
 
+  /* designed data field — aligned rows, occasional lime highlight (looks intentional, not noise) */
+  var HEX='0123456789ABCDEF';
+  function tok(){return HEX[Math.floor(Math.random()*16)]+HEX[Math.floor(Math.random()*16)];}
+  function row(){var t=[];for(var c=0;c<4;c++){var s=tok();t.push(Math.random()<0.12?'<b>'+s+'</b>':s);}return t.join(' · ');}
+  var ROWS=14;
+  function buildField(){var out=[];for(var r=0;r<ROWS;r++)out.push(row());field.innerHTML=out.join('\n');}
+  buildField();
+
+  /* the record */
   var LOG=[['read body composition','22% <b>BF</b>'],
     ['estimate skeletal muscle','42% <b>SMM</b>'],
     ['pull overnight recovery','68 · 8.1H'],
@@ -84,39 +102,50 @@ model-viewer{position:absolute;top:12%;left:0;right:0;height:33%;background:tran
   function T(f,m){var id=setTimeout(f,m);timers.push(id);return id;}
   function raf(f){var id=requestAnimationFrame(f);timers.push(id);return id;}
   function clr(){timers.forEach(function(t){clearTimeout(t);cancelAnimationFrame(t);});timers=[];}
+  function printLine(i){var ln=document.getElementById('ln'+i),lead=ln.querySelector('.lead'),v=document.getElementById('lv'+i);
+    ln.classList.add('in');lead.textContent=new Array(26).join('.');T(function(){v.innerHTML=LOG[i][1];ln.classList.add('done');},240);}
 
-  function printLine(i){
-    var ln=document.getElementById('ln'+i),lead=ln.querySelector('.lead'),v=document.getElementById('lv'+i);
-    ln.classList.add('in');lead.textContent=new Array(26).join('.');
-    T(function(){v.innerHTML=LOG[i][1];ln.classList.add('done');},260);
+  function setReveal(fracFromTopPx){
+    // reveal body + data from the top down to fracFromTopPx (in px within the zone)
+    var h=zone.clientHeight, revPct=Math.max(0,Math.min(100,(fracFromTopPx/h)*100));
+    var mask='linear-gradient(180deg,#000 '+revPct+'%,transparent '+Math.min(100,revPct+3)+'%)';
+    hold.style.webkitMaskImage=mask;hold.style.maskImage=mask;
+    field.style.webkitMaskImage=mask;field.style.maskImage=mask;
   }
 
   function play(){
     clr();
     LOG.forEach(function(r,i){var ln=document.getElementById('ln'+i);ln.className='ln';document.getElementById('lv'+i).innerHTML='';ln.querySelector('.lead').textContent='';});
-    line.style.opacity='0';glow.style.opacity='0';
+    buildField();
+    line.style.opacity='0';glow.style.opacity='0';line.style.transition='';
     st.textContent='Powering the engine';pf.style.transition='none';pf.style.width='0';
+    setReveal(0);
 
-    var mv=document.getElementById('mv'),box=mv.getBoundingClientRect(),sc=screen.getBoundingClientRect();
-    var top=box.top-sc.top,bot=box.bottom-sc.top,SCAN=2600;
-    var LOGSTART=900,GAP=780,TOTAL=LOGSTART+LOG.length*GAP+400;
+    var SCAN=3000, LOGSTART=1200, GAP=680, TOTAL=Math.max(SCAN+400, LOGSTART+LOG.length*GAP+300);
     T(function(){pf.style.transition='width '+(TOTAL/1000)+'s linear';pf.style.width='100%';},60);
 
-    // V5 — scan the body once
+    // ONE animation drives the scan line AND the body/data reveal — perfectly synced
     T(function(){
       line.style.opacity='1';glow.style.opacity='1';
-      var start=null;
-      function step(ts){if(!start)start=ts;var t=Math.min(1,(ts-start)/SCAN);var y=top+(bot-top)*t;
-        line.style.top=y+'px';glow.style.top=(y-56)+'px';
-        st.textContent=t<0.5?'Scanning composition':'Reading your signals';
-        if(t<1)raf(step);else{line.style.transition='opacity .5s';line.style.opacity='0';glow.style.opacity='0';}
-      }raf(step);
+      var start=null, zoneTop=zone.getBoundingClientRect().top-screen.getBoundingClientRect().top;
+      function step(ts){
+        if(!start)start=ts;var t=Math.min(1,(ts-start)/SCAN);
+        var e=t, yPx=zone.clientHeight*e;         // reveal boundary in zone px
+        setReveal(yPx);
+        line.style.top=(zoneTop+yPx)+'px';glow.style.top=(zoneTop+yPx-52)+'px';
+        // gently drift the highlighted tokens so the field feels live (not static)
+        if(Math.floor(t*ROWS)!==step._r){step._r=Math.floor(t*ROWS);}
+        st.textContent = t<0.5?'Assembling upper body':'Assembling lower body';
+        if(t<1)raf(step);
+        else{ setReveal(zone.clientHeight+8); line.style.transition='opacity .5s';line.style.opacity='0';glow.style.opacity='0';st.textContent='Reading your signals'; }
+      }
+      raf(step);
     },240);
 
-    // V1 — the record builds
-    LOG.forEach(function(r,i){T(function(){printLine(i);st.textContent='Reading · '+r[0];},LOGSTART+i*GAP);});
+    // the record builds
+    LOG.forEach(function(r,i){T(function(){printLine(i);},LOGSTART+i*GAP);});
     T(function(){st.textContent='Calibration locked';},LOGSTART+LOG.length*GAP);
-    T(function(){line.style.transition='';play();},TOTAL+1600);
+    T(function(){play();},TOTAL+1600);
   }
 
   var mv=document.getElementById('mv');
