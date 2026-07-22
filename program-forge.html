@@ -95,7 +95,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
   <!-- BEAT 1 · RECAP -->
   <section class="recap" id="recap">
-    <div class="eb">Before we build</div>
+    <div class="eb">Assigned by ZEAL</div>
     <div class="rh">YOUR NEXT 12 WEEKS</div>
     <div class="hero2">
       <div class="bc now"><span class="bl">Start · today</span><img src="brand-assets/body-model/grid-clean/obeyos-model-male-f2m1.webp" alt=""><div class="bv">22%</div><div class="bk">body fat</div></div>
@@ -107,12 +107,12 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="sl">What to expect · by week 12</div>
     <div class="exp" id="exp"></div>
     <div class="expnote">Projected on your tier + adherence · re-checked each phase</div>
-    <button class="rcta" id="buildBtn">Build my program →</button>
+    <button class="rcta" id="buildBtn">See the full program →</button>
   </section>
 
   <!-- BEAT 2/3 · FORGE -->
   <section class="forge" id="forge">
-    <video class="bgv" id="bgv" muted playsinline loop preload="auto">
+    <video class="bgv" id="bgv" autoplay muted playsinline loop preload="auto">
       <source src="brand-assets/video-loops/vid-intro-forge-signal-01.mp4" type="video/mp4">
       <source src="https://d8j0ntlcm91z4.cloudfront.net/user_2xwxbqXTnKKshPKSiHrPHfWFU2z/hf_20260722_120131_09ba20e3-5a55-4b75-a897-4fcbb0c4f20c.mp4" type="video/mp4">
     </video>
@@ -126,7 +126,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
       </div>
     </div>
     <div class="fstatus" id="fstatus">Reading your signals</div>
-    <a class="fcta" id="fcta" href="program.html">See your program →</a>
+    <a class="fcta" id="fcta">See your plan →</a>
   </section>
 
 </div>
@@ -164,13 +164,19 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   // flow
   var recap=document.getElementById('recap'),forge=document.getElementById('forge'),vid=document.getElementById('bgv');
   var STATUS=[[0,'Reading your signals'],[900,'Matching 31 programs'],[1900,'Tuning to your constraints'],[2900,'Locked']];
-  document.getElementById('buildBtn').addEventListener('click',function(){
-    window.scrollTo(0,0); forge.classList.add('show');
-    try{vid.currentTime=0;vid.play();}catch(e){}
+  // INTRO plays FIRST, the instant the page opens
+  function playIntro(){
+    forge.classList.add('show');
+    try{vid.currentTime=0;var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){});}catch(e){}
     var stEl=document.getElementById('fstatus');
     STATUS.forEach(function(s){setTimeout(function(){stEl.textContent=s[1];},s[0]);});
     setTimeout(function(){ forge.classList.add('step2'); }, rm?300:3300);
-  });
+  }
+  playIntro();
+  // "See your plan" closes the intro → reveals the recap
+  document.getElementById('fcta').addEventListener('click',function(){ forge.classList.remove('show'); window.scrollTo(0,0); });
+  // recap CTA → the full program page
+  document.getElementById('buildBtn').addEventListener('click',function(){ location.href='program.html'; });
 })();
 </script>
 </body>
