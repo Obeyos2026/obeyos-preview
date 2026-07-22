@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Strain deep-dive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--good:#22C55E;--sig:var(--lime);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 50% at 50% -6%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 60px;}
+.fade{opacity:0;transform:translateY(9px);transition:opacity .55s var(--ease),transform .55s var(--ease);}
+.screen.play .fade{opacity:1;transform:none;}
+.hd{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.hd .ico{width:16px;height:16px;stroke:var(--sig);fill:none;stroke-width:1.7;}
+.hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.hd .win{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);margin-left:auto;}
+
+/* VERDICT hero — editorial (word left, dial right) */
+.hero{display:grid;grid-template-columns:1fr auto;grid-template-areas:"eb ga" "vw ga" "fu fu";align-items:center;column-gap:14px;margin-top:18px;}
+.hero .eyebrow{grid-area:eb;align-self:end;font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.word-wrap{grid-area:vw;align-self:start;position:relative;display:inline-block;line-height:.8;margin-top:6px;}
+.vscan{position:absolute;inset:-18px -18px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);mask:linear-gradient(180deg,transparent 0,#000 24%,#000 76%,transparent 100%);}
+.vscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%, var(--sig) 0%, transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);}
+.screen.play .vscan::after{animation:sweep 5.5s linear .6s infinite;}
+@keyframes sweep{0%{opacity:0;transform:translateX(-58%);}6%{opacity:.85;}30%{opacity:.5;}44%{opacity:0;transform:translateX(58%);}100%{opacity:0;transform:translateX(58%);}}
+.word{position:relative;z-index:2;font-family:var(--head);font-size:52px;line-height:.82;color:var(--sig);letter-spacing:.02em;text-shadow:0 0 28px color-mix(in srgb,var(--sig) 32%,transparent);}
+.hero .gauge{grid-area:ga;position:relative;width:120px;height:120px;}
+.hero .gauge .ring-cv{position:absolute;top:0;left:0;pointer-events:none;}
+.hero .gauge .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hero .gauge .rn{font-family:var(--head);font-size:44px;color:var(--white);line-height:.8;}
+.hero .gauge .ru{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.furn{grid-area:fu;display:flex;margin-top:16px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.fc{flex:1;padding:13px 4px;text-align:center;border-left:1px solid var(--hair);}
+.fc:first-child{border-left:none;}
+.fv{font-family:var(--head);font-size:23px;color:var(--white);}
+.fv small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:2px;}
+.fv.g{color:var(--sig);}
+.fk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+
+.card{margin-top:14px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
+.ch .kv{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.ch .kv b{color:var(--sig);font-weight:500;}
+/* corridor legend chip */
+.leg{display:inline-flex;align-items:center;gap:5px;}
+.leg i{width:16px;height:8px;border-radius:2px;background:color-mix(in srgb,var(--sig) 16%,transparent);border-top:1px dashed color-mix(in srgb,var(--sig) 50%,transparent);border-bottom:1px dashed color-mix(in srgb,var(--sig) 50%,transparent);}
+
+.trend{width:100%;height:118px;display:block;overflow:visible;}
+.trend .band{fill:color-mix(in srgb,var(--sig) 12%,transparent);}
+.trend .bedge{stroke:color-mix(in srgb,var(--sig) 42%,transparent);stroke-width:1;stroke-dasharray:3 4;}
+.trend .ln{fill:none;stroke:rgba(255,255,255,.34);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset 1.7s var(--ease) .3s;}
+.screen.play .trend .ln{stroke-dashoffset:0;}
+.trend .pt{opacity:0;transition:opacity .4s ease;}
+.screen.play .trend .pt{opacity:1;}
+.taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
+.taxis .now{color:var(--sig);}
+
+/* drivers spec */
+.drv-sp .r{display:grid;grid-template-columns:14px 74px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--hair);}
+.drv-sp .r:first-child{border-top:none;}
+.drv-sp .dot{width:9px;height:9px;border-radius:3px;}
+.drv-sp .nm{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--white);text-transform:uppercase;}
+.drv-sp .mid{display:flex;align-items:baseline;gap:8px;}
+.drv-sp .val{font-family:var(--head);font-size:20px;color:var(--white);}
+.drv-sp .val small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:1px;}
+.drv-sp .base{font-family:var(--mono);font-size:8.5px;color:var(--dim);letter-spacing:.02em;}
+.drv-sp .st{font-family:var(--head);font-size:17px;text-align:right;color:var(--muted);}
+/* total row */
+.tot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid var(--sig);}
+.tot .l{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.tot .l b{color:var(--white);font-weight:500;}
+.tot .rr{font-family:var(--head);font-size:26px;color:var(--sig);}
+.tot .rr small{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em;margin-left:5px;}
+
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:24px 0 4px;}
+.drv{margin-top:8px;padding:2px 0 2px 14px;border-left:2px solid var(--sig);}
+.drv .t{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.55;color:var(--muted);}
+.drv .t b{color:var(--white);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="hd">
+    <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <svg class="ico" viewBox="0 0 24 24"><path d="M12 22a6 6 0 006-6c0-4-4-5-3.5-10C11 8 9 10 9 13c0-1.5-1-2.5-1-2.5C6.5 12 6 14 6 16a6 6 0 006 6z"/></svg>
+    <span class="tt">Strain</span><span class="win">as of 21:40</span>
+  </div>
+
+  <!-- VERDICT hero -->
+  <div class="hero fade">
+    <div class="eyebrow">Today's strain read</div>
+    <div class="gauge"><canvas class="ring-cv" id="hring"></canvas><div class="ctr"><div class="rn">14.2</div><div class="ru">Strain</div></div></div>
+    <div class="word-wrap"><span class="vscan"></span><span class="word">OPTIMAL</span></div>
+    <div class="furn">
+      <div class="fc"><div class="fv g">13&ndash;16</div><div class="fk">Target band</div></div>
+      <div class="fc"><div class="fv">168<small>BPM</small></div><div class="fk">Peak HR</div></div>
+      <div class="fc"><div class="fv">1:42</div><div class="fk">In load</div></div>
+    </div>
+  </div>
+
+  <!-- STRAIN TREND vs target corridor -->
+  <div class="card fade" style="transition-delay:.1s">
+    <div class="ch"><span class="k">Strain · 7 days</span><span class="kv leg"><i></i>&nbsp;target corridor</span></div>
+    <svg class="trend" id="trend" viewBox="0 0 380 118" preserveAspectRatio="none"></svg>
+    <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+  </div>
+
+  <!-- WHAT DROVE IT -->
+  <div class="card fade" style="transition-delay:.16s">
+    <div class="ch"><span class="k">What drove today's strain</span><span class="kv">share of load</span></div>
+    <div class="drv-sp" id="drivers"></div>
+    <div class="tot"><span class="l">Total vs target <b>13&ndash;16</b></span><span class="rr">14.2<small>OPTIMAL</small></span></div>
+  </div>
+
+  <div class="sl fade">The read</div>
+  <div class="drv fade"><div class="t"><b>You landed 14.2 inside your 13&ndash;16 band</b> — the load your <b style="color:var(--mint)">READY</b> verdict called for. The push session did the work; you didn't dig into recovery. Tomorrow's target resets at your next verdict.</div></div>
+</div>
+
+<script>
+(function(){
+  var scr=document.getElementById('screen'), rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SC=21, STR=14.2, LO=13, HI=16; // 0..21 strain scale, target band
+  // hero dial — fill to strain + target-band bracket (lime = landed in band = OPTIMAL)
+  (function(){ var cv=document.getElementById('hring'); if(!cv)return; var host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-5,tl=R*0.12,sa=150*Math.PI/180,sw=240*Math.PI/180;
+    var fill=STR/SC, lo=LO/SC, hi=HI/SC;
+    function fr(p){ctx.clearRect(0,0,size,size);var lit=fill*p;
+      for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';
+        if(t<=lit){ctx.strokeStyle='rgba(200,255,0,.72)';ctx.shadowColor='rgba(200,255,0,.45)';ctx.shadowBlur=3;}
+        else if(t>=lo&&t<=hi){ctx.strokeStyle='rgba(200,255,0,.26)';ctx.shadowBlur=0;} // ghost band ahead of fill
+        else{ctx.strokeStyle='rgba(255,255,255,.10)';ctx.shadowBlur=0;}
+        ctx.stroke();}
+      ctx.shadowBlur=0;
+      // band boundary markers (brighter, longer ticks at LO and HI)
+      [lo,hi].forEach(function(t){var a=sa+t*sw,x1=cx+(R-tl*1.9)*Math.cos(a),y1=cy+(R-tl*1.9)*Math.sin(a),x2=cx+(R+2)*Math.cos(a),y2=cy+(R+2)*Math.sin(a);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.6;ctx.strokeStyle='rgba(249,250,251,.72)';ctx.stroke();});
+    }
+    if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
+  })();
+  // 7-day strain vs corridor
+  (function(){ var svg=document.getElementById('trend'),d7=[11,16,9,14,18,12,14.2],W=380,H=118,PL=6,PR=6,PT=12,PB=12,mn=6,mx=21;
+    function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
+    function col(v){return (v>=LO&&v<=HI)?'#C8FF00':(v<LO?'#F59E0B':'#EF4444');}
+    function sm(p){if(p.length<2)return '';var d='M'+p[0][0]+','+p[0][1];for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;d+='C'+(p1[0]+(p2[0]-p0[0])/6)+','+(p1[1]+(p2[1]-p0[1])/6)+' '+(p2[0]-(p3[0]-p1[0])/6)+','+(p2[1]-(p3[1]-p1[1])/6)+' '+p2[0]+','+p2[1];}return d;}
+    var pts=d7.map(function(v,i){return [PL+(W-PL-PR)*(i/6),Y(v)];});
+    var yHI=Y(HI),yLO=Y(LO);
+    svg.innerHTML='<rect class="band" x="0" y="'+yHI+'" width="'+W+'" height="'+(yLO-yHI)+'"/>'+
+      '<line class="bedge" x1="0" y1="'+yHI+'" x2="'+W+'" y2="'+yHI+'"/><line class="bedge" x1="0" y1="'+yLO+'" x2="'+W+'" y2="'+yLO+'"/>'+
+      '<path class="ln" d="'+sm(pts)+'"/>'+
+      pts.map(function(p,i){var last=i===6;return '<circle class="pt" style="transition-delay:'+(1.2+i*0.08)+'s" cx="'+p[0]+'" cy="'+p[1]+'" r="'+(last?5:3.6)+'" fill="'+col(d7[i])+'" stroke="#0A0D12" stroke-width="'+(last?2:1.4)+'"/>';}).join('');
+  })();
+  // drivers — share of load
+  var D=[['Main session','#C8FF00','8.9','PTS','push · 1:12','63%'],['Zone-2 cardio','#00E5A0','3.1','PTS','34 min','22%'],['All-day load','#F59E0B','2.2','PTS','steps + NEAT','15%']];
+  document.getElementById('drivers').innerHTML=D.map(function(d){
+    return '<div class="r"><span class="dot" style="background:'+d[1]+'"></span><span class="nm">'+d[0]+'</span><span class="mid"><span class="val">'+d[2]+'<small>'+d[3]+'</small></span><span class="base">'+d[4]+'</span></span><span class="st">'+d[5]+'</span></div>';
+  }).join('');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ scr.classList.add('play'); }); });
+})();
+</script>
+</body>
+</html>
