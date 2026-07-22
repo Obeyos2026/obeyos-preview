@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Strain week · simpler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--sig:var(--lime);--panel:rgba(255,255,255,.022);
+  --glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;max-width:430px;margin:0 auto;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;padding:18px 20px 70px;}
+h1{font-family:var(--head);font-size:24px;letter-spacing:.03em;}
+.top{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:4px 0 18px;}
+.card{margin-top:16px;padding:18px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.vn{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;}
+.vn b{color:var(--sig);font-weight:500;}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
+.ch .kv{font-family:var(--head);font-size:19px;color:var(--white);letter-spacing:.02em;}
+.ch .kv b{color:var(--sig);}
+.ch .kv small{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);margin-left:5px;}
+
+/* V1 dots */
+.dots{display:flex;justify-content:space-between;}
+.dcol{display:flex;flex-direction:column;align-items:center;gap:9px;}
+.dot{width:15px;height:15px;border-radius:50%;}
+.dot.on{background:var(--lime);box-shadow:0 0 9px rgba(200,255,0,.6);}
+.dot.off{background:transparent;border:1.5px solid rgba(255,255,255,.22);}
+.dl{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;color:var(--dim);text-transform:uppercase;}
+.dl.now{color:var(--sig);}
+
+/* V2 segments */
+.segs{display:flex;gap:5px;}
+.seg{flex:1;height:12px;border-radius:6px;}
+.seg.on{background:var(--lime);box-shadow:0 0 8px rgba(200,255,0,.45);}
+.seg.off{background:rgba(255,255,255,.1);}
+.seglab{display:flex;gap:5px;margin-top:9px;}
+.seglab span{flex:1;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.02em;color:var(--dim);text-transform:uppercase;}
+.seglab span.now{color:var(--sig);}
+
+/* V3 ring */
+.ringwrap{display:flex;align-items:center;gap:20px;}
+.rc{position:relative;width:104px;height:104px;flex-shrink:0;}
+.rc canvas{position:absolute;top:0;left:0;}
+.rc .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.rc .rn{font-family:var(--head);font-size:30px;color:var(--white);line-height:.85;}
+.rc .rn b{color:var(--sig);}
+.rc .ru{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.rmini{display:flex;flex-wrap:wrap;gap:9px 12px;}
+.rmini .m{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;}
+.rmini .m i{width:8px;height:8px;border-radius:50%;}
+.rmini .m i.on{background:var(--lime);box-shadow:0 0 6px var(--lime);}
+.rmini .m i.off{background:transparent;border:1px solid rgba(255,255,255,.22);}
+.rmini .m.now{color:var(--sig);}
+
+/* V4 text */
+.tline{display:flex;align-items:center;gap:11px;padding:11px 0;}
+.tline+.tline{border-top:1px solid var(--hair);}
+.tline .tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;width:74px;}
+.tbig{font-family:var(--head);font-size:26px;color:var(--white);}
+.tbig .v{color:var(--sig);}
+.tbig small{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted);margin-left:6px;text-transform:uppercase;}
+.tsub{font-family:var(--body);font-weight:300;font-size:14px;color:var(--muted);line-height:1.4;}
+.tsub b{color:var(--white);font-weight:600;}
+
+/* V5 chips */
+.chips{display:flex;justify-content:space-between;gap:6px;}
+.chip{flex:1;aspect-ratio:1/1.12;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid rgba(255,255,255,.1);}
+.chip.on{background:rgba(200,255,0,.1);border-color:rgba(200,255,0,.5);}
+.chip.off{background:rgba(255,255,255,.02);}
+.chip .cd{font-family:var(--mono);font-size:8px;letter-spacing:.04em;color:var(--dim);text-transform:uppercase;}
+.chip.on .cd{color:var(--sig);}
+.chip .cv{font-family:var(--head);font-size:17px;color:var(--white);line-height:.8;}
+.chip.on .cv{color:var(--sig);}
+.chip.today{border-color:var(--sig);box-shadow:0 0 10px rgba(200,255,0,.25);}
+</style>
+</head>
+<body>
+<h1>STRAIN · THE WEEK</h1>
+<div class="top">simpler · one thing — did you hit target · one accent</div>
+
+<div class="card">
+  <div class="vn"><b>V1</b> · DOTS</div>
+  <div class="ch" style="margin-top:14px"><span class="k">This week</span><span class="kv"><b>5</b> / 7 <small>in target</small></span></div>
+  <div class="dots" id="v1"></div>
+</div>
+
+<div class="card">
+  <div class="vn"><b>V2</b> · WEEK BAR</div>
+  <div class="ch" style="margin-top:14px"><span class="k">This week</span><span class="kv"><b>5</b> / 7 <small>in target</small></span></div>
+  <div class="segs" id="v2"></div>
+  <div class="seglab" id="v2l"></div>
+</div>
+
+<div class="card">
+  <div class="vn"><b>V3</b> · ONE RING</div>
+  <div class="ringwrap" style="margin-top:16px">
+    <div class="rc"><canvas id="v3c"></canvas><div class="ctr"><div class="rn"><b>5</b>/7</div><div class="ru">in target</div></div></div>
+    <div class="rmini" id="v3m"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="vn"><b>V4</b> · JUST THE READ</div>
+  <div style="margin-top:8px">
+    <div class="tline"><span class="tag">Today</span><span class="tbig"><span class="v">14.2</span><small>Optimal</small></span></div>
+    <div class="tline"><span class="tag">This week</span><span class="tsub"><b>5 of the last 7 days</b> landed in target.</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="vn"><b>V5</b> · WEEK CHIPS</div>
+  <div class="ch" style="margin-top:14px"><span class="k">This week</span><span class="kv"><b>5</b> / 7 <small>in target</small></span></div>
+  <div class="chips" id="v5"></div>
+</div>
+
+<script>
+(function(){
+  var D=[['TUE',12],['WED',14],['THU',16],['FRI',13],['SAT',18],['SUN',14],['TODAY',14.2]];
+  var LO=13,HI=16; function inb(v){return v>=LO&&v<=HI;}
+  // V1 dots
+  document.getElementById('v1').innerHTML=D.map(function(d){var on=inb(d[1]),now=d[0]==='TODAY';
+    return '<div class="dcol"><span class="dot '+(on?'on':'off')+'"></span><span class="dl'+(now?' now':'')+'">'+d[0]+'</span></div>';}).join('');
+  // V2 segments
+  document.getElementById('v2').innerHTML=D.map(function(d){return '<span class="seg '+(inb(d[1])?'on':'off')+'"></span>';}).join('');
+  document.getElementById('v2l').innerHTML=D.map(function(d){var now=d[0]==='TODAY';return '<span'+(now?' class="now"':'')+'>'+d[0]+'</span>';}).join('');
+  // V3 ring — fill to 5/7
+  (function(){var cv=document.getElementById('v3c'),host=cv.parentElement,size=host.clientWidth,dpr=devicePixelRatio||1;
+    cv.width=size*dpr;cv.height=size*dpr;cv.style.width=size+'px';cv.style.height=size+'px';var ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+    var T=Math.round(size*0.42),cx=size/2,cy=size/2,R=size/2-4,tl=R*0.13,sa=150*Math.PI/180,sw=240*Math.PI/180,frac=5/7;
+    for(var i=0;i<T;i++){var t=i/(T-1),a=sa+t*sw,x1=cx+(R-tl)*Math.cos(a),y1=cy+(R-tl)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
+      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=1.5;ctx.lineCap='round';
+      if(t<=frac){ctx.strokeStyle='rgba(200,255,0,.72)';ctx.shadowColor='rgba(200,255,0,.45)';ctx.shadowBlur=3;}else{ctx.strokeStyle='rgba(255,255,255,.1)';ctx.shadowBlur=0;}ctx.stroke();}
+    ctx.shadowBlur=0;
+  })();
+  document.getElementById('v3m').innerHTML=D.map(function(d){var on=inb(d[1]),now=d[0]==='TODAY';
+    return '<span class="m'+(now?' now':'')+'"><i class="'+(on?'on':'off')+'"></i>'+d[0]+'</span>';}).join('');
+  // V5 chips
+  document.getElementById('v5').innerHTML=D.map(function(d){var on=inb(d[1]),now=d[0]==='TODAY';
+    return '<div class="chip '+(on?'on':'off')+(now?' today':'')+'"><span class="cd">'+d[0].slice(0,now?5:1)+'</span><span class="cv">'+d[1].toFixed(1).replace('.0','')+'</span></div>';}).join('');
+})();
+</script>
+</body>
+</html>
