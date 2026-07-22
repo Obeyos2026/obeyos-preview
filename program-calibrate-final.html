@@ -36,6 +36,15 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .scanglow{position:absolute;left:0;right:0;height:56px;background:linear-gradient(180deg,rgba(200,255,0,.14),transparent);z-index:4;pointer-events:none;opacity:0;}
 .scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sig) 20%,var(--sig) 80%,transparent);box-shadow:0 0 18px 3px rgba(200,255,0,.55);z-index:5;pointer-events:none;opacity:0;}
 
+/* V5 — region pins (light up as the scan crosses each) */
+.ro{position:absolute;z-index:7;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);opacity:0;white-space:nowrap;transition:opacity .45s var(--ease);}
+.ro.show{opacity:1;}
+.ro .rl{color:var(--dim);}
+.ro b{color:var(--sig);font-family:var(--head);font-size:15px;letter-spacing:.02em;margin-left:5px;}
+.ro::before{content:"";position:absolute;top:50%;width:22px;height:1px;background:var(--sig);opacity:.5;}
+.ro.l::before{right:100%;margin-right:7px;}
+.ro.r::before{left:100%;margin-left:7px;}
+
 /* the record */
 .log{position:absolute;left:26px;right:26px;top:50%;z-index:7;font-family:var(--mono);}
 .log .hdln{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--hair);}
@@ -64,6 +73,10 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="scanglow" id="glow"></div>
     <div class="scanline" id="line"></div>
   </div>
+
+  <div class="ro r" id="ro-muscle" data-y="22" style="left:64%;top:21%"><span class="rl">Muscle</span><b>42%</b></div>
+  <div class="ro l" id="ro-fat" data-y="30" style="right:64%;top:29%"><span class="rl">Body fat</span><b>22%</b></div>
+  <div class="ro r" id="ro-knee" data-y="38" style="left:62%;top:37%"><span class="rl">L-knee</span><b>Flagged</b></div>
 
   <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="st">Powering the engine</div><div class="pbar"><i id="pf"></i></div></div>
 
@@ -113,9 +126,12 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     field.style.webkitMaskImage=mask;field.style.maskImage=mask;
   }
 
+  var PINS=[document.getElementById('ro-muscle'),document.getElementById('ro-fat'),document.getElementById('ro-knee')];
+
   function play(){
     clr();
     LOG.forEach(function(r,i){var ln=document.getElementById('ln'+i);ln.className='ln';document.getElementById('lv'+i).innerHTML='';ln.querySelector('.lead').textContent='';});
+    PINS.forEach(function(p){p.classList.remove('show');});
     buildField();
     line.style.opacity='0';glow.style.opacity='0';line.style.transition='';
     st.textContent='Powering the engine';pf.style.transition='none';pf.style.width='0';
@@ -133,6 +149,9 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
         var e=t, yPx=zone.clientHeight*e;         // reveal boundary in zone px
         setReveal(yPx);
         line.style.top=(zoneTop+yPx)+'px';glow.style.top=(zoneTop+yPx-52)+'px';
+        // V5 pins light up as the scan crosses each region
+        var boundaryPct=((zoneTop+yPx)/screen.clientHeight)*100;
+        PINS.forEach(function(p){if(boundaryPct> +p.dataset.y)p.classList.add('show');});
         // gently drift the highlighted tokens so the field feels live (not static)
         if(Math.floor(t*ROWS)!==step._r){step._r=Math.floor(t*ROWS);}
         st.textContent = t<0.5?'Assembling upper body':'Assembling lower body';
