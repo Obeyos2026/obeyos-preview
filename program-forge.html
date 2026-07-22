@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--sig:var(--lime);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{width:100%;max-width:430px;min-height:100dvh;position:relative;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 55% at 50% -4%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 40px;overflow:hidden;}
+
+/* FORGE overlay */
+#forge{position:absolute;inset:0;z-index:10;background:#0A0D12;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s var(--ease);}
+#forge.gone{opacity:0;pointer-events:none;}
+#fcv{position:absolute;inset:0;width:100%;height:100%;}
+.f-top{position:absolute;top:12%;left:0;right:0;text-align:center;z-index:2;}
+.f-top .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
+.f-top .h{font-family:var(--head);font-size:30px;letter-spacing:.02em;color:var(--white);margin-top:8px;}
+.f-status{position:absolute;bottom:14%;left:0;right:0;text-align:center;z-index:2;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--sig);text-transform:uppercase;}
+.f-status .bar{width:120px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;margin:12px auto 0;overflow:hidden;}
+.f-status .bf{height:100%;background:var(--sig);width:0;box-shadow:0 0 8px var(--sig);}
+
+/* ASSIGN */
+#assign{opacity:0;transition:opacity .6s var(--ease);}
+#assign.in{opacity:1;}
+.hd{display:flex;align-items:center;gap:11px;margin-bottom:4px;}
+.back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
+.hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
+.a-eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;margin-top:20px;display:flex;align-items:center;gap:7px;}
+.a-eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
+.a-name-wrap{position:relative;display:inline-block;margin-top:8px;line-height:.86;}
+.a-scan{position:absolute;inset:-14px -16px;z-index:0;pointer-events:none;-webkit-mask:linear-gradient(180deg,transparent 0,#000 22%,#000 78%,transparent 100%);mask:linear-gradient(180deg,transparent 0,#000 22%,#000 78%,transparent 100%);}
+.a-scan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,var(--sig) 0%,transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);mask:repeating-linear-gradient(90deg,transparent 0,transparent 5px,#000 6px,#000 7px);transform:translateX(-58%);}
+.a-scan.sweep::after{animation:asweep 1.5s var(--ease);}
+@keyframes asweep{0%{opacity:0;transform:translateX(-58%);}20%{opacity:.9;}100%{opacity:0;transform:translateX(58%);}}
+.a-name{position:relative;z-index:2;font-family:var(--head);font-size:52px;letter-spacing:.01em;color:var(--white);}
+.a-meta{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.a-meta .fit{color:var(--dim);}.a-meta .fit b{font-family:var(--head);font-size:16px;color:var(--sig);letter-spacing:.02em;margin-left:3px;}
+.a-card{margin-top:14px;padding:16px;border-radius:16px;background:var(--glass);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.a-card .ck{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-bottom:14px;}
+.whys .wy{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:baseline;padding:9px 0;border-top:1px solid var(--hair);}
+.whys .wy:first-child{border-top:none;}
+.whys .tag{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--sig);text-transform:uppercase;padding:3px 7px;border-radius:6px;border:1px solid color-mix(in srgb,var(--sig) 28%,transparent);white-space:nowrap;}
+.whys .wt{font-family:var(--body);font-weight:300;font-size:12.5px;line-height:1.4;color:var(--muted);}
+.week{display:flex;gap:6px;}
+.wd{flex:1;text-align:center;padding:12px 2px;border-radius:11px;border:1px solid var(--hair);background:var(--panel);}
+.wd.rest{opacity:.4;}
+.wd .d{font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;}
+.wd .f{font-family:var(--head);font-size:15px;color:var(--white);margin-top:5px;line-height:.9;}
+.wd.rest .f{color:var(--mid);}
+.lock{display:block;width:100%;margin-top:22px;height:48px;border:none;border-radius:24px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+.adjust{display:block;width:100%;margin-top:12px;height:44px;border:1px solid var(--hair);border-radius:22px;background:none;color:var(--white);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;}
+.altbtn{display:block;width:100%;margin-top:14px;background:none;border:none;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;cursor:pointer;padding:6px;}
+
+/* SHEETS */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .4s;z-index:15;}
+.scrim.open{opacity:1;pointer-events:auto;}
+.sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;max-height:74dvh;background:#0C0F15;border-top:1px solid var(--hair);border-radius:22px 22px 0 0;z-index:20;transition:transform .5s var(--ease);padding:16px 20px 30px;overflow-y:auto;box-shadow:0 -20px 60px -20px rgba(0,0,0,.85);}
+.sheet.open{transform:translateX(-50%) translateY(0);}
+.grab{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);}
+.sh-hd{display:flex;align-items:center;justify-content:space-between;}
+.sh-hd h2{font-family:var(--head);font-size:24px;letter-spacing:.02em;}
+.sh-hd .refit{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;}
+.sh-hd .refit b{color:var(--sig);}
+.sh-hd .x{width:32px;height:32px;border-radius:50%;border:1px solid var(--hair);background:var(--panel);color:var(--muted);font-size:15px;cursor:pointer;}
+.lever{margin-top:20px;}
+.lever .ll{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-bottom:9px;}
+.seg{display:flex;gap:6px;}
+.seg .o{flex:1;padding:12px 2px;text-align:center;border-radius:10px;border:1px solid var(--hair);background:var(--panel);font-family:var(--head);font-size:16px;color:var(--mid);cursor:pointer;transition:all .13s;letter-spacing:.02em;}
+.seg .o small{display:block;font-family:var(--mono);font-size:7px;letter-spacing:.06em;color:var(--dim);margin-top:2px;text-transform:uppercase;}
+.seg .o.sel{border-color:var(--sig);background:color-mix(in srgb,var(--sig) 12%,transparent);color:var(--sig);}
+.seg .o.sel small{color:color-mix(in srgb,var(--sig) 70%,var(--dim));}
+.adone{display:block;width:100%;margin-top:26px;height:44px;border:none;border-radius:22px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+.build-own{width:100%;margin-top:12px;background:none;border:none;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;cursor:pointer;padding:6px;}
+/* alternatives */
+.alt-row{display:flex;align-items:center;gap:13px;padding:15px 0;border-top:1px solid var(--hair);cursor:pointer;}
+.alt-row:first-child{border-top:none;}
+.alt-rank{font-family:var(--head);font-size:22px;color:var(--dim);width:26px;flex-shrink:0;}
+.alt-mid{flex:1;}
+.alt-nm{display:block;font-family:var(--head);font-size:19px;color:var(--white);letter-spacing:.01em;}
+.alt-wy{display:block;font-family:var(--body);font-weight:300;font-size:11.5px;line-height:1.4;color:var(--mid);margin-top:4px;}
+.alt-fit{text-align:right;flex-shrink:0;}
+.alt-fit b{font-family:var(--head);font-size:22px;color:var(--muted);}
+.alt-fit small{display:block;font-family:var(--mono);font-size:7px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.alt-note{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:20px;line-height:1.6;}
+
+/* LOCKED confirm */
+#locked{position:fixed;inset:0;max-width:430px;margin:0 auto;background:#0A0D12;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .5s;}
+#locked.on{opacity:1;pointer-events:auto;}
+#locked .big{font-family:var(--head);font-size:56px;line-height:.9;color:var(--sig);text-align:center;text-shadow:0 0 30px color-mix(in srgb,var(--sig) 34%,transparent);}
+#locked .sub{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;text-align:center;margin-top:14px;}
+#locked .dcta{margin-top:32px;height:46px;width:100%;max-width:320px;border:none;border-radius:23px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:none;text-align:center;line-height:46px;}
+@media(prefers-reduced-motion:reduce){#forge{transition:none;} .a-scan.sweep::after{animation:none;}}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+
+  <!-- ASSIGN (revealed after forge) -->
+  <div id="assign">
+    <div class="hd">
+      <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <span class="tt">Your program</span>
+    </div>
+    <div class="a-eb">ZEAL assigned your program</div>
+    <div class="a-name-wrap"><span class="a-scan" id="aScan"></span><h1 class="a-name" id="pName">UPPER / LOWER</h1></div>
+    <div class="a-meta"><span id="pDays">4-day</span><span>·</span><span id="pLen">55 min</span><span>·</span><span class="fit">Fit <b id="pFit">94%</b></span></div>
+
+    <div class="a-card"><div class="ck">Why this program</div><div class="whys" id="pWhy"></div></div>
+    <div class="a-card"><div class="ck">Your week</div><div class="week" id="pWeek"></div></div>
+
+    <button class="lock" id="lockBtn">Lock it in →</button>
+    <button class="adjust" id="adjustBtn">Adjust the build</button>
+    <button class="altbtn" id="altBtn">What ZEAL also weighed ›</button>
+  </div>
+
+  <!-- FORGE overlay -->
+  <div id="forge">
+    <canvas id="fcv"></canvas>
+    <div class="f-top"><div class="k">ZEAL · program engine</div><div class="h">BUILDING YOUR PROGRAM</div></div>
+    <div class="f-status"><span id="fStatus">Reading your signals</span><div class="bar"><div class="bf" id="fBar"></div></div></div>
+  </div>
+</div>
+
+<!-- ADJUST sheet -->
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="adjSheet">
+  <div class="grab"></div>
+  <div class="sh-hd"><h2>Adjust the build</h2><span class="refit">Live fit <b id="reFit">94%</b></span></div>
+  <div class="lever"><div class="ll">Days per week</div><div class="seg" data-l="days"></div></div>
+  <div class="lever"><div class="ll">Session length</div><div class="seg" data-l="len"></div></div>
+  <div class="lever"><div class="ll">Equipment</div><div class="seg" data-l="equip"></div></div>
+  <div class="lever"><div class="ll">Emphasis</div><div class="seg" data-l="emph"></div></div>
+  <button class="adone" id="adjDone">Re-lock with these →</button>
+  <button class="build-own" id="buildOwn">Advanced · build from scratch</button>
+</div>
+
+<!-- ALTERNATIVES sheet -->
+<div class="sheet" id="altSheet">
+  <div class="grab"></div>
+  <div class="sh-hd"><h2>What ZEAL also weighed</h2><button class="x" id="altClose">✕</button></div>
+  <div id="altList"></div>
+  <div class="alt-note">ZEAL ranked every program against your profile.<br>Tap one to override — it stays your call.</div>
+</div>
+
+<!-- LOCKED -->
+<div id="locked">
+  <div class="big" id="lkName">PROGRAM<br>LOCKED</div>
+  <div class="sub">ZEAL will run your daily verdict against it</div>
+  <a class="dcta" href="dash-live.html">Enter the OS →</a>
+</div>
+
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // the user's onboarding signals (would come from their profile)
+  var SIGNALS=[
+    {l:'GOAL · RECOMP',c:'#C8FF00'},{l:'TIER 2',c:'#00E5A0'},{l:'SMM 42%',c:'#C8FF00'},
+    {l:'L-KNEE',c:'#F59E0B'},{l:'4 DAYS',c:'#00D4FF'},{l:'FULL GYM',c:'#00E5A0'}
+  ];
+  var lv={days:4,len:55,equip:'gym',emph:'balanced'};
+  var LEVERS={
+    days:[['3','/wk'],['4','/wk'],['5','/wk'],['6','/wk']],
+    len:[['45','min'],['55','min'],['70','min']],
+    equip:[['GYM',''],['HOME',''],['MIN','']],
+    emph:[['BAL',''],['PUSH',''],['PULL',''],['LEGS','']]
+  };
+  var LVAL={days:['3','4','5','6'],len:['45','55','70'],equip:['gym','home','min'],emph:['balanced','push','pull','legs']};
+
+  function forgeProgram(v){
+    var d=+v.days, split, struct;
+    if(d<=3){ split='FULL BODY'; struct=[['Mon','Full'],['Wed','Full'],['Fri','Full']].slice(0,d); }
+    else if(d===4){ split='UPPER / LOWER'; struct=[['Mon','Upper'],['Tue','Lower'],['Thu','Upper'],['Fri','Lower']]; }
+    else if(d===5){ split='UPPER / LOWER +'; struct=[['Mon','Upper'],['Tue','Lower'],['Wed','Push'],['Fri','Pull'],['Sat','Legs']]; }
+    else { split='PUSH / PULL / LEGS'; struct=[['Mon','Push'],['Tue','Pull'],['Wed','Legs'],['Thu','Push'],['Fri','Pull'],['Sat','Legs']].slice(0,d); }
+    if(v.emph!=='balanced' && d>=4) split+=' · '+v.emph.toUpperCase()+' BIAS';
+    var fit=95; if(d!==4)fit-=Math.abs(d-4)*4; if(v.equip!=='gym')fit-=6; if(v.emph!=='balanced')fit-=3; if(+v.len<50||+v.len>65)fit-=3;
+    fit=Math.max(70,Math.min(96,fit));
+    var eqTxt=v.equip==='gym'?'Full gym → barbell-first loading':(v.equip==='home'?'Home → dumbbell + bodyweight loading':'Minimal → bodyweight + bands');
+    var why=[
+      ['TIER 2','SMM 42% puts you mid-tier — moderate volume with room to progress.'],
+      ['RECOMP','Strength base + short metabolic finishers, slight energy deficit.'],
+      [d+' DAYS',split.split(' · ')[0].toLowerCase()+' — each muscle hit '+(d>=4?'2×':'1–2×')+' a week.'],
+      ['L-KNEE','Back-squat swapped for leg-press + hip-hinge to protect the joint.'],
+      [v.equip==='gym'?'FULL GYM':(v.equip==='home'?'HOME':'MINIMAL'),eqTxt]
+    ];
+    return {name:split,days:d,len:+v.len,fit:fit,why:why,struct:struct};
+  }
+
+  function renderAssign(p,flash){
+    document.getElementById('pName').textContent=p.name;
+    document.getElementById('pDays').textContent=p.days+'-day';
+    document.getElementById('pLen').textContent=p.len+' min';
+    document.getElementById('pFit').textContent=p.fit+'%';
+    document.getElementById('pWhy').innerHTML=p.why.map(function(w){return '<div class="wy"><span class="tag">'+w[0]+'</span><span class="wt">'+w[1]+'</span></div>';}).join('');
+    var full=[['Mon'],['Tue'],['Wed'],['Thu'],['Fri'],['Sat'],['Sun']];
+    var map={}; p.struct.forEach(function(s){map[s[0]]=s[1];});
+    document.getElementById('pWeek').innerHTML=full.map(function(dd){var f=map[dd[0]];return '<div class="wd'+(f?'':' rest')+'"><div class="d">'+dd[0]+'</div><div class="f">'+(f||'Rest')+'</div></div>';}).join('');
+    if(flash){var sc=document.getElementById('aScan');sc.classList.remove('sweep');void sc.offsetWidth;sc.classList.add('sweep');}
+  }
+  function apply(flash){ var p=forgeProgram(lv); renderAssign(p,flash); document.getElementById('reFit').textContent=p.fit+'%'; }
+
+  // ---- FORGE animation ----
+  var fcv=document.getElementById('fcv'),fx=fcv.getContext('2d'),W,H,DPR=devicePixelRatio||1;
+  function size(){var r=fcv.getBoundingClientRect();W=r.width;H=r.height;fcv.width=W*DPR;fcv.height=H*DPR;fx.setTransform(DPR,0,0,DPR,0,0);}
+  var STATUS=[[0,'Reading your signals'],[.32,'Matching 31 programs'],[.62,'Tuning to your constraints'],[.86,'Locking in']];
+  function runForge(dur,cb){
+    size(); var cx=W/2, cy=H*0.5, R=Math.min(W,H)*0.30, t0=null;
+    var nodes=SIGNALS.map(function(s,i){var a=(-90+i*60)*Math.PI/180;return {l:s.l,c:s.c,x:cx+R*Math.cos(a),y:cy+R*Math.sin(a),a:a};});
+    function ease(t){return 1-Math.pow(1-t,3);}
+    if(rm){ document.getElementById('fBar').style.width='100%'; cb(); return; }
+    function frame(ts){ if(!t0)t0=ts; var t=Math.min(1,(ts-t0)/dur); var e=ease(t);
+      fx.clearRect(0,0,W,H);
+      // core
+      var coreR=6+e*26, coreA=0.15+e*0.85;
+      // lines + particles
+      nodes.forEach(function(n,i){
+        var ln=Math.max(0,Math.min(1,(t-0.12-i*0.02)/0.42)); // line grow
+        var ex=n.x+(cx-n.x)*ln, ey=n.y+(cy-n.y)*ln;
+        var g=fx.createLinearGradient(n.x,n.y,cx,cy);
+        g.addColorStop(0,'rgba('+hex(n.c)+','+(0.5*coreA)+')'); g.addColorStop(1,'rgba('+hex(n.c)+',0)');
+        fx.strokeStyle=g;fx.lineWidth=1;fx.beginPath();fx.moveTo(n.x,n.y);fx.lineTo(ex,ey);fx.stroke();
+        // particle travelling inward
+        if(ln>0&&ln<1){var pp=(t*2.2+i*0.16)%1; var px=n.x+(cx-n.x)*pp,py=n.y+(cy-n.y)*pp; fx.beginPath();fx.arc(px,py,1.7,0,6.28);fx.fillStyle=n.c;fx.shadowColor=n.c;fx.shadowBlur=6;fx.fill();fx.shadowBlur=0;}
+        // node dot + label
+        fx.beginPath();fx.arc(n.x,n.y,3,0,6.28);fx.fillStyle=n.c;fx.shadowColor=n.c;fx.shadowBlur=8;fx.fill();fx.shadowBlur=0;
+        fx.font='500 8px "DM Mono",monospace';fx.fillStyle='rgba(249,250,251,'+(0.35+0.4*e)+')';fx.textAlign='center';
+        var lx=n.x+(n.x-cx)*0.16, ly=n.y+(n.y-cy)*0.16+(n.y<cy?-8:14);
+        fx.fillText(n.l,lx,ly);
+      });
+      // core glow
+      var cg=fx.createRadialGradient(cx,cy,0,cx,cy,coreR*3);
+      cg.addColorStop(0,'rgba(200,255,0,'+(0.5*coreA)+')');cg.addColorStop(1,'rgba(200,255,0,0)');
+      fx.fillStyle=cg;fx.beginPath();fx.arc(cx,cy,coreR*3,0,6.28);fx.fill();
+      fx.beginPath();fx.arc(cx,cy,coreR,0,6.28);fx.fillStyle='rgba(200,255,0,'+coreA+')';fx.shadowColor='#C8FF00';fx.shadowBlur=20*e;fx.fill();fx.shadowBlur=0;
+      // lock flash
+      if(t>0.9){var fp=(t-0.9)/0.1;fx.beginPath();fx.arc(cx,cy,coreR+fp*80,0,6.28);fx.strokeStyle='rgba(200,255,0,'+(0.5*(1-fp))+')';fx.lineWidth=2;fx.stroke();}
+      // status
+      var st=STATUS[0][1]; STATUS.forEach(function(s){if(t>=s[0])st=s[1];});
+      document.getElementById('fStatus').textContent=st;
+      document.getElementById('fBar').style.width=Math.round(e*100)+'%';
+      if(t<1)requestAnimationFrame(frame); else cb();
+    }
+    requestAnimationFrame(frame);
+  }
+  function hex(h){var n=parseInt(h.slice(1),16);return ((n>>16)&255)+','+((n>>8)&255)+','+(n&255);}
+
+  function reveal(){
+    document.getElementById('forge').classList.add('gone');
+    var a=document.getElementById('assign'); a.classList.add('in');
+    apply(false);
+    setTimeout(function(){var sc=document.getElementById('aScan');sc.classList.add('sweep');},250);
+  }
+
+  // ---- levers ----
+  document.querySelectorAll('.seg').forEach(function(seg){
+    var key=seg.dataset.l;
+    function draw(){ seg.innerHTML=LEVERS[key].map(function(o,i){return '<div class="o'+(LVAL[key][i]===String(lv[key])?' sel':'')+'" data-i="'+i+'">'+o[0]+(o[1]?'<small>'+o[1]+'</small>':'')+'</div>';}).join('');
+      Array.prototype.forEach.call(seg.querySelectorAll('.o'),function(o){o.addEventListener('click',function(){ lv[key]=LVAL[key][+o.dataset.i]; draw(); apply(true); if(navigator.vibrate)navigator.vibrate(8); });});
+    }
+    seg._draw=draw; draw();
+  });
+
+  // ---- sheets ----
+  var scrim=document.getElementById('scrim'),adj=document.getElementById('adjSheet'),alt=document.getElementById('altSheet');
+  function openAdj(){ adj.classList.add('open');scrim.classList.add('open'); }
+  function openAlt(){ renderAlt(); alt.classList.add('open');scrim.classList.add('open'); }
+  function closeAll(){ adj.classList.remove('open');alt.classList.remove('open');scrim.classList.remove('open'); }
+  document.getElementById('adjustBtn').addEventListener('click',openAdj);
+  document.getElementById('altBtn').addEventListener('click',openAlt);
+  document.getElementById('adjDone').addEventListener('click',closeAll);
+  document.getElementById('altClose').addEventListener('click',closeAll);
+  scrim.addEventListener('click',closeAll);
+  document.getElementById('buildOwn').addEventListener('click',function(){ alert('Advanced builder — for coaches / power users. Kept out of the main path so ZEAL stays the default.'); });
+
+  var ALT=[
+    {r:2,n:'PUSH / PULL / LEGS',fit:88,why:'Higher frequency and a great hypertrophy driver — but it needs 6 training days. You gave 4.'},
+    {r:3,n:'FULL BODY · 3-DAY',fit:84,why:'Time-efficient and joint-friendly — but slower recomp progress at your tier and availability.'},
+    {r:4,n:'BODY-PART SPLIT',fit:71,why:'The classic bro-split — too much isolated volume and too little frequency for a recomp goal.'}
+  ];
+  function renderAlt(){
+    document.getElementById('altList').innerHTML=ALT.map(function(a){return '<div class="alt-row" data-n="'+a.n+'"><span class="alt-rank">'+a.r+'</span><span class="alt-mid"><span class="alt-nm">'+a.n+'</span><span class="alt-wy">'+a.why+'</span></span><span class="alt-fit"><b>'+a.fit+'%</b><small>fit</small></span></div>';}).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('#altList .alt-row'),function(r){r.addEventListener('click',function(){ document.getElementById('pName').textContent=r.dataset.n; closeAll(); var sc=document.getElementById('aScan');sc.classList.remove('sweep');void sc.offsetWidth;sc.classList.add('sweep'); });});
+  }
+
+  // ---- lock ----
+  document.getElementById('lockBtn').addEventListener('click',function(){
+    document.getElementById('lkName').innerHTML=document.getElementById('pName').textContent.replace(/ · .*/,'')+'<br>LOCKED';
+    document.getElementById('locked').classList.add('on');
+  });
+
+  // GO
+  runForge(3200, reveal);
+})();
+</script>
+</body>
+</html>
