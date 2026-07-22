@@ -53,18 +53,10 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
 .ch .kv{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
 .ch .kv b{color:var(--sig);font-weight:500;}
-/* corridor legend chip */
-.leg{display:inline-flex;align-items:center;gap:5px;}
-.leg i{width:16px;height:8px;border-radius:2px;background:color-mix(in srgb,var(--sig) 16%,transparent);border-top:1px dashed color-mix(in srgb,var(--sig) 50%,transparent);border-bottom:1px dashed color-mix(in srgb,var(--sig) 50%,transparent);}
-
 .scale{width:100%;height:70px;display:block;overflow:visible;}
 .def{font-family:var(--body);font-weight:300;font-size:12px;line-height:1.55;color:var(--muted);margin-top:14px;}
 .def b{color:var(--white);font-weight:500;}
-.trend{width:100%;height:140px;display:block;overflow:visible;}
-.trend .bar{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom;transition:transform .7s var(--ease);}
-.screen.play .trend .bar{transform:scaleY(1);}
-.trend .bl{opacity:0;transition:opacity .4s ease;}
-.screen.play .trend .bl{opacity:1;}
+.trend{width:100%;height:150px;display:block;overflow:visible;}
 .taxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-top:7px;}
 .taxis .now{color:var(--sig);}
 
@@ -120,9 +112,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
   <!-- STRAIN TREND vs target corridor -->
   <div class="card fade" style="transition-delay:.1s">
-    <div class="ch"><span class="k">Strain · 7 days</span><span class="kv leg"><i></i>&nbsp;target corridor</span></div>
-    <svg class="trend" id="trend" viewBox="0 0 380 140" preserveAspectRatio="none"></svg>
-    <div class="taxis"><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span class="now">Today</span></div>
+    <div class="ch"><span class="k">Strain · 7 days</span><span class="kv">today <b>14.2</b> · optimal</span></div>
+    <svg class="trend" id="trend" viewBox="0 0 380 150"></svg>
   </div>
 
   <!-- WHAT DROVE IT -->
@@ -158,19 +149,31 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     }
     if(rm){fr(1);return;}var s=null;setTimeout(function(){(function f(ts){if(!s)s=ts;var p=Math.min(1,(ts-s)/1150),e=1-Math.pow(1-p,3);fr(e);if(p<1)requestAnimationFrame(f);})(performance.now());},400);
   })();
-  // 7-day strain — bars vs target corridor (bar top inside band = matched)
-  (function(){ var svg=document.getElementById('trend'),d7=[11,16,9,14,18,12,14.2],W=380,H=140,PL=8,PR=8,PT=24,PB=8,mx=21;
-    function Y(v){return (H-PB)-(H-PT-PB)*(v/mx);}
-    function col(v){return (v>=LO&&v<=HI)?'#C8FF00':(v<LO?'#F59E0B':'#EF4444');}
-    var slot=(W-PL-PR)/7, bw=slot*0.44, yHI=Y(HI),yLO=Y(LO), h='';
-    h+='<rect x="0" y="'+yHI+'" width="'+W+'" height="'+(yLO-yHI)+'" fill="rgba(200,255,0,.10)"/>';
-    h+='<line x1="0" y1="'+yHI+'" x2="'+W+'" y2="'+yHI+'" stroke="rgba(200,255,0,.34)" stroke-width="1" stroke-dasharray="3 4"/>';
-    h+='<line x1="0" y1="'+yLO+'" x2="'+W+'" y2="'+yLO+'" stroke="rgba(200,255,0,.34)" stroke-width="1" stroke-dasharray="3 4"/>';
-    d7.forEach(function(v,i){var cx=PL+slot*i+slot/2, x=cx-bw/2, y=Y(v), last=i===6, c=col(v);
-      h+='<rect class="bar" style="transition-delay:'+(0.4+i*0.08)+'s" x="'+x+'" y="'+y+'" width="'+bw+'" height="'+((H-PB)-y)+'" rx="3" fill="'+c+'" opacity="'+(last?1:0.85)+'"/>';
-      h+='<text class="bl" style="transition-delay:'+(0.9+i*0.08)+'s" x="'+cx+'" y="'+(y-6)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="'+(last?'#F9FAFB':'rgba(249,250,251,.55)')+'">'+v.toFixed(1)+'</text>';
-    });
-    svg.innerHTML=h;
+  // 7-day strain — step trace; target zone neutral (reference), lime reserved for today
+  (function(){ var svg=document.getElementById('trend'),D7=[['TUE',11],['WED',16],['THU',9],['FRI',14],['SAT',18],['SUN',12],['TODAY',14.2]];
+    var W=380,H=150,GUT=48,PL=56,PR=14,PT=26,PB=24,mn=6,mx=21,N=7,LIME='#C8FF00';
+    function X(i){return PL+(W-PL-PR)*(i/(N-1));}
+    function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
+    var yHI=Y(HI),yLO=Y(LO),ym=(yHI+yLO)/2,seg=(W-PL-PR)/(N-1),h='';
+    // neutral target zone (labelled reference)
+    h+='<rect x="'+GUT+'" y="'+yHI+'" width="'+((W-PR)-GUT)+'" height="'+(yLO-yHI)+'" fill="rgba(255,255,255,.045)"/>';
+    h+='<line x1="'+GUT+'" y1="'+yHI+'" x2="'+(W-PR)+'" y2="'+yHI+'" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
+    h+='<line x1="'+GUT+'" y1="'+yLO+'" x2="'+(W-PR)+'" y2="'+yLO+'" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
+    h+='<line x1="'+(GUT-4)+'" y1="'+yHI+'" x2="'+(GUT-4)+'" y2="'+yLO+'" stroke="rgba(255,255,255,.28)" stroke-width="1.4"/>';
+    h+='<text x="'+(GUT-9)+'" y="'+(ym-2)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#5C6679">TARGET</text>';
+    h+='<text x="'+(GUT-9)+'" y="'+(ym+9)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="8" fill="#747E8C">13–16</text>';
+    // muted step trace (the week is history)
+    var d='';D7.forEach(function(dd,i){var x=X(i),y=Y(dd[1]),xl=Math.max(GUT,x-seg*0.42),xr=Math.min(W-PR,x+seg*0.42);d+=(i===0?'M':'L')+xl+','+y+' L'+xr+','+y+' ';});
+    for(var i=0;i<N-1;i++){h+='<line x1="'+(X(i)+seg*0.42)+'" y1="'+Y(D7[i][1])+'" x2="'+(X(i+1)-seg*0.42)+'" y2="'+Y(D7[i+1][1])+'" stroke="rgba(255,255,255,.16)" stroke-width="1.3"/>';}
+    h+='<path d="'+d+'" fill="none" stroke="rgba(249,250,251,.44)" stroke-width="2.4" stroke-linecap="round"/>';
+    // today lit lime — the one signal
+    var xt=X(6),yt=Y(14.2),xtl=Math.max(GUT,xt-seg*0.42);
+    h+='<line x1="'+xtl+'" y1="'+yt+'" x2="'+(W-PR)+'" y2="'+yt+'" stroke="'+LIME+'" stroke-width="2.6" stroke-linecap="round" filter="url(#slgl)"/>';
+    h+='<circle cx="'+(W-PR)+'" cy="'+yt+'" r="4" fill="'+LIME+'" filter="url(#slgl)"/>';
+    D7.forEach(function(dd,i){var now=i===6;
+      h+='<text x="'+X(i)+'" y="'+(Y(dd[1])-9)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="'+(now?LIME:'rgba(249,250,251,.5)')+'">'+dd[1].toFixed(1)+'</text>';
+      h+='<text x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'#5C6679')+'">'+dd[0]+'</text>';});
+    svg.innerHTML='<defs><filter id="slgl" x="-90%" y="-90%" width="280%" height="280%"><feDropShadow dx="0" dy="0" stdDeviation="2.6" flood-color="#C8FF00" flood-opacity="0.85"/></filter></defs>'+h;
   })();
   // the strain scale — 0..21 with intensity zones + today marker + target band
   (function(){ var svg=document.getElementById('scale'); if(!svg)return; var W=380,PL=8,PR=8,y=44;
