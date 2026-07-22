@@ -89,15 +89,18 @@ h1{font-family:var(--head);font-size:23px;letter-spacing:.03em;}
   function chip(n,k,v){return '<span class="chip"><svg viewBox="0 0 24 24">'+IC[n]+'</svg><span>'+k+' <b>'+v+'</b></span></span>';}
   var BRIEF=chip('recomp','GOAL','Recomp')+chip('tier','TIER','2')+chip('knee','KNEE','safe')+chip('gym','DAYS','4');
 
-  // ---- abstract body silhouette (geometric, no face) ----
-  function pts(shW,waistW){return [[50,4],[59,9],[61,19],[54,30],[50+shW,42],[50+waistW,94],[68,118],[64,152],[59,208],[52,208],[51,122],[50,124],[49,122],[48,208],[41,208],[36,152],[32,118],[50-waistW,94],[50-shW,42],[46,30],[39,19],[41,9]];}
-  function smC(P){var n=P.length,d='M'+P[0][0]+' '+P[0][1];for(var i=0;i<n;i++){var p0=P[(i-1+n)%n],p1=P[i],p2=P[(i+1)%n],p3=P[(i+2)%n];d+='C'+(p1[0]+(p2[0]-p0[0])/6)+' '+(p1[1]+(p2[1]-p0[1])/6)+','+(p2[0]-(p3[0]-p1[0])/6)+' '+(p2[1]-(p3[1]-p1[1])/6)+','+p2[0]+' '+p2[1];}return d+'Z';}
-  var NOWP=smC(pts(20,23)), TGTP=smC(pts(25,16));
-  var ACCENTS='<path class="acc" d="M42 50h16M40 62h20M44 74h12M46 84h8" stroke="#C8FF00" stroke-width="1.4" fill="none" stroke-linecap="round"/>';
-  function silSVG(h){return '<svg class="sil" viewBox="0 0 100 214" style="height:'+h+'px;display:block;margin:0 auto"><path class="now-p" d="'+NOWP+'" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.32)" stroke-width="1.4"/><path class="tgt-p" d="'+TGTP+'" fill="rgba(200,255,0,.07)" stroke="#C8FF00" stroke-width="1.6"/>'+ACCENTS+'</svg>';}
-  // static silhouette (single state) for twin
-  function silStatic(state,h){var p=state==='now'?NOWP:TGTP,col=state==='now'?'rgba(255,255,255,.3)':'#C8FF00',fill=state==='now'?'rgba(255,255,255,.05)':'rgba(200,255,0,.07)';
-    return '<svg viewBox="0 0 100 214" style="height:'+h+'px;display:block;margin:0 auto"><path d="'+p+'" fill="'+fill+'" stroke="'+col+'" stroke-width="1.5"/>'+(state==='target'?'<path d="M42 50h16M40 62h20M44 74h12M46 84h8" stroke="#C8FF00" stroke-width="1.3" fill="none" stroke-linecap="round" opacity=".85"/>':'')+'</svg>';}
+  // ---- REAL onboarding body figure (grid-clean low-poly, gender-aware, morphs by fat/muscle state) ----
+  // now = bf22/smm42 -> f2m1 · target = bf18/more-muscle -> f1m2 (male mock)
+  var IMG_NOW='brand-assets/body-model/grid-clean/obeyos-model-male-f2m1.webp';
+  var IMG_TGT='brand-assets/body-model/grid-clean/obeyos-model-male-f1m2.webp';
+  function silStatic(state,h){var s=state==='now'?IMG_NOW:IMG_TGT;
+    var st=state==='target'?'filter:drop-shadow(0 0 16px rgba(200,255,0,.4));':'opacity:.8;filter:grayscale(.2);';
+    return '<img src="'+s+'" alt="" style="height:'+h+'px;width:auto;display:block;margin:0 auto;object-fit:contain;'+st+'">';}
+  function silSVG(h){ // morph: now fades back, target lights forward
+    return '<div class="sil" style="position:relative;height:'+h+'px;display:flex;align-items:flex-end;justify-content:center">'+
+      '<img class="now-p" src="'+IMG_NOW+'" alt="" style="position:absolute;bottom:0;height:'+h+'px;width:auto">'+
+      '<img class="tgt-p" src="'+IMG_TGT+'" alt="" style="position:absolute;bottom:0;height:'+h+'px;width:auto;filter:drop-shadow(0 0 16px rgba(200,255,0,.4))">'+
+      '</div>';}
 
   // ---- projection graph (fat down + lean up) ----
   function graphSVG(w,ht){var PL=30,PR=14,PT=14,PB=24;
