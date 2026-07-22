@@ -77,15 +77,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .mv .mx{font-family:var(--mono);font-size:10px;color:var(--mid);letter-spacing:.04em;}
 
 /* expected */
-.exp .er{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--hair);}
-.exp .er:first-child{border-top:none;}
-.exp .el{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--mid);text-transform:uppercase;width:92px;}
-.exp .track{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.07);position:relative;overflow:hidden;}
-.exp .now{position:absolute;left:0;top:0;bottom:0;background:rgba(255,255,255,.18);}
-.exp .proj{position:absolute;top:0;bottom:0;background:var(--sig);box-shadow:0 0 8px color-mix(in srgb,var(--sig) 55%,transparent);}
-.exp .ev{font-family:var(--head);font-size:16px;color:var(--sig);width:78px;text-align:right;}
-.exp .ev small{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:.04em;}
-.exp .cap{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;margin-top:12px;text-align:center;}
+/* expected — outcome tiles (matches the recap) */
+.exp{display:flex;gap:8px;}
+.et{flex:1;border-radius:13px;border:1px solid var(--hair);background:var(--panel);padding:14px 8px;text-align:center;}
+.et svg{width:20px;height:20px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.et .ev{font-family:var(--head);font-size:24px;color:var(--sig);line-height:.85;margin-top:9px;}
+.et .ek{font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+.expnote{font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:12px;}
 
 /* alternatives */
 .alt{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--hair);}
@@ -129,7 +127,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   </div>
 
   <div class="sl fade">Expected by week 12</div>
-  <div class="card exp fade" id="exp"></div>
+  <div class="exp fade" id="exp"></div>
+  <div class="expnote fade">Projected on your tier + adherence · re-checked each phase</div>
 
   <div class="sl fade">What ZEAL also weighed</div>
   <div class="card fade" id="alts"></div>
@@ -176,12 +175,11 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('sel');});t.classList.add('sel');renderMv(t.dataset.t);});});
 
   // expected — now vs projected on a shared axis
-  var EXP=[['Body fat','22%','18%',22,18,10,26,true],['Lean mass','58.1kg','60.1kg',58.1,60.1,55,62,false],['Est. strength','—','+12%',0,12,0,20,false]];
+  var XIC={fat:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/><path d="M9 15l6-4"/>',lean:'<path d="M4 16h16M7 11h10M10 6h4"/>',str:'<path d="M4 18l6-9 4 5 6-9"/>'};
+  var EXP=[['fat','−4%','Body fat'],['lean','+2kg','Lean mass'],['str','+12%','Est. strength']];
   document.getElementById('exp').innerHTML=EXP.map(function(e){
-    var mn=e[5],mx=e[6],nowP=((e[3]-mn)/(mx-mn))*100,prP=((e[4]-mn)/(mx-mn))*100;
-    var lo=Math.min(nowP,prP),hi=Math.max(nowP,prP);
-    return '<div class="er"><span class="el">'+e[0]+'</span><div class="track"><div class="now" style="width:'+nowP+'%"></div><div class="proj" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div></div><span class="ev">'+e[2]+'<small> proj</small></span></div>';
-  }).join('')+'<div class="cap">Projected on your tier + adherence · re-forecast each phase</div>';
+    return '<div class="et"><svg viewBox="0 0 24 24">'+XIC[e[0]]+'</svg><div class="ev">'+e[1]+'</div><div class="ek">'+e[2]+'</div></div>';
+  }).join('');
 
   var ALT=[['2','PUSH / PULL / LEGS','Higher frequency — but needs 6 days you gave 4.','88%'],
            ['3','FULL BODY · 3-DAY','Time-efficient — slower recomp at your tier.','84%'],
