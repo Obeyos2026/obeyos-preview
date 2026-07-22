@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Program assignment · 5 variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--sig:var(--lime);
+  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;max-width:430px;margin:0 auto;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;padding:18px 18px 80px;}
+h1{font-family:var(--head);font-size:23px;letter-spacing:.03em;}
+.top{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:4px 0 6px;}
+.note{font-family:var(--body);font-weight:300;font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px;}
+.note b{color:var(--sig);font-weight:500;}
+.vs{margin-top:20px;padding:18px 16px 20px;border-radius:18px;background:var(--glass);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;}
+.vlab{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;}
+.vlab b{color:var(--sig);font-weight:500;}
+.vdesc{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);line-height:1.45;margin:5px 0 16px;}
+.eb{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--sig);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 6px var(--sig);}
+.pname{font-family:var(--head);font-size:40px;letter-spacing:.01em;line-height:.9;margin-top:6px;}
+.pmeta{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:8px;}
+.pmeta b{font-family:var(--head);font-size:15px;color:var(--sig);letter-spacing:.02em;}
+.ab{width:24px;height:24px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.abx{width:20px;height:20px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ===== V1 CREST ===== */
+.v1-crest{display:flex;justify-content:center;margin:6px 0 14px;}
+.v1-crest svg{width:120px;height:132px;overflow:visible;}
+.v1-crest .hx{fill:none;stroke:rgba(255,255,255,.14);stroke-width:1.5;}
+.v1-crest .up,.v1-crest .lo{fill:rgba(200,255,0,.14);stroke:var(--sig);stroke-width:1.5;opacity:0;transition:opacity .5s var(--ease),transform .5s var(--ease);}
+.v1-crest .up{transform:translateY(-18px);}.v1-crest .lo{transform:translateY(18px);}
+.vs.play .v1-crest .up,.vs.play .v1-crest .lo{opacity:1;transform:none;}
+.v1-crest .gl{opacity:0;transition:opacity .4s ease .55s;}.vs.play .v1-crest .gl{opacity:1;}
+.v1-rows .r{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--hair);}
+.v1-rows .r:first-child{border-top:none;}
+.v1-rows .tx{font-family:var(--body);font-weight:300;font-size:12.5px;color:var(--muted);line-height:1.4;}
+.v1-rows .tx b{color:var(--white);font-weight:500;}
+.v1-week{display:flex;gap:5px;margin-top:16px;}
+.v1-week .d{flex:1;aspect-ratio:1;border-radius:9px;border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;}
+.v1-week .d.on{border-color:color-mix(in srgb,var(--sig) 45%,transparent);background:color-mix(in srgb,var(--sig) 9%,transparent);}
+.v1-week .d svg{width:15px;height:15px;stroke:var(--mid);fill:none;stroke-width:1.6;}
+.v1-week .d.on svg{stroke:var(--sig);}
+
+/* ===== V2 BODY ZONES ===== */
+.v2-wrap{display:flex;gap:18px;align-items:center;margin:8px 0 4px;}
+.v2-body{width:74px;flex-shrink:0;display:flex;flex-direction:column;gap:5px;}
+.v2-z{height:20px;border-radius:6px;border:1px solid var(--hair);background:var(--panel);position:relative;opacity:.35;transition:opacity .45s var(--ease),background .45s,border-color .45s;}
+.vs.play .v2-z{opacity:1;}
+.v2-z.hit{border-color:color-mix(in srgb,var(--sig) 50%,transparent);background:color-mix(in srgb,var(--sig) 16%,transparent);}
+.v2-z .fq{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:7px;color:var(--sig);}
+.v2-side{flex:1;}
+.v2-side .zrow{display:flex;align-items:center;gap:9px;padding:7px 0;}
+.v2-side .zrow .zn{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--white);text-transform:uppercase;flex:1;}
+.v2-side .zrow .zf{font-family:var(--head);font-size:15px;color:var(--sig);}
+
+/* ===== V3 ORBIT ===== */
+.v3-orbit{position:relative;width:220px;height:220px;margin:6px auto 8px;}
+.v3-orbit .ring{position:absolute;inset:26px;border-radius:50%;border:1px dashed rgba(255,255,255,.12);}
+.v3-orbit .core{position:absolute;inset:64px;border-radius:50%;background:radial-gradient(circle,rgba(200,255,0,.12),transparent 70%);border:1px solid color-mix(in srgb,var(--sig) 30%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.v3-orbit .core .cn{font-family:var(--head);font-size:18px;line-height:.85;}
+.v3-orbit .core .cf{font-family:var(--mono);font-size:8px;color:var(--sig);letter-spacing:.1em;margin-top:3px;}
+.v3-node{position:absolute;width:42px;height:42px;margin:-21px;border-radius:50%;border:1px solid var(--hair);background:#0C0F15;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .5s var(--ease),transform .6s var(--ease);}
+.v3-node svg{width:19px;height:19px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.vs.play .v3-node{opacity:1;}
+.v3-node.a{transform:scale(.4);}.vs.play .v3-node.a{transform:scale(1);}
+
+/* ===== V4 MODULE BOOT ===== */
+.v4-fit{display:flex;align-items:center;gap:12px;margin:6px 0 16px;}
+.v4-fit .barwrap{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden;}
+.v4-fit .bf{height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);border-radius:3px;transition:width 1.1s var(--ease) .2s;}
+.vs.play .v4-fit .bf{width:95%;}
+.v4-fit .fv{font-family:var(--head);font-size:24px;color:var(--sig);}
+.v4-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.v4-mod{padding:14px;border-radius:13px;border:1px solid var(--hair);background:var(--panel);opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease);}
+.vs.play .v4-mod{opacity:1;transform:none;}
+.v4-mod .mi{width:26px;height:26px;stroke:var(--sig);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.v4-mod .mk{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:10px;}
+.v4-mod .mv{font-family:var(--head);font-size:19px;color:var(--white);margin-top:2px;line-height:.95;}
+.v4-mod.full{grid-column:1 / -1;}
+
+/* ===== V5 BLUEPRINT ===== */
+.v5-bp{position:relative;margin:14px 0 6px;padding:6px 0;}
+.v5-line{position:absolute;left:6%;right:6%;top:32px;height:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px);}
+.v5-days{display:flex;justify-content:space-between;position:relative;}
+.v5-day{display:flex;flex-direction:column;align-items:center;gap:8px;width:13%;}
+.v5-node{width:44px;height:44px;border-radius:12px;border:1px solid var(--hair);background:#0C0F15;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.5);transition:opacity .4s var(--ease),transform .4s var(--ease);}
+.vs.play .v5-node{opacity:1;transform:none;}
+.v5-node svg{width:20px;height:20px;stroke:var(--mid);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.v5-node.on{border-color:color-mix(in srgb,var(--sig) 45%,transparent);background:color-mix(in srgb,var(--sig) 9%,transparent);}
+.v5-node.on svg{stroke:var(--sig);}
+.v5-node.rest{width:10px;height:10px;border-radius:50%;margin:17px 0;}
+.v5-dl{font-family:var(--mono);font-size:7.5px;letter-spacing:.04em;color:var(--dim);text-transform:uppercase;}
+.v5-focus{font-family:var(--head);font-size:12px;color:var(--white);}
+.v5-focus.rest{color:var(--dim);}
+
+.lock{display:block;width:100%;margin-top:20px;height:44px;border:none;border-radius:22px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+</style>
+</head>
+<body>
+<h1>PROGRAM · ASSIGNMENT</h1>
+<div class="top">5 redesigns · components · animation · abstract icons</div>
+<div class="note">Same program (UPPER / LOWER · 95% fit) — five ways to present it, each with its own <b>abstract-geometric icon set</b> and <b>signature reveal</b>. Scroll each into view to trigger its animation.</div>
+
+<!-- V1 CREST -->
+<div class="vs" id="v1">
+  <div class="vlab"><b>V1</b> · THE CREST</div>
+  <div class="vdesc">The split becomes an emblem — a divided hex whose halves converge & lock. Week as abstract day-glyph cells. Anim: halves slide together + pulse.</div>
+  <div class="eb">ZEAL assigned your program</div>
+  <div class="v1-crest" id="v1crest"></div>
+  <div class="pname" style="text-align:center">UPPER / LOWER</div>
+  <div class="pmeta" style="text-align:center">4-DAY · 55 MIN · FIT <b>95%</b></div>
+  <div class="v1-rows" id="v1rows" style="margin-top:16px"></div>
+  <div class="v1-week" id="v1week"></div>
+  <button class="lock">Lock it in →</button>
+</div>
+
+<!-- V2 BODY -->
+<div class="vs" id="v2">
+  <div class="vlab"><b>V2</b> · ABSTRACT BODY</div>
+  <div class="vdesc">Geometric body-zones (not a figure) light up to show what's trained & how often. Anim: zones ignite top→bottom, frequency pulses.</div>
+  <div class="eb">ZEAL assigned your program</div>
+  <div class="pname">UPPER / LOWER</div>
+  <div class="pmeta">4-DAY · FIT <b>95%</b></div>
+  <div class="v2-wrap">
+    <div class="v2-body" id="v2body"></div>
+    <div class="v2-side" id="v2side"></div>
+  </div>
+  <button class="lock">Lock it in →</button>
+</div>
+
+<!-- V3 ORBIT -->
+<div class="vs" id="v3">
+  <div class="vlab"><b>V3</b> · ORBIT SYSTEM</div>
+  <div class="vdesc">Program at the core; the inputs that built it orbit as abstract glyphs. Anim: nodes settle onto the ring, fit ring fills.</div>
+  <div class="eb" style="justify-content:center">ZEAL assigned your program</div>
+  <div class="v3-orbit" id="v3orbit">
+    <div class="ring"></div>
+    <div class="core"><div class="cn">UPPER<br>LOWER</div><div class="cf">FIT 95%</div></div>
+  </div>
+  <div class="pmeta" style="text-align:center">4-DAY · 55 MIN · GLYPHS = WHAT SHAPED IT</div>
+  <button class="lock">Lock it in →</button>
+</div>
+
+<!-- V4 MODULES -->
+<div class="vs" id="v4">
+  <div class="vlab"><b>V4</b> · MODULE BOOT</div>
+  <div class="vdesc">The program as instrument modules, each an icon-tile. Anim: fit gauge fills, modules boot in one by one.</div>
+  <div class="eb">ZEAL assigned your program</div>
+  <div class="pname">UPPER / LOWER</div>
+  <div class="v4-fit"><span class="fv">95%</span><div class="barwrap"><div class="bf"></div></div></div>
+  <div class="v4-grid" id="v4grid"></div>
+  <button class="lock">Lock it in →</button>
+</div>
+
+<!-- V5 BLUEPRINT -->
+<div class="vs" id="v5">
+  <div class="vlab"><b>V5</b> · THE BLUEPRINT</div>
+  <div class="vdesc">The week as a technical schematic — each training day an abstract focus-glyph on a drafting line. Anim: blueprint renders in left→right.</div>
+  <div class="eb">ZEAL assigned your program</div>
+  <div class="pname">UPPER / LOWER</div>
+  <div class="pmeta">4-DAY · 55 MIN · FIT <b>95%</b></div>
+  <div class="v5-bp"><div class="v5-line"></div><div class="v5-days" id="v5days"></div></div>
+  <button class="lock">Lock it in →</button>
+</div>
+
+<script>
+(function(){
+  // ---- abstract-geometric icon set (no literal gym clipart) ----
+  var IC={
+    upper:'<path d="M4 16h16M7 11h10M10 6h4"/>',            // mass widening upward
+    lower:'<path d="M4 8h16M7 13h10M10 18h4"/>',            // mass widening downward
+    push:'<path d="M12 21V6M12 6l-4 4M12 6l4 4M6 4h12"/>',  // drive out/up
+    pull:'<path d="M12 3v15M12 18l-4-4M12 18l4-4M6 20h12"/>',// draw in/down
+    legs:'<path d="M9 3v18M15 3v18M6 4h12"/>',              // twin pillars
+    full:'<path d="M12 3v18M4 8h16M4 16h16"/>',             // whole
+    recomp:'<path d="M4 7l8 8 8-8M4 17l8-8 8 8"/>',         // transform / exchange
+    tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',         // ascending level
+    days:'<path d="M2 12h4l2-6 3 12 2-6h9"/>',              // weekly rhythm
+    gym:'<path d="M3 12h18M6 8v8M18 8v8M9 10v4M15 10v4"/>', // loaded bar (abstract)
+    knee:'<path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M8.5 11.5h7"/>', // shield + guard
+    volume:'<path d="M4 20v-4M9 20v-8M14 20v-11M19 20v-6"/>', // dosage bars
+    strength:'<path d="M4 18l6-9 4 5 6-9"/>'               // peak
+  };
+  function svg(name,cls){return '<svg class="'+(cls||'ab')+'" viewBox="0 0 24 24">'+IC[name]+'</svg>';}
+
+  // ===== V1 CREST =====
+  document.getElementById('v1crest').innerHTML=
+    '<svg viewBox="0 0 120 132">'+
+    '<polygon class="hx" points="60 4 112 34 112 98 60 128 8 98 8 34"/>'+
+    '<g class="up"><path d="M8 66 L60 4 L112 34 L112 66 Z" fill="rgba(200,255,0,.14)" stroke="#C8FF00" stroke-width="1.5"/></g>'+
+    '<g class="lo"><path d="M8 66 L112 66 L112 98 L60 128 L8 98 Z" fill="rgba(200,255,0,.14)" stroke="#C8FF00" stroke-width="1.5"/></g>'+
+    '<g class="gl"><path d="M8 66h104" stroke="#C8FF00" stroke-width="1.5"/><circle cx="60" cy="66" r="4" fill="#C8FF00"/></g>'+
+    '</svg>';
+  document.getElementById('v1rows').innerHTML=[
+    ['tier','<b>Tier 2</b> — moderate volume, room to progress'],
+    ['recomp','<b>Recomp</b> — strength base + metabolic finishers'],
+    ['knee','<b>Knee-safe</b> — leg-press over back-squat']
+  ].map(function(r){return '<div class="r">'+svg(r[0])+'<span class="tx">'+r[1]+'</span></div>';}).join('');
+  var W1=[['upper',1],['lower',1],['',0],['upper',1],['lower',1],['',0],['',0]];
+  document.getElementById('v1week').innerHTML=W1.map(function(d){return '<div class="d'+(d[1]?' on':'')+'">'+(d[1]?svg(d[0]):'<svg viewBox=\'0 0 24 24\'><circle cx=\'12\' cy=\'12\' r=\'2\'/></svg>')+'</div>';}).join('');
+
+  // ===== V2 BODY =====
+  var ZONES=[['Shoulders / chest','upper',2],['Back / arms','upper',2],['Core','full',1],['Quads / glutes','lower',2],['Hamstrings / calves','lower',2]];
+  document.getElementById('v2body').innerHTML=ZONES.map(function(z){return '<div class="v2-z'+(z[2]?' hit':'')+'">'+(z[2]?'<span class="fq">'+z[2]+'×</span>':'')+'</div>';}).join('');
+  document.getElementById('v2side').innerHTML=ZONES.map(function(z){return '<div class="zrow">'+svg(z[1],'abx')+'<span class="zn">'+z[0]+'</span><span class="zf">'+z[2]+'×</span></div>';}).join('');
+
+  // ===== V3 ORBIT =====
+  var ORB=[['recomp'],['tier'],['days'],['gym'],['knee']];
+  (function(){var host=document.getElementById('v3orbit'),R=97,cx=110,cy=110;
+    ORB.forEach(function(o,i){var a=(-90+i*(360/ORB.length))*Math.PI/180;var x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+      var n=document.createElement('div');n.className='v3-node a';n.style.left=x+'px';n.style.top=y+'px';n.style.transitionDelay=(0.15+i*0.12)+'s';n.innerHTML=svg(o[0]);host.appendChild(n);});
+  })();
+
+  // ===== V4 MODULES =====
+  var MODS=[['recomp','Goal','Recomp'],['tier','Tier','2 · Mid'],['volume','Volume','Moderate'],['days','Frequency','4× / week'],['gym','Loading','Barbell-first'],['knee','Safety','Knee-guarded']];
+  document.getElementById('v4grid').innerHTML=MODS.map(function(m,i){return '<div class="v4-mod'+(i>=4?'':'')+'" style="transition-delay:'+(0.3+i*0.1)+'s">'+svg(m[0],'mi')+'<div class="mk">'+m[1]+'</div><div class="mv">'+m[2]+'</div></div>';}).join('');
+
+  // ===== V5 BLUEPRINT =====
+  var BP=[['Mon','upper','Upper'],['Tue','lower','Lower'],['Wed','','Rest'],['Thu','upper','Upper'],['Fri','lower','Lower'],['Sat','','Rest'],['Sun','','Rest']];
+  document.getElementById('v5days').innerHTML=BP.map(function(d,i){
+    var train=!!d[1];
+    var node= train ? '<div class="v5-node on" style="transition-delay:'+(0.15+i*0.09)+'s">'+svg(d[1],'abx')+'</div>'
+                    : '<div class="v5-node rest" style="transition-delay:'+(0.15+i*0.09)+'s"></div>';
+    return '<div class="v5-day">'+node+'<span class="v5-dl">'+d[0]+'</span><span class="v5-focus'+(train?'':' rest')+'">'+d[2]+'</span></div>';
+  }).join('');
+
+  // ---- trigger animations on scroll-in ----
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('play');});},{threshold:.35});
+  document.querySelectorAll('.vs').forEach(function(v){io.observe(v);});
+})();
+</script>
+</body>
+</html>
