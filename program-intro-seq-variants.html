@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Intro sequence · variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--sig:var(--lime);--panel:rgba(255,255,255,.03);
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;max-width:430px;margin:0 auto;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;padding:18px 18px 80px;}
+h1{font-family:var(--head);font-size:23px;letter-spacing:.03em;}
+.top{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:4px 0 6px;}
+.note{font-family:var(--body);font-weight:300;font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px;}
+.note b{color:var(--sig);font-weight:500;}
+.vlab{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin:24px 0 3px;}
+.vlab b{color:var(--sig);font-weight:500;}
+.vdesc{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);line-height:1.45;margin-bottom:10px;}
+
+.player{position:relative;height:540px;border-radius:18px;overflow:hidden;border:1px solid var(--hair);background:#000;}
+.pv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;}
+.pscrim{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 45%,transparent,rgba(10,13,18,.5) 70%,rgba(10,13,18,.88));}
+.replay{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(255,255,255,.05);border:1px solid var(--hair);color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:7px 15px;border-radius:16px;cursor:pointer;}
+.ptop{position:absolute;top:22px;left:0;right:0;text-align:center;z-index:5;}
+.ptop .k{font-family:var(--mono);font-size:8px;letter-spacing:.28em;color:var(--sig);text-transform:uppercase;}
+
+/* ===== V1 TERMINAL ===== */
+.term{position:absolute;left:26px;right:26px;top:44%;transform:translateY(-50%);z-index:6;}
+.term .ln{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--muted);padding:5px 0;opacity:0;display:flex;gap:9px;align-items:center;}
+.term .ln .ok{color:var(--sig);opacity:0;transition:opacity .3s;}
+.play .term .ln{animation:tln .4s var(--ease) forwards;}
+.play .term .ln.done .ok{opacity:1;}
+@keyframes tln{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.play .term{animation:fadeOut .5s var(--ease) 3.6s forwards;}
+@keyframes fadeOut{to{opacity:0}}
+.v1-card{position:absolute;left:0;right:0;bottom:0;z-index:8;background:linear-gradient(180deg,rgba(12,15,21,.75),#0C0F15 30%);border-top:1px solid color-mix(in srgb,var(--sig) 24%,transparent);border-radius:20px 20px 0 0;padding:26px 22px 24px;text-align:center;transform:translateY(102%);}
+.play .v1-card{animation:cardUp .7s var(--ease) 3.9s forwards;}
+@keyframes cardUp{to{transform:translateY(0)}}
+.v1-scrim2{position:absolute;inset:0;background:rgba(10,13,18,.5);opacity:0;z-index:7;}
+.play .v1-scrim2{animation:fadeIn .6s ease 3.7s forwards;}
+@keyframes fadeIn{to{opacity:1}}
+
+/* ===== V2 METRIC INGEST ===== */
+.ingest{position:absolute;left:30px;right:30px;top:50%;transform:translateY(-50%);z-index:6;}
+.ingest .m{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);opacity:0;}
+.ingest .m .ml{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+.ingest .m .mv{font-family:var(--head);font-size:18px;color:var(--white);}
+.ingest .m .dot{width:6px;height:6px;border-radius:50%;background:var(--sig);box-shadow:0 0 6px var(--sig);margin-left:8px;opacity:0;}
+.play .ingest .m{animation:mIn .4s var(--ease) forwards;}
+.play .ingest .m .dot{animation:fadeIn .3s ease forwards;}
+@keyframes mIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.play .ingest{animation:fadeOut .5s var(--ease) 3.8s forwards;}
+.v2-reveal{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:8;opacity:0;}
+.play .v2-reveal{animation:fadeIn .7s var(--ease) 4.1s forwards;}
+.v2-scrim{position:absolute;inset:0;background:rgba(10,13,18,.6);opacity:0;z-index:7;}
+.play .v2-scrim{animation:fadeIn .6s ease 3.9s forwards;}
+
+/* ===== V3 SCAN RING ===== */
+.ring-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:6;}
+.scanring{width:120px;height:120px;position:relative;}
+.scanring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.scanring .trk{fill:none;stroke:rgba(255,255,255,.1);stroke-width:2;}
+.scanring .arc{fill:none;stroke:var(--sig);stroke-width:2;stroke-linecap:round;stroke-dasharray:326;stroke-dashoffset:326;filter:drop-shadow(0 0 5px var(--sig));}
+.play .scanring .arc{animation:ringFill 3.4s var(--ease) forwards;}
+@keyframes ringFill{to{stroke-dashoffset:0}}
+.scanring .rn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-size:28px;color:var(--white);}
+.v3-status{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--sig);text-transform:uppercase;margin-top:22px;height:12px;}
+.play .ring-wrap{animation:fadeOut .5s var(--ease) 3.7s forwards;}
+.v3-sheet{position:absolute;left:0;right:0;bottom:0;z-index:8;background:#0C0F15;border-top:1px solid color-mix(in srgb,var(--sig) 24%,transparent);border-radius:20px 20px 0 0;padding:26px 22px 24px;text-align:center;transform:translateY(102%);}
+.play .v3-sheet{animation:cardUp .7s var(--ease) 4s forwards;}
+.v3-scrim{position:absolute;inset:0;background:rgba(10,13,18,.55);opacity:0;z-index:7;}
+.play .v3-scrim{animation:fadeIn .6s ease 3.8s forwards;}
+
+/* shared result content */
+.re{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;color:var(--sig);text-transform:uppercase;}
+.rn2{font-family:var(--head);font-size:42px;line-height:.9;letter-spacing:.01em;margin-top:8px;}
+.rchips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:16px;}
+.rchip{display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:10px;border:1px solid color-mix(in srgb,var(--sig) 26%,transparent);background:rgba(200,255,0,.06);}
+.rchip svg{width:14px;height:14px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.rchip span{font-family:var(--mono);font-size:8px;letter-spacing:.05em;color:var(--white);text-transform:uppercase;}
+.rchip b{color:var(--sig);}
+.rcta{display:block;width:100%;margin-top:20px;height:46px;border:none;border-radius:23px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;line-height:46px;text-align:center;}
+</style>
+</head>
+<body>
+<h1>INTRO SEQUENCE</h1>
+<div class="top">calibration → clean results · 3 ideas</div>
+<div class="note">The video stays. What changes: first ZEAL <b>reads your data</b> (pulling metrics, calibrating), then the program lands on a <b>clean surface</b> — never cramped over the cinematic. Scroll each to play · replay to repeat.</div>
+
+<div class="vlab"><b>V1</b> · TERMINAL READ → CARD</div>
+<div class="vdesc">ZEAL reads line by line (pulling body metrics, recovery, injury), each ticking done — then a clean card rises with the result. The engine's log, then the answer.</div>
+<div class="player" id="v1"></div>
+
+<div class="vlab"><b>V2</b> · METRIC INGEST → VERDICT</div>
+<div class="vdesc">Your real metrics flash in as ZEAL ingests them (body fat, SMM, HRV, knee) — then the video calms and the program arrives centered, verdict-style, on the dimmed cinematic.</div>
+<div class="player" id="v2"></div>
+
+<div class="vlab"><b>V3</b> · SCAN RING → SHEET</div>
+<div class="vdesc">A scan ring fills while status cycles (reading your body · building your split · tuning volume) — then a result sheet slides up over the receding video. Calm, contained.</div>
+<div class="player" id="v3"></div>
+
+<script>
+(function(){
+  var VID='<video class="pv" autoplay muted loop playsinline><source src="brand-assets/video-loops/vid-intro-forge-signal-01.mp4" type="video/mp4"><source src="https://d8j0ntlcm91z4.cloudfront.net/user_2xwxbqXTnKKshPKSiHrPHfWFU2z/hf_20260722_120131_09ba20e3-5a55-4b75-a897-4fcbb0c4f20c.mp4" type="video/mp4"></video>';
+  var IC={split:'<path d="M4 16h16M7 11h10M10 6h4"/>',days:'<path d="M4 12h3l2-5 3 10 2-5h5"/>',tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',fit:'<path d="M4 18l6-9 4 5 6-9"/>'};
+  function chip(n,k,v){return '<span class="rchip"><svg viewBox="0 0 24 24">'+IC[n]+'</svg><span>'+k+' <b>'+v+'</b></span></span>';}
+  var RESULT='<div class="re">ZEAL assigned your program</div><div class="rn2">UPPER / LOWER</div><div class="rchips">'+chip('split','SPLIT','U / L')+chip('days','DAYS','4')+chip('tier','TIER','2')+chip('fit','FIT','95%')+'</div><a class="rcta">See your plan →</a>';
+
+  // V1 TERMINAL
+  var T=['Pulling body metrics','Reading recovery signals','Mapping injury history','Matching 31 programs','Calibrating to Tier 2'];
+  document.getElementById('v1').innerHTML=VID+'<div class="pscrim"></div><div class="ptop"><div class="k">ZEAL · program engine</div></div>'+
+    '<div class="term">'+T.map(function(t,i){return '<div class="ln" style="animation-delay:'+(0.3+i*0.62)+'s"><span>'+t+'</span><span class="ok">ok</span></div>';}).join('')+'</div>'+
+    '<div class="v1-scrim2"></div><div class="v1-card">'+RESULT+'</div><button class="replay">Replay</button>';
+
+  // V2 METRIC INGEST
+  var M=[['Body fat','22%'],['Skeletal muscle','42%'],['Sleep','8.1h'],['HRV','68ms'],['Left knee','flagged']];
+  document.getElementById('v2').innerHTML=VID+'<div class="pscrim"></div><div class="ptop"><div class="k">ZEAL · reading you</div></div>'+
+    '<div class="ingest">'+M.map(function(m,i){return '<div class="m" style="animation-delay:'+(0.3+i*0.55)+'s"><span class="ml">'+m[0]+'</span><span style="display:flex;align-items:center"><span class="mv">'+m[1]+'</span><span class="dot" style="animation-delay:'+(0.6+i*0.55)+'s"></span></span></div>';}).join('')+'</div>'+
+    '<div class="v2-scrim"></div><div class="v2-reveal" style="padding:24px;text-align:center">'+RESULT+'</div><button class="replay">Replay</button>';
+
+  // V3 SCAN RING
+  document.getElementById('v3').innerHTML=VID+'<div class="pscrim"></div>'+
+    '<div class="ring-wrap"><div class="scanring"><svg viewBox="0 0 120 120"><circle class="trk" cx="60" cy="60" r="52"/><circle class="arc" cx="60" cy="60" r="52"/></svg><div class="rn">ZEAL</div></div><div class="v3-status" id="v3st">Reading your body</div></div>'+
+    '<div class="v3-scrim"></div><div class="v3-sheet">'+RESULT+'</div><button class="replay">Replay</button>';
+  var V3ST=[[0,'Reading your body'],[1200,'Building your split'],[2400,'Tuning your volume'],[3200,'Locked']];
+
+  function play(pl){
+    pl.classList.remove('play'); void pl.offsetWidth; pl.classList.add('play');
+    var v=pl.querySelector('video'); if(v){try{v.currentTime=0;var pr=v.play();if(pr&&pr.catch)pr.catch(function(){});}catch(e){}}
+    // V1 tick "ok" after each line resolves
+    if(pl.id==='v1'){var lns=pl.querySelectorAll('.term .ln');lns.forEach(function(l,i){setTimeout(function(){l.classList.add('done');},(0.3+i*0.62+0.35)*1000);});}
+    // V3 status cycle
+    if(pl.id==='v3'){var st=pl.querySelector('#v3st');V3ST.forEach(function(s){setTimeout(function(){st.textContent=s[1];},s[0]);});}
+  }
+  document.querySelectorAll('.player').forEach(function(pl){ pl.querySelector('.replay').addEventListener('click',function(){play(pl);}); });
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){play(e.target);io.unobserve(e.target);}});},{threshold:.5});
+  document.querySelectorAll('.player').forEach(function(pl){io.observe(pl);});
+})();
+</script>
+</body>
+</html>
