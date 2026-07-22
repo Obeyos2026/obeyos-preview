@@ -292,6 +292,50 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .mode-editorial .vword{font-size:66px;line-height:.82;}
 .mode-editorial .directive{grid-area:dir;text-align:left;margin-top:6px;}
 /* editorial keeps all 5 reading rings visible (no scroll) */
+
+/* TODAY'S SESSION — the assignment */
+.assigned{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--vc);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.assigned::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--vc);box-shadow:0 0 6px var(--vc);}
+.session{margin-top:6px;padding:16px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.s-head{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:13px;border-bottom:1px solid var(--hair);}
+.s-name{font-family:var(--head);font-size:30px;letter-spacing:.02em;line-height:.9;color:var(--white);}
+.s-type{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:6px;}
+.s-meta{text-align:right;flex-shrink:0;}
+.s-dur{font-family:var(--head);font-size:26px;color:var(--vc);line-height:.85;}
+.s-dur small{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:2px;}
+.s-blk{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+.s-why{font-family:var(--body);font-weight:300;font-size:12.5px;line-height:1.5;color:var(--muted);padding:12px 0;}
+.s-why b{color:var(--vc);font-weight:600;}
+.s-blocks{display:flex;flex-direction:column;}
+.blk{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--hair);}
+.blk .bn{font-family:var(--mono);font-size:9px;color:var(--dim);}
+.blk .bt{font-family:var(--body);font-weight:400;font-size:13.5px;color:var(--white);}
+.blk .bx{font-family:var(--mono);font-size:10px;color:var(--mid);letter-spacing:.04em;}
+
+/* WHY sheet — deterministic read behind the verdict */
+.hero{cursor:pointer;}
+.why-list{margin-top:8px;}
+.why-row{display:grid;grid-template-columns:10px 72px 1fr auto;gap:10px;align-items:center;padding:13px 0;border-top:1px solid var(--hair);}
+.why-row:first-child{border-top:none;}
+.why-row .wd{width:8px;height:8px;border-radius:3px;}
+.why-row .wn{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--white);text-transform:uppercase;}
+.why-row .wctx{font-family:var(--mono);font-size:9px;color:var(--dim);}
+.why-row .wend{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.why-row .wv{font-family:var(--head);font-size:18px;color:var(--white);line-height:.8;}
+.why-row .ws{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;}
+.why-logic{margin-top:18px;padding:14px 16px;border-radius:12px;background:color-mix(in srgb,var(--vc) 7%,transparent);border:1px solid color-mix(in srgb,var(--vc) 26%,transparent);}
+.why-logic .wl-k{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--vc);text-transform:uppercase;margin-bottom:7px;}
+.why-logic .wl-t{font-family:var(--body);font-weight:300;font-size:13px;line-height:1.55;color:var(--muted);}
+.why-logic .wl-t b{color:var(--white);font-weight:600;}
+
+/* CHECK-IN ceremony — the one input */
+.ci-q{margin-top:22px;}
+.ci-q .ql{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:11px;}
+.ci-seg{display:flex;gap:6px;}
+.ci-opt{flex:1;padding:15px 3px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);text-align:center;cursor:pointer;transition:border-color .15s,background .15s,color .15s;font-family:var(--head);font-size:15px;letter-spacing:.02em;color:var(--mid);}
+.ci-opt.sel{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 12%,transparent);color:var(--cyan);box-shadow:0 0 12px color-mix(in srgb,var(--cyan) 20%,transparent);}
+.ci-lock{display:block;width:100%;margin-top:26px;height:44px;border:none;border-radius:22px;background:var(--lime);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+.ci-note{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:14px;}
 </style>
 </head>
 <body>
@@ -326,7 +370,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   </div>
 
   <!-- SIGNALS -->
-  <div class="sec-lbl fade" style="transition-delay:.46s"><span>The read</span><a href="#">Full read →</a></div>
+  <div class="sec-lbl fade" style="transition-delay:.46s"><span>The read</span><a href="#" id="whyLink">Why this verdict →</a></div>
   <div class="sigs fade" style="transition-delay:.5s">
     <div class="sg" data-m="hrv" style="--sig:var(--lime);--o:24;--d:1s">
       <div class="ring"><canvas class="ring-cv" data-size="56" data-frac="0.77" data-rgb="200,255,0" data-delay="900"></canvas>
@@ -404,7 +448,24 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="t"><b>HRV up 8% on your 30-day baseline.</b> Recovered · solid sleep. Nothing's holding you back.</div>
   </div>
 
-  <button class="cta fade" style="transition-delay:.68s">Start today's session →</button>
+  <!-- TODAY'S SESSION — the verdict resolves into the assignment -->
+  <div class="sec-lbl fade" style="transition-delay:.7s"><span>Today's session</span><span class="assigned">Assigned by ZEAL</span></div>
+  <div class="session fade" style="transition-delay:.72s">
+    <div class="s-head">
+      <div><div class="s-name">UPPER BODY</div><div class="s-type">Strength · Tier 2 · Push</div></div>
+      <div class="s-meta"><div class="s-dur">52<small>MIN</small></div><div class="s-blk">5 blocks</div></div>
+    </div>
+    <div class="s-why">Your <b>READY</b> verdict cleared the main lifts — full intensity, no autoregulation today.</div>
+    <div class="s-blocks">
+      <div class="blk"><span class="bn">01</span><span class="bt">Barbell bench press</span><span class="bx">4 × 5</span></div>
+      <div class="blk"><span class="bn">02</span><span class="bt">Weighted pull-up</span><span class="bx">4 × 6</span></div>
+      <div class="blk"><span class="bn">03</span><span class="bt">Overhead press</span><span class="bx">3 × 8</span></div>
+      <div class="blk"><span class="bn">04</span><span class="bt">Incline DB press</span><span class="bx">3 × 10</span></div>
+      <div class="blk"><span class="bn">05</span><span class="bt">Face pull · superset</span><span class="bx">3 × 15</span></div>
+    </div>
+  </div>
+
+  <button class="cta fade" style="transition-delay:.74s">Start today's session →</button>
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -424,6 +485,31 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <span><i style="background:#EF4444"></i>Rest</span>
     <span><i style="background:#5C6679"></i>No data</span>
   </div>
+</div>
+
+<!-- WHY SHEET — how ZEAL reached the verdict -->
+<div class="sheet" id="whySheet">
+  <div class="sh-hd"><div class="grab"></div>
+    <div><h2>Why <span style="color:var(--vc)">READY</span></h2><div class="sh-sub">How ZEAL reached today's verdict</div></div>
+    <button class="x" id="whyClose">✕</button>
+  </div>
+  <div class="why-list" id="whyList"></div>
+  <div class="why-logic">
+    <div class="wl-k">The rule</div>
+    <div class="wl-t"><b>READY needs 3 of 4 core signals clear.</b> HRV, recovery and sleep all cleared; yesterday's strain sat in the optimal band. Resp rate is the one watch-point — not enough to pull the verdict down. <b>→ Push the main lifts.</b></div>
+  </div>
+</div>
+
+<!-- CHECK-IN CEREMONY — the one signal you give ZEAL -->
+<div class="sheet" id="ciSheet">
+  <div class="sh-hd"><div class="grab"></div>
+    <div><h2>Morning check-in</h2><div class="sh-sub">The one signal you give ZEAL</div></div>
+    <button class="x" id="ciClose">✕</button>
+  </div>
+  <div class="ci-q"><div class="ql">How recovered does your body feel?</div><div class="ci-seg" data-q="soreness"></div></div>
+  <div class="ci-q"><div class="ql">Motivation to train today?</div><div class="ci-seg" data-q="motivation"></div></div>
+  <button class="ci-lock" id="ciLock">Lock it in →</button>
+  <div class="ci-note">Everything else, ZEAL reads from your wearables.</div>
 </div>
 
 <div class="nav">
@@ -477,7 +563,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   // ---- every reading + vital opens its detail ----
   document.querySelectorAll('.sg, .vv-rail .ri').forEach(function(c){
     c.classList.add('tappable');
-    c.addEventListener('click', function(){ var m=c.dataset.m||'rhr'; var D={sleep:'sleep-deepdive.html',recov:'recovery-deepdive.html',strain:'strain-deepdive.html'}; location.href = D[m] || ('signal.html?m='+m); });
+    c.addEventListener('click', function(){ var m=c.dataset.m||'rhr'; if(m==='checkin'){ openCheckin(); return; } var D={sleep:'sleep-deepdive.html',recov:'recovery-deepdive.html',strain:'strain-deepdive.html'}; location.href = D[m] || ('signal.html?m='+m); });
   });
 
   // ---- dashed tick-ring gauges (zone colour, 240° opening at bottom) ----
@@ -525,9 +611,38 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   document.getElementById('trend').addEventListener('click',open);
   document.getElementById('calBtn').addEventListener('click',open);
   document.getElementById('closeSheet').addEventListener('click',close);
-  scrim.addEventListener('click',close);
   document.getElementById('prevMo').addEventListener('click',function(){ viewM--; if(viewM<0){viewM=11;viewY--;} render(); });
   document.getElementById('nextMo').addEventListener('click',function(){ viewM++; if(viewM>11){viewM=0;viewY++;} render(); });
+
+  // WHY sheet — deterministic read behind the verdict
+  var whySheet=document.getElementById('whySheet');
+  var WHY=[['HRV','#00E5A0','68 ms','+6 vs base','STRONG'],['Recovery','#00E5A0','84','primed','STRONG'],['Sleep','#00E5A0','96%','need met','STRONG'],['Strain','#C8FF00','14.2','yesterday','OPTIMAL'],['Resp','#F59E0B','13 rpm','+1 vs base','WATCH']];
+  document.getElementById('whyList').innerHTML=WHY.map(function(w){return '<div class="why-row"><span class="wd" style="background:'+w[1]+'"></span><span class="wn">'+w[0]+'</span><span class="wctx">'+w[3]+'</span><span class="wend"><span class="wv">'+w[2]+'</span><span class="ws" style="color:'+w[1]+'">'+w[4]+'</span></span></div>';}).join('');
+  function openWhy(){ whySheet.classList.add('open'); scrim.classList.add('open'); }
+  function closeWhy(){ whySheet.classList.remove('open'); }
+  document.querySelector('.hero').addEventListener('click',openWhy);
+  var wl=document.getElementById('whyLink'); if(wl)wl.addEventListener('click',function(e){e.preventDefault();openWhy();});
+  document.getElementById('whyClose').addEventListener('click',function(){ closeWhy(); scrim.classList.remove('open'); });
+
+  // CHECK-IN ceremony — the one input
+  var ciSheet=document.getElementById('ciSheet');
+  var CI={soreness:['WRECKED','SORE','MILD','FRESH'],motivation:['LOW','OK','HIGH','PRIMED']};
+  var ciPick={soreness:3,motivation:2};
+  function ciRender(){
+    Object.keys(CI).forEach(function(q){
+      var seg=document.querySelector('.ci-seg[data-q="'+q+'"]'); if(!seg)return;
+      seg.innerHTML=CI[q].map(function(name,i){return '<div class="ci-opt'+(ciPick[q]===i?' sel':'')+'" data-i="'+i+'">'+name+'</div>';}).join('');
+      Array.prototype.forEach.call(seg.querySelectorAll('.ci-opt'),function(o){o.addEventListener('click',function(){ ciPick[q]=+o.dataset.i; ciRender(); if(navigator.vibrate)navigator.vibrate(8); });});
+    });
+  }
+  function openCheckin(){ ciRender(); ciSheet.classList.add('open'); scrim.classList.add('open'); }
+  function closeCheckin(){ ciSheet.classList.remove('open'); }
+  document.getElementById('ciClose').addEventListener('click',function(){ closeCheckin(); scrim.classList.remove('open'); });
+  document.getElementById('ciLock').addEventListener('click',function(){
+    var v=document.querySelector('.sg[data-m="checkin"] .v'); if(v)v.textContent=CI.soreness[ciPick.soreness];
+    closeCheckin(); scrim.classList.remove('open');
+  });
+  scrim.addEventListener('click',function(){ close(); closeWhy(); closeCheckin(); });
 })();
 </script>
 </body>
