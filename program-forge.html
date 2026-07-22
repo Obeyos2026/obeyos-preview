@@ -16,12 +16,10 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{background:#05070a;height:100%;}
 body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
-.wrap{width:100%;max-width:430px;height:100dvh;position:relative;overflow:hidden;background:var(--bg);}
-.beat{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;opacity:0;pointer-events:none;transition:opacity .6s var(--ease);z-index:1;}
-.beat.on{opacity:1;pointer-events:auto;z-index:2;}
+.wrap{width:100%;max-width:430px;position:relative;background:var(--bg);}
 
-/* ===== BEAT 1 · RECAP ===== */
-.recap{background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 40% at 50% -4%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:22px 20px 34px;overflow-y:auto;}
+/* ===== BEAT 1 · RECAP (normal flow — page scrolls) ===== */
+.recap{min-height:100dvh;background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 40% at 50% -4%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:22px 20px 40px;}
 .eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;display:flex;align-items:center;gap:7px;}
 .eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
 .rh{font-family:var(--head);font-size:30px;line-height:.9;letter-spacing:.01em;margin-top:6px;}
@@ -60,8 +58,9 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .expnote{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:12px;}
 .rcta{display:block;width:100%;margin-top:26px;height:50px;border:none;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
 
-/* ===== BEAT 2/3 · FORGE (video + reveal) ===== */
-.forge{background:#000;}
+/* ===== BEAT 2/3 · FORGE (full-screen fixed overlay) ===== */
+.forge{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:none;background:#000;z-index:50;}
+.forge.show{display:block;}
 .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;}
 .fscrim{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 50%,transparent,rgba(10,13,18,.55) 70%,rgba(10,13,18,.9));}
 .fstage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;}
@@ -95,7 +94,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <div class="wrap">
 
   <!-- BEAT 1 · RECAP -->
-  <section class="beat recap on" id="recap">
+  <section class="recap" id="recap">
     <div class="eb">Before we build</div>
     <div class="rh">YOUR NEXT 12 WEEKS</div>
     <div class="hero2">
@@ -112,7 +111,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   </section>
 
   <!-- BEAT 2/3 · FORGE -->
-  <section class="beat forge" id="forge">
+  <section class="forge" id="forge">
     <video class="bgv" id="bgv" muted playsinline loop preload="auto">
       <source src="brand-assets/video-loops/vid-intro-forge-signal-01.mp4" type="video/mp4">
       <source src="https://d8j0ntlcm91z4.cloudfront.net/user_2xwxbqXTnKKshPKSiHrPHfWFU2z/hf_20260722_120131_09ba20e3-5a55-4b75-a897-4fcbb0c4f20c.mp4" type="video/mp4">
@@ -166,7 +165,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   var recap=document.getElementById('recap'),forge=document.getElementById('forge'),vid=document.getElementById('bgv');
   var STATUS=[[0,'Reading your signals'],[900,'Matching 31 programs'],[1900,'Tuning to your constraints'],[2900,'Locked']];
   document.getElementById('buildBtn').addEventListener('click',function(){
-    recap.classList.remove('on'); forge.classList.add('on');
+    window.scrollTo(0,0); forge.classList.add('show');
     try{vid.currentTime=0;vid.play();}catch(e){}
     var stEl=document.getElementById('fstatus');
     STATUS.forEach(function(s){setTimeout(function(){stEl.textContent=s[1];},s[0]);});
