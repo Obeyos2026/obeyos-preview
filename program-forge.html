@@ -11,16 +11,15 @@
 <style>
 :root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
   --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--cyan:#00D4FF;--sig:var(--lime);
-  --panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
-  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+  --panel:rgba(255,255,255,.022);--head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{background:#05070a;height:100%;}
 body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
 .wrap{width:100%;max-width:430px;position:relative;background:var(--bg);}
 
-/* ===== BEAT 1 · RECAP (normal flow — page scrolls) ===== */
+/* ===== BEAT 1 · RECAP (page scrolls) ===== */
 .recap{min-height:100dvh;background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 40% at 50% -4%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:22px 20px 40px;}
-.eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;display:flex;align-items:center;gap:7px;}
+.eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;}
 .eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
 .rh{font-family:var(--head);font-size:30px;line-height:.9;letter-spacing:.01em;margin-top:6px;}
 .hero2{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:16px;}
@@ -59,33 +58,57 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .rcta{display:block;width:100%;margin-top:26px;height:50px;border:none;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
 
 /* ===== BEAT 2/3 · FORGE (full-screen fixed overlay) ===== */
-.forge{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:none;background:#000;z-index:50;}
+.forge{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:none;background:#000;z-index:50;overflow:hidden;}
 .forge.show{display:block;}
 .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;}
-.fscrim{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 50%,transparent,rgba(10,13,18,.55) 70%,rgba(10,13,18,.9));}
-.fstage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;}
-.ftitle{position:absolute;top:50%;transform:translateY(-50%);transition:opacity .6s var(--ease);}
-.ftitle .k{font-family:var(--mono);font-size:9px;letter-spacing:.28em;color:var(--sig);text-transform:uppercase;opacity:.85;}
-.ftitle .h{font-family:var(--head);font-size:32px;letter-spacing:.02em;color:var(--white);margin-top:10px;text-shadow:0 0 24px rgba(0,0,0,.8);}
-.forge.step2 .ftitle{opacity:0;pointer-events:none;}
-.freveal{opacity:0;transform:translateY(10px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
-.forge.step2 .freveal{opacity:1;transform:none;}
-.freveal .re{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;}
-.freveal .rn{position:relative;font-family:var(--head);font-size:52px;line-height:.86;letter-spacing:.01em;margin-top:8px;text-shadow:0 0 30px rgba(200,255,0,.25);}
-.freveal .rscan{position:absolute;inset:-12px -16px;-webkit-mask:linear-gradient(180deg,transparent,#000 25%,#000 75%,transparent);mask:linear-gradient(180deg,transparent,#000 25%,#000 75%,transparent);}
-.freveal .rscan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,var(--sig),transparent 55%);-webkit-mask:repeating-linear-gradient(90deg,transparent 0 5px,#000 6px 7px);mask:repeating-linear-gradient(90deg,transparent 0 5px,#000 6px 7px);}
-.forge.step2 .freveal .rscan::after{animation:rsc 1.4s var(--ease) .2s;}
-@keyframes rsc{0%{opacity:0;transform:translateX(-58%)}25%{opacity:.9}100%{opacity:0;transform:translateX(58%)}}
-.fchips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:22px;}
-.fchip{display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:12px;border:1px solid color-mix(in srgb,var(--sig) 26%,transparent);background:rgba(200,255,0,.06);opacity:0;transform:translateY(8px) scale(.96);}
-.forge.step2 .fchip{animation:chipIn .5s var(--ease) forwards;}
-@keyframes chipIn{to{opacity:1;transform:none}}
-.fchip svg{width:16px;height:16px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-.fchip span{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--white);text-transform:uppercase;}
-.fchip b{color:var(--sig);font-weight:500;}
-.fstatus{position:absolute;bottom:120px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--sig);text-transform:uppercase;transition:opacity .5s;}
-.forge.step2 .fstatus{opacity:0;}
-.fcta{position:absolute;bottom:40px;left:24px;right:24px;height:50px;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;text-decoration:none;opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .6s var(--ease) .5s,transform .6s var(--ease) .5s;}
+.fscrim{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 46%,transparent,rgba(10,13,18,.55) 66%,rgba(10,13,18,.92));}
+
+/* --- calibration --- */
+.calib{position:absolute;inset:0;padding:0 30px;display:flex;flex-direction:column;justify-content:center;z-index:5;transition:opacity .6s var(--ease);}
+.chead{position:absolute;top:12%;left:30px;right:30px;text-align:center;}
+.chead .k{font-family:var(--mono);font-size:9px;letter-spacing:.3em;color:var(--sig);text-transform:uppercase;}
+.chead .st{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:12px;height:13px;transition:opacity .3s;}
+.pbar{width:150px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);margin:16px auto 0;overflow:hidden;}
+.pbar .pf{height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+.crow{display:flex;align-items:baseline;justify-content:space-between;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.06);opacity:0;transform:translateY(8px);}
+.crow.in{opacity:1;transform:none;transition:opacity .45s var(--ease),transform .45s var(--ease);}
+.crow .cl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+.crow .cright{display:flex;align-items:center;gap:10px;}
+.crow .cv{font-family:var(--head);font-size:22px;letter-spacing:.02em;color:var(--mid);min-width:20px;text-align:right;}
+.crow .cv.locked{color:var(--white);}
+.crow .cdot{width:7px;height:7px;border-radius:50%;background:var(--dim);transition:background .3s,box-shadow .3s;}
+.crow .cv.locked + .cdot{background:var(--sig);box-shadow:0 0 8px var(--sig);}
+.forge.step2 .calib{opacity:0;pointer-events:none;}
+
+/* --- blended result (fit ring + spec sheet) --- */
+.fresult{position:absolute;inset:0;z-index:8;padding:64px 30px 0;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0;pointer-events:none;}
+.forge.step2 .fresult{opacity:1;pointer-events:auto;transition:opacity .7s var(--ease);}
+.fresult .re{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;}
+.fresult .re::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
+.pname{position:relative;display:inline-block;margin-top:10px;}
+.pname .scan{position:absolute;inset:-8px -14px;z-index:0;pointer-events:none;overflow:hidden;}
+.pname .scan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,var(--sig) 0%,transparent 56%),radial-gradient(circle at 42% 46%,var(--sig) 0%,transparent 40%),radial-gradient(circle at 60% 56%,var(--sig) 0%,transparent 44%);mix-blend-mode:screen;filter:blur(7px);}
+.forge.step2 .pname .scan::after{animation:scanSweep 2.1s cubic-bezier(.5,.75,.4,1) forwards;}
+@keyframes scanSweep{0%{opacity:0;transform:translateX(-64%);}14%{opacity:.9;}55%{opacity:.7;}82%{opacity:.35;}100%{opacity:0;transform:translateX(64%);}}
+.pname .txt{position:relative;z-index:2;font-family:var(--head);font-size:46px;line-height:.88;letter-spacing:.01em;color:var(--white);opacity:0;}
+.forge.step2 .pname .txt{animation:nameIn 1.5s var(--ease) .25s forwards;}
+@keyframes nameIn{0%{opacity:0;filter:blur(12px);transform:translateY(8px) scale(.95);}55%{opacity:1;text-shadow:0 0 40px color-mix(in srgb,var(--sig) 50%,transparent);}100%{opacity:1;filter:blur(0);transform:none;text-shadow:none;}}
+.ringwrap{position:relative;width:196px;height:196px;margin:18px 0 4px;}
+.ringwrap canvas{position:absolute;inset:0;width:100%;height:100%;}
+.ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ringc .rn{font-family:var(--head);font-size:64px;line-height:.8;color:var(--white);opacity:0;}
+.forge.step2 .ringc .rn{animation:nameIn 1.2s var(--ease) .6s forwards;}
+.ringc .rl{font-family:var(--mono);font-size:8.5px;letter-spacing:.28em;color:var(--sig);text-transform:uppercase;margin-top:7px;}
+.ringc .rs{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.spec{width:100%;margin-top:18px;border-top:1px solid var(--hair);}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:13px 2px;border-bottom:1px solid var(--hair);opacity:0;transform:translateX(-8px);}
+.forge.step2 .srow.in{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .5s var(--ease);}
+.srow .sk{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.srow .sk svg{width:15px;height:15px;stroke:var(--sig);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.srow .sv{font-family:var(--head);font-size:21px;color:var(--white);letter-spacing:.02em;}
+.srow .su{font-family:var(--mono);font-size:9px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase;margin-left:5px;}
+
+.fcta{position:absolute;bottom:34px;left:24px;right:24px;height:50px;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;text-decoration:none;opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .6s var(--ease) .9s,transform .6s var(--ease) .9s;z-index:9;}
 .forge.step2 .fcta{opacity:1;transform:none;pointer-events:auto;}
 @media(prefers-reduced-motion:reduce){.bgv{opacity:.6}}
 </style>
@@ -107,25 +130,31 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="sl">What to expect · by week 12</div>
     <div class="exp" id="exp"></div>
     <div class="expnote">Projected on your tier + adherence · re-checked each phase</div>
-    <button class="rcta" id="buildBtn">See the full program →</button>
+    <button class="rcta" id="buildBtn">Build my program →</button>
   </section>
 
-  <!-- BEAT 2/3 · FORGE -->
+  <!-- BEAT 2/3 · FORGE (calibration → blended result) -->
   <section class="forge" id="forge">
-    <video class="bgv" id="bgv" autoplay muted playsinline loop preload="auto">
+    <video class="bgv" id="bgv" muted playsinline loop preload="auto">
       <source src="brand-assets/video-loops/vid-intro-forge-signal-01.mp4" type="video/mp4">
       <source src="https://d8j0ntlcm91z4.cloudfront.net/user_2xwxbqXTnKKshPKSiHrPHfWFU2z/hf_20260722_120131_09ba20e3-5a55-4b75-a897-4fcbb0c4f20c.mp4" type="video/mp4">
     </video>
     <div class="fscrim"></div>
-    <div class="fstage">
-      <div class="ftitle"><div class="k">ZEAL · program engine</div><div class="h">BUILDING YOUR PROGRAM</div></div>
-      <div class="freveal">
-        <div class="re">ZEAL assigned your program</div>
-        <div class="rn"><span class="rscan"></span>UPPER / LOWER</div>
-        <div class="fchips" id="fchips"></div>
-      </div>
+
+    <div class="calib" id="calib">
+      <div class="chead"><div class="k">ZEAL · Calibrating</div><div class="st" id="cst">Waking the engine</div><div class="pbar"><div class="pf" id="pf"></div></div></div>
+      <div class="rows" id="rows"></div>
     </div>
-    <div class="fstatus" id="fstatus">Reading your signals</div>
+
+    <div class="fresult" id="fresult">
+      <div class="re">ZEAL assigned your program</div>
+      <div class="pname"><span class="scan"></span><span class="txt">UPPER / LOWER</span></div>
+      <div class="ringwrap"><canvas id="ring" width="392" height="392"></canvas>
+        <div class="ringc"><div class="rn">95</div><div class="rl">Fit score</div><div class="rs">matched to your signals</div></div>
+      </div>
+      <div class="spec" id="spec"></div>
+    </div>
+
     <a class="fcta" id="fcta">See your plan →</a>
   </section>
 
@@ -135,10 +164,10 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 (function(){
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var IC={recomp:'<path d="M4 7l8 8 8-8M4 17l8-8 8 8"/>',tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',
-    upper:'<path d="M4 16h16M7 11h10M10 6h4"/>',days:'<path d="M2 12h4l2-6 3 12 2-6h9"/>',horizon:'<path d="M3 20h18M4 20l6-9 4 5 6-10"/>',
+    upper:'<path d="M4 16h16M7 11h10M10 6h4"/>',days:'<path d="M4 12h3l2-5 3 10 2-5h5"/>',
     fat:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/><path d="M9 15l6-4"/>',lean:'<path d="M4 16h16M7 11h10M10 6h4"/>',str:'<path d="M4 18l6-9 4 5 6-9"/>'};
 
-  // recap · path
+  /* ---- RECAP · path + tiles ---- */
   var STEPS=[
     ['WK 0','Where you are','22% body fat · Tier 2 · left knee flagged','','on'],
     ['WK 1–4','Foundation','Groove the patterns, build work capacity.','−1.5% fat','on'],
@@ -149,34 +178,94 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   document.getElementById('path').innerHTML=STEPS.map(function(s){
     return '<div class="step'+(s[4]?' on':'')+'"><div class="sw">'+s[0]+'</div><div class="st">'+s[1]+'</div><div class="sd">'+s[2]+'</div>'+(s[3]?'<span class="sdelta">'+s[3]+'</span>':'')+'</div>';
   }).join('');
-  // recap · what to expect tiles
   var EXP=[['fat','−4%','Body fat'],['lean','+2kg','Lean mass'],['str','+12%','Est. strength']];
   document.getElementById('exp').innerHTML=EXP.map(function(e){
     return '<div class="et"><svg viewBox="0 0 24 24">'+IC[e[0]]+'</svg><div class="ev">'+e[1]+'</div><div class="ek">'+e[2]+'</div></div>';
   }).join('');
 
-  // forge · reveal chips
-  var CHIPS=[['upper','SPLIT','Upper / Lower'],['days','DAYS','4'],['tier','TIER','2'],['horizon','FIT','95%']];
-  document.getElementById('fchips').innerHTML=CHIPS.map(function(c,i){
-    return '<span class="fchip" style="animation-delay:'+(0.5+i*0.14)+'s"><svg viewBox="0 0 24 24">'+IC[c[0]]+'</svg><span>'+c[1]+' <b>'+c[2]+'</b></span></span>';
+  /* ---- RESULT · spec sheet (FIT is the ring, so 3 rows here) ---- */
+  var SPEC=[['upper','Split','Upper / Lower',''],['days','Frequency','4','days / week'],['tier','Tier','2','']];
+  document.getElementById('spec').innerHTML=SPEC.map(function(r){
+    return '<div class="srow"><span class="sk"><svg viewBox="0 0 24 24">'+IC[r[0]]+'</svg>'+r[1]+'</span><span class="sv">'+r[2]+(r[3]?'<span class="su">'+r[3]+'</span>':'')+'</span></div>';
   }).join('');
 
-  // flow
-  var recap=document.getElementById('recap'),forge=document.getElementById('forge'),vid=document.getElementById('bgv');
-  var STATUS=[[0,'Reading your signals'],[900,'Matching 31 programs'],[1900,'Tuning to your constraints'],[2900,'Locked']];
-  // INTRO plays FIRST, the instant the page opens
-  function playIntro(){
-    forge.classList.add('show');
-    try{vid.currentTime=0;var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){});}catch(e){}
-    var stEl=document.getElementById('fstatus');
-    STATUS.forEach(function(s){setTimeout(function(){stEl.textContent=s[1];},s[0]);});
-    setTimeout(function(){ forge.classList.add('step2'); }, rm?300:3300);
+  /* ---- RESULT · dashed fit ring ---- */
+  function drawRing(cv,frac,t){
+    var ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=W*0.40,N=72;
+    ctx.clearRect(0,0,W,H);
+    var lit=Math.floor(N*frac*t);
+    for(var i=0;i<N;i++){
+      var a=-Math.PI/2+(i/N)*Math.PI*2,on=i<lit,r1=R-(on?13:8),r2=R+(on?7:5);
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);
+      ctx.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2);
+      ctx.lineWidth=on?3:2;
+      ctx.strokeStyle=on?'rgba(200,255,0,.85)':'rgba(255,255,255,.10)';
+      ctx.shadowColor=on?'#C8FF00':'transparent';ctx.shadowBlur=on?8:0;
+      ctx.stroke();
+    }
+    ctx.shadowBlur=0;
   }
-  playIntro();
-  // "See your plan" closes the intro → reveals the recap
-  document.getElementById('fcta').addEventListener('click',function(){ forge.classList.remove('show'); window.scrollTo(0,0); });
-  // recap CTA → the full program page
-  document.getElementById('buildBtn').addEventListener('click',function(){ location.href='program.html'; });
+  function animRing(){
+    var cv=document.getElementById('ring');if(!cv)return;
+    if(rm){drawRing(cv,0.95,1);return;}
+    var start=null,DUR=1500;
+    function step(ts){if(!start)start=ts;var p=Math.min(1,(ts-start)/DUR),e=1-Math.pow(1-p,3);drawRing(cv,0.95,e);if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+
+  /* ---- CALIBRATION ---- */
+  var ROWS=[
+    ['Reading body composition','Body fat','22%'],
+    ['Estimating skeletal muscle','Muscle mass','42%'],
+    ['Pulling overnight recovery','HRV · sleep','68 · 8.1h'],
+    ['Mapping your injury history','Left knee','Flagged'],
+    ['Matching the program library','Programs','31 → 1'],
+    ['Locking your training tier','Tier','2']
+  ];
+  var STEP=1500,HOLD=750,START=600,TOTAL=START+ROWS.length*STEP+400;
+  var rowsEl=document.getElementById('rows');
+  rowsEl.innerHTML=ROWS.map(function(r,i){return '<div class="crow" id="cr'+i+'"><span class="cl">'+r[1]+'</span><span class="cright"><span class="cv" id="cv'+i+'"></span><span class="cdot"></span></span></div>';}).join('');
+  var CH='0123456789%·HMSFLAGEDKNRThkm';
+  var timers=[];
+  function T(fn,ms){var id=setTimeout(fn,ms);timers.push(id);return id;}
+  function scramble(el,val,dur){
+    var iv=setInterval(function(){var s='';for(var i=0;i<val.length;i++){s+=val[i]===' '?' ':CH[Math.floor(Math.random()*CH.length)];}el.textContent=s;},55);
+    timers.push(iv);
+    T(function(){clearInterval(iv);el.textContent=val;el.classList.add('locked');},dur);
+  }
+
+  var forge=document.getElementById('forge'),recap=document.getElementById('recap'),vid=document.getElementById('bgv');
+
+  function runForge(){
+    forge.classList.add('show');forge.classList.remove('step2');
+    try{vid.currentTime=0;var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){});}catch(e){}
+    var pf=document.getElementById('pf'),st=document.getElementById('cst');
+    st.textContent='Waking the engine';pf.style.transition='none';pf.style.width='0';
+    ROWS.forEach(function(r,i){var cr=document.getElementById('cr'+i),cv=document.getElementById('cv'+i);cr.className='crow';cv.className='cv';cv.textContent='';});
+
+    if(rm){ // reduced motion: skip straight to result
+      ROWS.forEach(function(r,i){document.getElementById('cr'+i).classList.add('in');var cv=document.getElementById('cv'+i);cv.textContent=r[2];cv.classList.add('locked');});
+      T(function(){forge.classList.add('step2');animRing();document.querySelectorAll('#spec .srow').forEach(function(x){x.classList.add('in');});},400);
+      return;
+    }
+    T(function(){pf.style.transition='width '+(TOTAL/1000)+'s linear';pf.style.width='100%';},80);
+    ROWS.forEach(function(r,i){
+      T(function(){st.textContent=r[0];document.getElementById('cr'+i).classList.add('in');scramble(document.getElementById('cv'+i),r[2],HOLD);},START+i*STEP);
+    });
+    T(function(){st.textContent='Locked';},START+ROWS.length*STEP);
+    // resolve → blended result
+    T(function(){
+      forge.classList.add('step2');
+      animRing();
+      var rows=document.querySelectorAll('#spec .srow');
+      rows.forEach(function(x,i){setTimeout(function(){x.classList.add('in');},250+i*140);});
+    },TOTAL);
+  }
+
+  /* ---- FLOW ---- */
+  document.getElementById('buildBtn').addEventListener('click',runForge);
+  document.getElementById('fcta').addEventListener('click',function(){ location.href='program.html'; });
 })();
 </script>
 </body>
