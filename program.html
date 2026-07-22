@@ -16,20 +16,74 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{background:#05070a;height:100%;}
 body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
-.screen{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px),radial-gradient(120% 45% at 50% -6%,rgba(200,255,0,.05),transparent 60%);background-size:28px 28px,100% 100%;padding:14px 20px 110px;}
+.screen{position:relative;width:100%;max-width:430px;min-height:100dvh;background:var(--bg);padding:14px 20px 120px;overflow:hidden;}
+/* hero atmosphere — dim void-light behind the top only, fades to flat black */
+.atmo{position:absolute;top:0;left:0;right:0;height:460px;z-index:0;pointer-events:none;
+  background:url('brand-assets/atmospheres/atm-void-light-01.png') center 18% / cover no-repeat;opacity:.30;
+  -webkit-mask:linear-gradient(180deg,#000 0%,#000 30%,transparent 96%);mask:linear-gradient(180deg,#000 0%,#000 30%,transparent 96%);}
+.atmo::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 60% at 50% 4%,rgba(200,255,0,.07),transparent 62%);}
+.screen>*:not(.atmo){position:relative;z-index:1;}
+/* fade-in-from-black continuity from the forge */
+.blackout{position:fixed;inset:0;background:#000;z-index:80;opacity:1;transition:opacity .85s var(--ease);pointer-events:none;}
+.blackout.gone{opacity:0;}
 .fade{opacity:0;transform:translateY(9px);transition:opacity .55s var(--ease),transform .55s var(--ease);}
 .screen.play .fade{opacity:1;transform:none;}
+
 .hd{display:flex;align-items:center;gap:11px;}
 .back{width:36px;height:36px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
 .back svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;}
 .hd .tt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--white);text-transform:uppercase;}
 .hd .as{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;letter-spacing:.06em;}
 
-.eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;margin-top:20px;display:flex;align-items:center;gap:7px;}
+/* ---- cinematic hero ---- */
+.eb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--sig);text-transform:uppercase;margin-top:26px;display:flex;align-items:center;gap:7px;}
 .eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 7px var(--sig);}
-.pname{font-family:var(--head);font-size:56px;line-height:.88;letter-spacing:.01em;margin-top:8px;}
-.pmeta{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-.pmeta b{font-family:var(--head);font-size:15px;color:var(--sig);letter-spacing:.02em;}
+.pname{position:relative;display:inline-block;margin-top:8px;}
+.pname .scan{position:absolute;inset:-8px -16px;z-index:0;pointer-events:none;overflow:hidden;}
+.pname .scan::after{content:"";position:absolute;inset:0;opacity:0;background:radial-gradient(circle at 50% 50%,var(--sig) 0%,transparent 56%),radial-gradient(circle at 40% 46%,var(--sig) 0%,transparent 40%);mix-blend-mode:screen;filter:blur(8px);}
+.screen.play .pname .scan::after{animation:scanSweep 2.1s cubic-bezier(.5,.75,.4,1) .2s forwards;}
+@keyframes scanSweep{0%{opacity:0;transform:translateX(-66%)}14%{opacity:.9}55%{opacity:.7}82%{opacity:.35}100%{opacity:0;transform:translateX(66%)}}
+.pname .ptxt{position:relative;z-index:2;font-family:var(--head);font-size:58px;line-height:.86;letter-spacing:.01em;display:block;opacity:0;}
+.screen.play .pname .ptxt{animation:nameIn 1.5s var(--ease) .3s forwards;}
+@keyframes nameIn{0%{opacity:0;filter:blur(12px);transform:translateY(8px) scale(.96)}55%{opacity:1;text-shadow:0 0 40px color-mix(in srgb,var(--sig) 50%,transparent)}100%{opacity:1;filter:blur(0);transform:none;text-shadow:none}}
+.essence{font-family:var(--body);font-weight:300;font-size:13px;color:var(--muted);margin-top:12px;}
+.essence b{color:var(--white);font-weight:500;}
+
+/* match meter (replaces the ring) */
+.match{margin-top:18px;display:flex;align-items:center;gap:12px;}
+.match .mbar{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;position:relative;}
+.match .mbar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--sig) 55%,transparent),var(--sig));box-shadow:0 0 10px rgba(200,255,0,.5);}
+.screen.play .match .mbar i{width:95%;transition:width 1.3s var(--ease) .8s;}
+.match .mval{font-family:var(--head);font-size:34px;line-height:.8;color:var(--white);}
+.match .mval span{font-size:16px;color:var(--sig);}
+.match .mlab{position:absolute;font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;transform:translateY(-16px);}
+
+/* ---- distinct spec components ---- */
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px;}
+.sc{border:1px solid var(--hair);background:var(--panel);border-radius:14px;padding:13px 13px 12px;min-height:96px;display:flex;flex-direction:column;justify-content:space-between;}
+.sc .scl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.sc .scv{font-family:var(--head);font-size:19px;letter-spacing:.02em;color:var(--white);line-height:.9;}
+.sc .scv em{font-style:normal;color:var(--sig);}
+/* split — two segments */
+.splitbar{display:flex;gap:4px;margin-top:2px;}
+.splitbar i{flex:1;height:26px;border-radius:7px;background:color-mix(in srgb,var(--sig) 15%,transparent);border:1px solid color-mix(in srgb,var(--sig) 38%,transparent);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--sig);}
+/* frequency — 7 day dots */
+.wkdots{display:flex;gap:6px;margin-top:2px;}
+.wkdots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);}
+.wkdots i.on{background:var(--sig);box-shadow:0 0 6px var(--sig);}
+/* session — segmented duration bar */
+.segbar{display:flex;gap:3px;height:8px;margin-top:2px;}
+.segbar i{border-radius:3px;background:color-mix(in srgb,var(--sig) 30%,transparent);}
+.segbar i.w{flex:2;}.segbar i.m{flex:6;background:var(--sig);box-shadow:0 0 6px rgba(200,255,0,.4);}.segbar i.f{flex:2;}
+.seglbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:6.5px;letter-spacing:.06em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+/* tier — ascending ladder */
+.ladder{display:flex;align-items:flex-end;gap:5px;height:30px;margin-top:2px;}
+.ladder i{flex:1;border-radius:3px 3px 0 0;background:rgba(255,255,255,.1);}
+.ladder i:nth-child(1){height:35%;}.ladder i:nth-child(2){height:58%;}.ladder i:nth-child(3){height:80%;}.ladder i:nth-child(4){height:100%;}
+.ladder i.on{background:var(--sig);box-shadow:0 0 8px rgba(200,255,0,.5);}
+.tiermean{font-family:var(--body);font-weight:300;font-size:12px;line-height:1.5;color:var(--mid);margin-top:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);}
+.tiermean b{color:var(--white);font-weight:600;}
+.tiermean .tp{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--sig);text-transform:uppercase;margin-top:7px;}
 
 .sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:30px 0 12px;}
 .card{padding:16px;border-radius:16px;background:var(--glass);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
@@ -77,7 +131,6 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .mv .mx{font-family:var(--mono);font-size:10px;color:var(--mid);letter-spacing:.04em;}
 
 /* expected */
-/* expected — outcome tiles (matches the recap) */
 .exp{display:flex;gap:8px;}
 .et{flex:1;border-radius:13px;border:1px solid var(--hair);background:var(--panel);padding:14px 8px;text-align:center;}
 .et svg{width:20px;height:20px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
@@ -98,20 +151,58 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .dock{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:14px 20px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#0A0D12 30%);z-index:10;}
 .lock{display:block;width:100%;height:50px;border:none;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
 .adj{display:block;width:100%;background:none;border:none;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;cursor:pointer;padding:9px;}
+@media(prefers-reduced-motion:reduce){.blackout{display:none;}.screen .fade{opacity:1;transform:none;}.pname .ptxt{opacity:1;animation:none;}.match .mbar i{width:95%;transition:none;}}
 </style>
 </head>
 <body>
+<div class="blackout" id="blackout"></div>
 <div class="screen" id="screen">
+  <div class="atmo"></div>
   <div class="hd">
     <button class="back" onclick="history.length>1?history.back():location.href='dash-live.html'"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <span class="tt">Your program</span><span class="as">Assigned by ZEAL</span>
   </div>
 
+  <!-- cinematic hero -->
   <div class="eb fade">ZEAL assigned your program</div>
-  <div class="pname fade">UPPER / LOWER</div>
-  <div class="pmeta fade"><span>4-DAY</span><span>·</span><span>55 MIN</span><span>·</span><span>12 WEEKS</span><span>·</span><span>FIT <b>95%</b></span></div>
+  <div class="pname"><span class="scan"></span><span class="ptxt">UPPER<br>/ LOWER</span></div>
+  <div class="essence fade">A <b>recomp block</b> — build muscle and strip fat at once. Matched to your signals, tuned to your knee.</div>
+  <div class="match fade">
+    <span class="mlab">Signal match</span>
+    <div class="mbar"><i></i></div>
+    <div class="mval">95<span>%</span></div>
+  </div>
 
-  <div class="sl fade">Why this program</div>
+  <!-- distinct spec components -->
+  <div class="spec fade">
+    <div class="sc">
+      <div class="scl">Training split</div>
+      <div class="splitbar"><i>UPPER</i><i>LOWER</i></div>
+      <div class="scv" style="font-size:13px;color:var(--mid)">Each region <em>2×</em> / week</div>
+    </div>
+    <div class="sc">
+      <div class="scl">Frequency</div>
+      <div class="wkdots"><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      <div class="scv"><em>4</em> days / week</div>
+    </div>
+    <div class="sc">
+      <div class="scl">Per session</div>
+      <div class="segbar"><i class="w"></i><i class="m"></i><i class="f"></i></div>
+      <div class="seglbl"><span>Warm</span><span>Work</span><span>Finish</span></div>
+      <div class="scv">≈ <em>55</em> min</div>
+    </div>
+    <div class="sc">
+      <div class="scl">Your tier</div>
+      <div class="ladder"><i></i><i class="on"></i><i></i><i></i></div>
+      <div class="scv">TIER <em>2</em> <span style="font-family:var(--mono);font-size:9px;color:var(--dim)">of 4</span></div>
+    </div>
+  </div>
+  <div class="tiermean fade">
+    <b>Tier 2</b> is moderate volume you can actually recover from — enough stimulus to grow, with headroom to add load.
+    <span class="tp">ZEAL promotes you to Tier 3 as your logged sessions prove recovery</span>
+  </div>
+
+  <div class="sl fade">Why ZEAL chose this</div>
   <div class="card why fade" id="why"></div>
 
   <div class="sl fade">The 12 weeks</div>
@@ -141,7 +232,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
 <script>
 (function(){
-  var scr=document.getElementById('screen');
+  var scr=document.getElementById('screen'),bo=document.getElementById('blackout');
   var IC={recomp:'<path d="M4 7l8 8 8-8M4 17l8-8 8 8"/>',tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',
     knee:'<path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M8.5 11.5h7"/>',
     days:'<path d="M2 12h4l2-6 3 12 2-6h9"/>',gym:'<path d="M3 12h18M6 8v8M18 8v8"/>',
@@ -149,10 +240,9 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   function sv(n){return '<svg viewBox="0 0 24 24">'+IC[n]+'</svg>';}
 
   document.getElementById('why').innerHTML=[
-    ['tier','<b>Tier 2</b> (SMM 42%) — moderate volume you can actually recover from, with room to add load.'],
-    ['recomp','<b>Recomp</b> — a strength base with short metabolic finishers, run at a slight energy deficit.'],
-    ['days','<b>4 days</b> as Upper / Lower — each muscle trained twice a week, the sweet spot for your level.'],
-    ['knee','<b>Left knee protected</b> — back-squat and deep lunges swapped for leg-press and hip-hinge work.']
+    ['recomp','<b>Recomp goal</b> — at 22% body fat you can build muscle and lose fat together, so ZEAL set a strength base with short metabolic finishers at a slight deficit.'],
+    ['days','<b>4 days, Upper / Lower</b> — you gave 4 training days, so each muscle gets hit twice a week: the growth sweet spot for your level.'],
+    ['knee','<b>Left knee protected</b> — you flagged it, so back-squats and deep lunges are swapped for leg-press and hip-hinge work.']
   ].map(function(w){return '<div class="wy">'+sv(w[0])+'<span class="wt">'+w[1]+'</span></div>';}).join('');
 
   var PH=[['1','FOUNDATION','Groove the patterns, build work capacity.','WK 1–4','Moderate',true],
@@ -174,7 +264,6 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){
     document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('sel');});t.classList.add('sel');renderMv(t.dataset.t);});});
 
-  // expected — now vs projected on a shared axis
   var XIC={fat:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/><path d="M9 15l6-4"/>',lean:'<path d="M4 16h16M7 11h10M10 6h4"/>',str:'<path d="M4 18l6-9 4 5 6-9"/>'};
   var EXP=[['fat','−4%','Body fat'],['lean','+2kg','Lean mass'],['str','+12%','Est. strength']];
   document.getElementById('exp').innerHTML=EXP.map(function(e){
@@ -187,7 +276,12 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   document.getElementById('alts').innerHTML=ALT.map(function(a){
     return '<div class="alt"><span class="ar">'+a[0]+'</span><div class="am"><div class="an">'+a[1]+'</div><div class="ay">'+a[2]+'</div></div><span class="af">'+a[3]+'</span></div>';}).join('');
 
-  requestAnimationFrame(function(){requestAnimationFrame(function(){scr.classList.add('play');});});
+  // fade in from black + play the reveal
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    bo.classList.add('gone');
+    scr.classList.add('play');
+    setTimeout(function(){ if(bo.parentNode) bo.parentNode.removeChild(bo); }, 900);
+  });});
 })();
 </script>
 </body>
