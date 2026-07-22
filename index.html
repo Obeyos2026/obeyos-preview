@@ -477,7 +477,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   // ---- every reading + vital opens its detail ----
   document.querySelectorAll('.sg, .vv-rail .ri').forEach(function(c){
     c.classList.add('tappable');
-    c.addEventListener('click', function(){ var m=c.dataset.m||'rhr'; var D={sleep:'sleep-deepdive.html',recov:'recovery-deepdive.html'}; location.href = D[m] || ('signal.html?m='+m); });
+    c.addEventListener('click', function(){ var m=c.dataset.m||'rhr'; var D={sleep:'sleep-deepdive.html',recov:'recovery-deepdive.html',strain:'strain-deepdive.html'}; location.href = D[m] || ('signal.html?m='+m); });
   });
 
   // ---- dashed tick-ring gauges (zone colour, 240° opening at bottom) ----
