@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Calibrating</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--sig:var(--lime);--head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#000;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{position:relative;width:100%;max-width:430px;height:100dvh;overflow:hidden;background:#000;}
+.pv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;}
+.pscrim{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 42%,transparent,rgba(10,13,18,.5) 68%,rgba(10,13,18,.9));}
+
+/* CALIBRATION */
+.calib{position:absolute;inset:0;padding:0 30px;display:flex;flex-direction:column;justify-content:center;z-index:5;transition:opacity .6s var(--ease);}
+.chead{position:absolute;top:11%;left:30px;right:30px;text-align:center;}
+.chead .k{font-family:var(--mono);font-size:9px;letter-spacing:.3em;color:var(--sig);text-transform:uppercase;}
+.chead .st{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:12px;height:13px;transition:opacity .3s;}
+.pbar{width:150px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);margin:16px auto 0;overflow:hidden;}
+.pbar .pf{height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+.rows{display:flex;flex-direction:column;}
+.crow{display:flex;align-items:baseline;justify-content:space-between;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.06);opacity:0;transform:translateY(8px);}
+.crow.in{opacity:1;transform:none;transition:opacity .45s var(--ease),transform .45s var(--ease);}
+.crow .cl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+.crow .cright{display:flex;align-items:center;gap:10px;}
+.crow .cv{font-family:var(--head);font-size:22px;letter-spacing:.02em;color:var(--mid);min-width:20px;text-align:right;}
+.crow .cv.locked{color:var(--white);}
+.crow .cdot{width:7px;height:7px;border-radius:50%;background:var(--dim);transition:background .3s,box-shadow .3s;}
+.crow .cv.locked + .cdot{background:var(--sig);box-shadow:0 0 8px var(--sig);}
+
+/* RESULT (clean surface) */
+.rcard{position:absolute;left:0;right:0;bottom:0;z-index:8;background:linear-gradient(180deg,rgba(12,15,21,.4),#0C0F15 26%);border-top:1px solid color-mix(in srgb,var(--sig) 26%,transparent);border-radius:22px 22px 0 0;padding:30px 24px 40px;text-align:center;transform:translateY(102%);}
+.rcard.up{transform:translateY(0);transition:transform .8s var(--ease);}
+.rcard .re{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--sig);text-transform:uppercase;}
+.rcard .rn{font-family:var(--head);font-size:50px;line-height:.9;letter-spacing:.01em;margin-top:8px;}
+.rchips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+.rchip{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:11px;border:1px solid color-mix(in srgb,var(--sig) 26%,transparent);background:rgba(200,255,0,.06);}
+.rchip svg{width:14px;height:14px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.rchip span{font-family:var(--mono);font-size:8.5px;letter-spacing:.05em;color:var(--white);text-transform:uppercase;}
+.rchip b{color:var(--sig);}
+.rcta{display:block;width:100%;margin-top:24px;height:50px;border:none;border-radius:25px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;line-height:50px;text-align:center;cursor:pointer;}
+.replay{position:absolute;top:14px;right:14px;z-index:20;background:rgba(255,255,255,.05);border:1px solid var(--hair);color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:14px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <video class="pv" autoplay muted loop playsinline>
+    <source src="brand-assets/video-loops/vid-intro-forge-signal-01.mp4" type="video/mp4">
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_2xwxbqXTnKKshPKSiHrPHfWFU2z/hf_20260722_120131_09ba20e3-5a55-4b75-a897-4fcbb0c4f20c.mp4" type="video/mp4">
+  </video>
+  <div class="pscrim"></div>
+
+  <div class="calib" id="calib">
+    <div class="chead"><div class="k">ZEAL · Calibrating</div><div class="st" id="cst">Waking the engine</div><div class="pbar"><div class="pf" id="pf"></div></div></div>
+    <div class="rows" id="rows"></div>
+  </div>
+
+  <div class="rcard" id="rcard">
+    <div class="re">ZEAL assigned your program</div>
+    <div class="rn">UPPER / LOWER</div>
+    <div class="rchips" id="rchips"></div>
+    <a class="rcta">See your plan →</a>
+  </div>
+
+  <button class="replay" id="replay">Replay</button>
+</div>
+
+<script>
+(function(){
+  var IC={split:'<path d="M4 16h16M7 11h10M10 6h4"/>',days:'<path d="M4 12h3l2-5 3 10 2-5h5"/>',tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',fit:'<path d="M4 18l6-9 4 5 6-9"/>'};
+  function chip(n,k,v){return '<span class="rchip"><svg viewBox="0 0 24 24">'+IC[n]+'</svg><span>'+k+' <b>'+v+'</b></span></span>';}
+  document.getElementById('rchips').innerHTML=chip('split','SPLIT','U / L')+chip('days','DAYS','4')+chip('tier','TIER','2')+chip('fit','FIT','95%');
+
+  // process line + metric per step
+  var ROWS=[
+    ['Reading body composition','Body fat','22%'],
+    ['Estimating skeletal muscle','Muscle mass','42%'],
+    ['Pulling overnight recovery','HRV · sleep','68 · 8.1h'],
+    ['Mapping your injury history','Left knee','Flagged'],
+    ['Matching the program library','Programs','31 → 1'],
+    ['Locking your training tier','Tier','2']
+  ];
+  var STEP=1500, HOLD=750, START=600; // deliberate calibration cadence
+  var TOTAL=START+ROWS.length*STEP+400;
+  var rowsEl=document.getElementById('rows');
+  rowsEl.innerHTML=ROWS.map(function(r,i){return '<div class="crow" id="cr'+i+'"><span class="cl">'+r[1]+'</span><span class="cright"><span class="cv" id="cv'+i+'"></span><span class="cdot"></span></span></div>';}).join('');
+
+  var CH='0123456789%·HMSFLAGEDKNRThkmↃ';
+  var timers=[];
+  function clearAll(){timers.forEach(clearTimeout);timers.forEach(clearInterval);timers=[];}
+  function T(fn,ms){var id=setTimeout(fn,ms);timers.push(id);return id;}
+
+  function scramble(el,val,dur){
+    var iv=setInterval(function(){var s='';for(var i=0;i<val.length;i++){s+=val[i]===' '?' ':CH[Math.floor(Math.random()*CH.length)];}el.textContent=s;},55);
+    timers.push(iv);
+    T(function(){clearInterval(iv);el.textContent=val;el.classList.add('locked');},dur);
+  }
+
+  function play(){
+    clearAll();
+    var calib=document.getElementById('calib'),card=document.getElementById('rcard'),pf=document.getElementById('pf'),st=document.getElementById('cst');
+    calib.style.opacity='1'; card.classList.remove('up');
+    st.textContent='Waking the engine';
+    pf.style.transition='none'; pf.style.width='0';
+    ROWS.forEach(function(r,i){var cr=document.getElementById('cr'+i),cv=document.getElementById('cv'+i);cr.className='crow';cv.className='cv';cv.textContent='';});
+    var v=document.querySelector('video'); if(v){try{v.currentTime=0;var pr=v.play();if(pr&&pr.catch)pr.catch(function(){});}catch(e){}}
+    // progress bar
+    T(function(){pf.style.transition='width '+(TOTAL/1000)+'s linear';pf.style.width='100%';},80);
+    // each row: reveal + status + scramble-lock
+    ROWS.forEach(function(r,i){
+      var at=START+i*STEP;
+      T(function(){ st.textContent=r[0]; document.getElementById('cr'+i).classList.add('in'); scramble(document.getElementById('cv'+i),r[2],HOLD); },at);
+    });
+    // done -> result
+    T(function(){ st.textContent='Locked'; },START+ROWS.length*STEP);
+    T(function(){ calib.style.opacity='0'; },TOTAL);
+    T(function(){ card.classList.add('up'); },TOTAL+300);
+  }
+  document.getElementById('replay').addEventListener('click',play);
+  play();
+})();
+</script>
+</body>
+</html>
