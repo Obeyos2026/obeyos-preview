@@ -29,9 +29,9 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .zone{position:absolute;top:12%;left:0;right:0;height:34%;z-index:2;}
 .hold{position:absolute;inset:0;}
 .hold model-viewer{position:absolute;inset:0;width:100%;height:100%;background:transparent;--poster-color:transparent;outline:none;filter:brightness(.46) contrast(1.12) saturate(.72);}
-/* scan line + glow — sized to the body only, not the full screen */
-.scanglow{position:absolute;left:29%;right:29%;height:56px;background:linear-gradient(180deg,rgba(200,255,0,.16),transparent);z-index:4;pointer-events:none;opacity:0;}
-.scanline{position:absolute;left:29%;right:29%;height:2px;background:linear-gradient(90deg,transparent,var(--sig) 16%,var(--sig) 84%,transparent);box-shadow:0 0 18px 3px rgba(200,255,0,.55);z-index:5;pointer-events:none;opacity:0;}
+/* scan line + glow — neutral white light, sized to the body only */
+.scanglow{position:absolute;left:29%;right:29%;height:64px;background:linear-gradient(180deg,rgba(255,255,255,.12),transparent);z-index:4;pointer-events:none;opacity:0;}
+.scanline{position:absolute;left:29%;right:29%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 16%,rgba(255,255,255,.9) 84%,transparent);box-shadow:0 0 22px 3px rgba(255,255,255,.4);z-index:5;pointer-events:none;opacity:0;}
 
 /* V5 — region pins (light up as the scan crosses each) */
 .ro{position:absolute;z-index:7;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);opacity:0;white-space:nowrap;transition:opacity .45s var(--ease);}
@@ -64,7 +64,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <div class="screen" id="screen">
   <div class="zone" id="zone">
     <div class="hold" id="hold">
-      <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="16deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
+      <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="10deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
     </div>
     <div class="scanglow" id="glow"></div>
     <div class="scanline" id="line"></div>
@@ -123,7 +123,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     st.textContent='Powering the engine';pf.style.transition='none';pf.style.width='0';
     setReveal(0);
 
-    var SCAN=3000, LOGSTART=1200, GAP=680, TOTAL=Math.max(SCAN+400, LOGSTART+LOG.length*GAP+300);
+    var SCAN=5600, LOGSTART=2100, GAP=920, TOTAL=Math.max(SCAN+600, LOGSTART+LOG.length*GAP+400);
     T(function(){pf.style.transition='width '+(TOTAL/1000)+'s linear';pf.style.width='100%';},60);
 
     // ONE animation drives the scan line AND the body/data reveal — perfectly synced
@@ -132,7 +132,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
       var start=null, zoneTop=zone.getBoundingClientRect().top-screen.getBoundingClientRect().top;
       function step(ts){
         if(!start)start=ts;var t=Math.min(1,(ts-start)/SCAN);
-        var e=t, yPx=zone.clientHeight*e;         // reveal boundary in zone px
+        var e=t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2; // ease-in-out — cinematic
+        var yPx=zone.clientHeight*e;              // reveal boundary in zone px
         setReveal(yPx);
         line.style.top=(zoneTop+yPx)+'px';glow.style.top=(zoneTop+yPx-52)+'px';
         // V5 pins light up as the scan crosses each region
