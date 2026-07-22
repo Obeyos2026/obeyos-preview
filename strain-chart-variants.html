@@ -31,25 +31,29 @@ svg{display:block;width:100%;overflow:visible;margin-top:6px;}
 <body>
 <h1>STRAIN · 7 DAYS</h1>
 <div class="top">same chart · same values · design only</div>
-<div class="note">Not bars, not traffic-light. One accent — <b>inside the corridor = lime</b>, a miss sits above (over) or below (under), dim. Every day keeps its real number.</div>
+<div class="note">The lime zone on the left is labelled <b>TARGET · 13–16</b> — the load band your verdict set. A day inside it lights lime; a miss sits above (over) or below (under), dim. Every day keeps its real number.</div>
 
-<div class="card"><div class="ch"><span class="vn"><b>V1</b> · DOT PLOT</span><span class="lg"><i></i>target</span></div><svg id="v1" viewBox="0 0 380 150"></svg></div>
-<div class="card"><div class="ch"><span class="vn"><b>V2</b> · LOLLIPOP</span><span class="lg"><i></i>target</span></div><svg id="v2" viewBox="0 0 380 150"></svg></div>
-<div class="card"><div class="ch"><span class="vn"><b>V3</b> · LINE</span><span class="lg"><i></i>target</span></div><svg id="v3" viewBox="0 0 380 150"></svg></div>
-<div class="card"><div class="ch"><span class="vn"><b>V4</b> · STEP TRACE</span><span class="lg"><i></i>target</span></div><svg id="v4" viewBox="0 0 380 150"></svg></div>
-<div class="card"><div class="ch"><span class="vn"><b>V5</b> · FLOATING NUMBERS</span><span class="lg"><i></i>target</span></div><svg id="v5" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V1</b> · DOT PLOT</span></div><svg id="v1" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V2</b> · LOLLIPOP</span></div><svg id="v2" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V3</b> · LINE</span></div><svg id="v3" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V4</b> · STEP TRACE</span></div><svg id="v4" viewBox="0 0 380 150"></svg></div>
+<div class="card"><div class="ch"><span class="vn"><b>V5</b> · FLOATING NUMBERS</span></div><svg id="v5" viewBox="0 0 380 150"></svg></div>
 
 <script>
 (function(){
   var D=[['TUE',11],['WED',16],['THU',9],['FRI',14],['SAT',18],['SUN',12],['TODAY',14.2]];
-  var LO=13,HI=16,mn=6,mx=21,N=7,W=380,H=150,PL=14,PR=14,PT=26,PB=24;
+  var LO=13,HI=16,mn=6,mx=21,N=7,W=380,H=150,GUT=48,PL=56,PR=14,PT=26,PB=24;
   function inb(v){return v>=LO&&v<=HI;}
   function X(i){return PL+(W-PL-PR)*(i/(N-1));}
   function Y(v){return (H-PB)-(H-PT-PB)*((v-mn)/(mx-mn));}
   var LIME='#C8FF00', DIM='rgba(249,250,251,.34)', yHI=Y(HI), yLO=Y(LO);
-  function band(){return '<rect x="0" y="'+yHI+'" width="'+W+'" height="'+(yLO-yHI)+'" fill="rgba(200,255,0,.09)"/>'+
-    '<line x1="0" y1="'+yHI+'" x2="'+W+'" y2="'+yHI+'" stroke="rgba(200,255,0,.32)" stroke-width="1" stroke-dasharray="3 4"/>'+
-    '<line x1="0" y1="'+yLO+'" x2="'+W+'" y2="'+yLO+'" stroke="rgba(200,255,0,.32)" stroke-width="1" stroke-dasharray="3 4"/>';}
+  function band(){var x0=GUT,x1=W-PR,ym=(yHI+yLO)/2;
+    return '<rect x="'+x0+'" y="'+yHI+'" width="'+(x1-x0)+'" height="'+(yLO-yHI)+'" fill="rgba(200,255,0,.08)"/>'+
+    '<line x1="'+x0+'" y1="'+yHI+'" x2="'+x1+'" y2="'+yHI+'" stroke="rgba(200,255,0,.28)" stroke-width="1"/>'+
+    '<line x1="'+x0+'" y1="'+yLO+'" x2="'+x1+'" y2="'+yLO+'" stroke="rgba(200,255,0,.28)" stroke-width="1"/>'+
+    '<line x1="'+(x0-4)+'" y1="'+yHI+'" x2="'+(x0-4)+'" y2="'+yLO+'" stroke="rgba(200,255,0,.55)" stroke-width="1.4"/>'+
+    '<text x="'+(x0-9)+'" y="'+(ym-2)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="7.5" letter-spacing="1" fill="#C8FF00">TARGET</text>'+
+    '<text x="'+(x0-9)+'" y="'+(ym+9)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="8" fill="#8A93A6">13–16</text>';}
   function days(){return D.map(function(d,i){var now=d[0]==='TODAY';return '<text x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+(now?LIME:'#5C6679')+'">'+d[0]+'</text>';}).join('');}
   function vlabel(i,v,on,dy){return '<text x="'+X(i)+'" y="'+(Y(v)+(dy||-9))+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="'+(on?LIME:'rgba(249,250,251,.6)')+'">'+v.toFixed(1)+'</text>';}
   var glow='<defs><filter id="gl" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#C8FF00" flood-opacity="0.8"/></filter></defs>';
