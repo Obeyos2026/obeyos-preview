@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · V4 drivers → drill-down</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--sig:var(--lime);--panel:rgba(255,255,255,.022);--glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;max-width:430px;margin:0 auto;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;padding:18px 20px 70px;}
+h1{font-family:var(--head);font-size:23px;letter-spacing:.03em;}
+.top{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:4px 0 14px;}
+.card{margin-top:6px;padding:16px;border-radius:16px;background:var(--glass);backdrop-filter:blur(13px) saturate(115%);-webkit-backdrop-filter:blur(13px) saturate(115%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.ch .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;}
+.ch .kv{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+/* V4 ranked */
+.r4{padding:11px 0;cursor:pointer;}
+.r4 .top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;}
+.r4 .nm{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--white);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.r4 .nm .cx{width:12px;height:12px;stroke:var(--mid);stroke-width:2;fill:none;}
+.r4 .rt{font-family:var(--mono);font-size:8.5px;color:var(--dim);}
+.r4 .bar{position:relative;height:24px;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden;transition:transform .15s var(--ease);}
+.r4:active .bar{transform:scale(.99);}
+.r4 .bf{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,rgba(200,255,0,.18),rgba(200,255,0,.42));transition:width .8s var(--ease);}
+.r4 .bv{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-family:var(--head);font-size:16px;color:var(--white);}
+.tot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid var(--sig);}
+.tot .l{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.tot .l b{color:var(--white);}
+.tot .rr{font-family:var(--head);font-size:24px;color:var(--sig);}
+.tot .rr small{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em;margin-left:4px;}
+
+/* SHEET */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .4s;z-index:15;}
+.scrim.open{opacity:1;pointer-events:auto;}
+.sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;height:88dvh;background:#0C0F15;border-top:1px solid var(--hair);border-radius:22px 22px 0 0;z-index:20;transition:transform .5s var(--ease);padding:18px 20px 40px;overflow-y:auto;box-shadow:0 -20px 60px -20px rgba(0,0,0,.8);}
+.sheet.open{transform:translateX(-50%) translateY(0);}
+.grab{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);}
+.dhead{display:flex;align-items:flex-start;justify-content:space-between;margin-top:6px;}
+.dhead .t{font-family:var(--head);font-size:26px;letter-spacing:.02em;line-height:.95;}
+.dhead .x{width:32px;height:32px;border-radius:50%;border:1px solid var(--hair);background:var(--panel);color:var(--muted);font-size:15px;cursor:pointer;flex-shrink:0;}
+.dmeta{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin:6px 0 18px;}
+.dmeta b{color:var(--sig);font-weight:500;}
+.slab{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin:16px 0 8px;}
+#effort{display:block;width:100%;overflow:visible;}
+.zbar{display:flex;height:18px;border-radius:6px;overflow:hidden;gap:2px;margin-top:4px;}
+.zbar span{height:100%;transition:width .6s var(--ease);}
+.zleg{display:flex;margin-top:9px;}
+.zleg .z{text-align:center;flex:1;}
+.zleg .zn{font-family:var(--mono);font-size:7.5px;letter-spacing:.05em;color:var(--dim);text-transform:uppercase;}
+.zleg .zm{font-family:var(--head);font-size:17px;color:var(--white);margin-top:3px;}
+.zleg .zm.hot{color:var(--sig);}
+.zleg .zm span{font-size:9px;color:var(--dim);}
+.dnote{font-family:var(--body);font-weight:300;font-size:13px;color:var(--muted);line-height:1.55;margin-top:16px;}
+.dnote b{color:var(--white);font-weight:600;}
+</style>
+</head>
+<body>
+<h1>WHAT DROVE THE STRAIN</h1>
+<div class="top">V4 · ranked — tap a bar to drill in</div>
+
+<div class="card">
+  <div class="ch"><span class="k">What drove the strain</span><span class="kv">tap a source ›</span></div>
+  <div id="v4"></div>
+  <div class="tot"><span class="l">Total vs target <b>13–16</b></span><span class="rr">14.2<small>OPTIMAL</small></span></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <div class="dhead"><div><div class="t" id="dTitle">MAIN SESSION</div></div><button class="x" id="dClose">✕</button></div>
+  <div class="dmeta" id="dMeta"></div>
+  <div class="slab" id="dLab1">Strain built over the session</div>
+  <svg id="effort" viewBox="0 0 380 150"></svg>
+  <div class="slab" id="dLab2">For how long — time in effort</div>
+  <div class="zbar" id="zbar"></div>
+  <div class="zleg" id="zleg"></div>
+  <div class="dnote" id="dNote"></div>
+</div>
+
+<script>
+(function(){
+  var DR=[['main','Main session',8.9,63,'PUSH · 1:12'],['cardio','Zone-2 cardio',3.1,22,'34 MIN'],['allday','All-day load',2.1,15,'STEPS + NEAT']];
+  var cx='<svg class="cx" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>';
+  var mx=Math.max.apply(null,DR.map(function(d){return d[2];}));
+  document.getElementById('v4').innerHTML=DR.map(function(d){
+    return '<div class="r4" data-key="'+d[0]+'"><div class="top"><span class="nm">'+cx+d[1]+'</span><span class="rt">'+d[4]+' · '+d[3]+'%</span></div><div class="bar"><div class="bf" style="width:'+(d[2]/mx*100)+'%"></div><div class="bv">'+d[2].toFixed(1)+'</div></div></div>';
+  }).join('');
+
+  var SRC={
+    main:{title:'MAIN SESSION',meta:'PUSH · <b>8.9 PTS</b> · 1:12 · 4:48–6:00PM',lab1:'Strain built over the session',
+      K:[[0,15],[6,48],[9,80],[12,42],[15,84],[18,44],[22,86],[25,46],[29,88],[32,45],[36,85],[39,44],[43,82],[46,52],[52,64],[57,58],[62,42],[68,30],[72,20]],TT:72,hard:true,
+      xl:[['START',0],['18m',18],['36m',36],['54m',54],['72m',72]],sets:[9,15,22,29,36,43],
+      lab2:'For how long — time in effort',Z:[['REST',24],['MODERATE',16],['HARD',24],['MAX',8]],hot:['HARD','MAX'],
+      note:'<b>The six working sets</b> — the tall bursts — earned most of the 8.9. Between them you dropped to rest; the accessory block held a steady simmer. 32 of the 72 minutes were genuinely hard.'},
+    cardio:{title:'ZONE-2 CARDIO',meta:'ZONE 2 · <b>3.1 PTS</b> · 34 MIN · 7:00–7:34AM',lab1:'Effort held across the block',
+      K:[[0,20],[3,55],[8,62],[14,60],[20,64],[26,61],[30,58],[34,26]],TT:34,hard:true,
+      xl:[['START',0],['12m',12],['24m',24],['34m',34]],sets:[],
+      lab2:'For how long — time in zone',Z:[['EASY',4],['ZONE 2',27],['ZONE 3',3]],hot:['ZONE 2'],
+      note:'A flat, aerobic block — you held <b>zone 2 for 27 of the 34 minutes</b>. Steady oxidative work, almost no spikes, so the strain built slowly and evenly.'},
+    allday:{title:'ALL-DAY LOAD',meta:'MOVEMENT · <b>2.1 PTS</b> · 6:00AM–10:00PM',lab1:'When you moved across the day',
+      K:[[0,10],[1.4,40],[1.9,13],[6,11],[7,44],[7.6,13],[10.8,32],[11.3,12],[14,12],[16,9]],TT:16,hard:false,unit:'h',
+      xl:[['6a',0],['10a',4],['2p',8],['6p',12],['10p',16]],sets:[],
+      lab2:'Active time — not a workout',Z:[['LIGHT',44],['MODERATE',18],['BRISK',6]],hot:['BRISK'],
+      note:'Not a session — steps and NEAT across the whole day. <b>Three walks</b> (morning commute, a midday loop) did most of it; the rest was low, sedentary hours.'}
+  };
+
+  function drawEffort(cfg){
+    var W=380,H=150,PL=8,PR=8,PT=20,PB=26;
+    function X(t){return PL+(W-PL-PR)*(t/cfg.TT);}
+    function Y(e){return (H-PB)-(H-PT-PB)*(e/100);}
+    function sm(p){if(p.length<2)return '';var d='M'+p[0][0]+','+p[0][1];for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;d+='C'+(p1[0]+(p2[0]-p0[0])/6)+','+(p1[1]+(p2[1]-p0[1])/6)+' '+(p2[0]-(p3[0]-p1[0])/6)+','+(p2[1]-(p3[1]-p1[1])/6)+' '+p2[0]+','+p2[1];}return d;}
+    var pts=cfg.K.map(function(k){return [X(k[0]),Y(k[1])];});
+    var line=sm(pts),area=line+' L'+X(cfg.TT)+','+(H-PB)+' L'+X(0)+','+(H-PB)+' Z';
+    var h='<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C8FF00" stop-opacity=".32"/><stop offset="1" stop-color="#C8FF00" stop-opacity="0"/></linearGradient><filter id="eg2" x="-20%" y="-60%" width="140%" height="220%"><feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#C8FF00" flood-opacity="0.5"/></filter></defs>';
+    if(cfg.hard){h+='<line x1="'+PL+'" y1="'+Y(70)+'" x2="'+(W-PR)+'" y2="'+Y(70)+'" stroke="rgba(255,255,255,.14)" stroke-width="1" stroke-dasharray="3 4"/>';
+      h+='<text x="'+(W-PR)+'" y="'+(Y(70)-4)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="7.5" fill="#5C6679">HARD</text>';}
+    h+='<path d="'+area+'" fill="url(#eg)"/>';
+    h+='<path d="'+line+'" fill="none" stroke="#C8FF00" stroke-width="2" stroke-linejoin="round" filter="url(#eg2)"/>';
+    cfg.sets.forEach(function(t){var e=cfg.K.filter(function(k){return k[0]===t;})[0][1];h+='<circle cx="'+X(t)+'" cy="'+Y(e)+'" r="2.4" fill="#C8FF00"/>';});
+    cfg.xl.forEach(function(x){h+='<text x="'+X(x[1])+'" y="'+(H-8)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5C6679">'+x[0]+'</text>';});
+    document.getElementById('effort').innerHTML=h;
+  }
+
+  function renderDrill(key){
+    var c=SRC[key];
+    document.getElementById('dTitle').textContent=c.title;
+    document.getElementById('dMeta').innerHTML=c.meta;
+    document.getElementById('dLab1').textContent=c.lab1;
+    document.getElementById('dLab2').textContent=c.lab2;
+    drawEffort(c);
+    var tot=c.Z.reduce(function(a,z){return a+z[1];},0);
+    document.getElementById('zbar').innerHTML=c.Z.map(function(z,i){var hot=c.hot.indexOf(z[0])>=0;
+      var tone=i===0?'rgba(255,255,255,.16)':(hot?'rgba(200,255,0,.9)':'rgba(200,255,0,'+(0.28+0.22*i)+')');
+      return '<span style="width:'+(z[1]/tot*100)+'%;background:'+tone+'"></span>';}).join('');
+    document.getElementById('zleg').innerHTML=c.Z.map(function(z){var hot=c.hot.indexOf(z[0])>=0;
+      return '<div class="z"><div class="zn">'+z[0]+'</div><div class="zm'+(hot?' hot':'')+'">'+z[1]+'<span>m</span></div></div>';}).join('');
+    document.getElementById('dNote').innerHTML=c.note;
+  }
+
+  var sheet=document.getElementById('sheet'), scrim=document.getElementById('scrim');
+  function openDrill(key){ renderDrill(key); sheet.classList.add('open'); scrim.classList.add('open'); sheet.scrollTop=0; }
+  function closeDrill(){ sheet.classList.remove('open'); scrim.classList.remove('open'); }
+  Array.prototype.forEach.call(document.querySelectorAll('.r4'),function(r){ r.addEventListener('click',function(){ openDrill(r.dataset.key); }); });
+  document.getElementById('dClose').addEventListener('click',closeDrill);
+  scrim.addEventListener('click',closeDrill);
+})();
+</script>
+</body>
+</html>
