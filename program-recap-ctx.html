@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Recap · context</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--sig:var(--lime);--panel:rgba(255,255,255,.022);
+  --glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#05070a;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;max-width:430px;margin:0 auto;background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.026) 1px,transparent 1px);background-size:28px 28px;padding:18px 18px 80px;}
+h1{font-family:var(--head);font-size:23px;letter-spacing:.03em;}
+.top{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin:4px 0 6px;}
+.note{font-family:var(--body);font-weight:300;font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:6px;}
+.note b{color:var(--sig);font-weight:500;}
+.vlab{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin:24px 0 3px;}
+.vlab b{color:var(--sig);font-weight:500;}
+.vdesc{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);line-height:1.45;margin-bottom:10px;}
+.vs{border-radius:18px;border:1px solid var(--hair);background:#0A0D12;background-image:radial-gradient(rgba(200,255,0,.03) 1px,transparent 1px),radial-gradient(120% 40% at 50% -4%,rgba(200,255,0,.05),transparent 60%);background-size:22px 22px,100% 100%;padding:20px 16px;overflow:hidden;}
+.eb{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--sig);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.eb::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sig);box-shadow:0 0 6px var(--sig);}
+
+/* ── two-body hero (LOCKED — the part he likes) ── */
+.hero2{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:14px;}
+.bc{border-radius:14px;padding:12px 6px 10px;text-align:center;}
+.bc.now{border:1px solid var(--hair);background:var(--panel);}
+.bc.tgt{border:1px solid color-mix(in srgb,var(--sig) 32%,transparent);background:color-mix(in srgb,var(--sig) 6%,transparent);}
+.bc .bl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+.bc.tgt .bl{color:var(--sig);}
+.bc img{height:158px;width:auto;display:block;margin:6px auto 8px;object-fit:contain;}
+.bc.now img{opacity:.78;filter:grayscale(.25);}
+.bc.tgt img{filter:drop-shadow(0 0 15px rgba(200,255,0,.38));}
+.bc .bv{font-family:var(--head);font-size:24px;line-height:.85;}
+.bc.now .bv{color:var(--white);}.bc.tgt .bv{color:var(--sig);}
+.bc .bk{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+.midway{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.midway .ln{width:1px;height:30px;background:linear-gradient(var(--hair),var(--sig));}
+.midway .wk{font-family:var(--head);font-size:15px;color:var(--sig);line-height:.8;}
+.midway .wkl{font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.midway svg{width:16px;height:16px;stroke:var(--sig);fill:none;stroke-width:1.6;}
+
+.sl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:24px 0 12px;}
+.cta{display:block;width:100%;margin-top:22px;height:48px;border:none;border-radius:24px;background:var(--sig);color:#0A0D12;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+
+/* A — the change (delta rows) */
+.chg .r{display:grid;grid-template-columns:1fr auto 16px auto 54px;gap:9px;align-items:baseline;padding:13px 0;border-top:1px solid var(--hair);}
+.chg .ar{text-align:center;}
+.chg .r:first-child{border-top:none;}
+.chg .cl{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--mid);text-transform:uppercase;}
+.chg .c1{font-family:var(--head);font-size:19px;color:var(--muted);}
+.chg .ar{color:var(--dim);font-size:12px;align-self:center;}
+.chg .c2{font-family:var(--head);font-size:19px;color:var(--white);}
+.chg .cd{font-family:var(--head);font-size:16px;color:var(--sig);width:52px;text-align:right;}
+/* 3-phase bar */
+.pbar{display:flex;gap:4px;margin-top:2px;}
+.pseg{flex:1;padding:11px 8px;border-radius:9px;border:1px solid var(--hair);background:var(--panel);}
+.pseg.cur{border-color:color-mix(in srgb,var(--sig) 34%,transparent);background:color-mix(in srgb,var(--sig) 7%,transparent);}
+.pseg .pw{font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;}
+.pseg .pt{font-family:var(--head);font-size:14px;margin-top:3px;}
+.pseg.cur .pt{color:var(--sig);}
+
+/* B — the path (vertical steps) */
+.path{position:relative;padding-left:26px;}
+.path::before{content:"";position:absolute;left:7px;top:6px;bottom:12px;width:1px;background:linear-gradient(var(--sig),var(--hair));}
+.step{position:relative;padding:11px 0;}
+.step::before{content:"";position:absolute;left:-23px;top:15px;width:9px;height:9px;border-radius:50%;background:#0C0F15;border:1.5px solid var(--dim);}
+.step.on::before{background:var(--sig);border-color:var(--sig);box-shadow:0 0 8px var(--sig);}
+.step .sw{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;}
+.step .st{font-family:var(--head);font-size:17px;letter-spacing:.02em;margin-top:1px;}
+.step .sd{font-family:var(--body);font-weight:300;font-size:11.5px;color:var(--mid);margin-top:2px;}
+.step .sdelta{font-family:var(--mono);font-size:9px;color:var(--sig);margin-top:3px;letter-spacing:.02em;}
+
+/* C — brief rows */
+.spec .r{display:grid;grid-template-columns:26px 92px 1fr;gap:11px;align-items:center;padding:12px 0;border-top:1px solid var(--hair);}
+.spec .r:first-child{border-top:none;}
+.spec .r svg{width:20px;height:20px;stroke:var(--sig);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.spec .sk{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.spec .sv{font-family:var(--body);font-weight:400;font-size:13.5px;color:var(--white);}
+.spec .sv b{color:var(--sig);}
+.outcome{margin-top:14px;padding:14px 16px;border-radius:13px;border:1px solid color-mix(in srgb,var(--sig) 24%,transparent);background:color-mix(in srgb,var(--sig) 6%,transparent);}
+.outcome .ok{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--sig);text-transform:uppercase;}
+.outcome .ot{font-family:var(--body);font-weight:300;font-size:13px;line-height:1.5;color:var(--muted);margin-top:6px;}
+.outcome .ot b{color:var(--white);font-weight:600;}
+</style>
+</head>
+<body>
+<h1>RECAP · THE CONTEXT</h1>
+<div class="top">two bodies locked · 3 clearer contexts</div>
+<div class="note">The <b>start → finish bodies</b> stay (you liked them). Three ways to make the rest clear, calm and easy — pick the one that reads at a glance.</div>
+
+<div class="vlab"><b>A</b> · THE CHANGE</div>
+<div class="vdesc">Under the bodies: exactly what changes (fat, lean, strength) now→target, then the 3 phases in one clean row. Deltas do the talking.</div>
+<div class="vs" id="A"></div>
+
+<div class="vlab"><b>B</b> · THE PATH</div>
+<div class="vdesc">The bodies bookend a clean vertical roadmap — Now → Foundation → Build → Peak → Week 12 — each step its focus + what it earns.</div>
+<div class="vs" id="B"></div>
+
+<div class="vlab"><b>C</b> · WHY IT FITS</div>
+<div class="vdesc">Bodies up top, then a plain-spoken spec: why this plan fits your body, and one clear line on what to expect.</div>
+<div class="vs" id="C"></div>
+
+<script>
+(function(){
+  var IMG_NOW='brand-assets/body-model/grid-clean/obeyos-model-male-f2m1.webp';
+  var IMG_TGT='brand-assets/body-model/grid-clean/obeyos-model-male-f1m2.webp';
+  var IC={recomp:'<path d="M4 7l8 8 8-8M4 17l8-8 8 8"/>',tier:'<path d="M5 20v-4M12 20v-9M19 20v-14"/>',
+    knee:'<path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M8.5 11.5h7"/>',gym:'<path d="M3 12h18M6 8v8M18 8v8"/>'};
+  function hero(){return '<div class="eb">Before we build</div>'+
+    '<div style="font-family:var(--head);font-size:26px;line-height:.9;margin-top:6px">YOUR NEXT 12 WEEKS</div>'+
+    '<div class="hero2">'+
+      '<div class="bc now"><span class="bl">Start · today</span><img src="'+IMG_NOW+'" alt=""><div class="bv">22%</div><div class="bk">body fat</div></div>'+
+      '<div class="midway"><div class="ln"></div><div class="wk">12</div><div class="wkl">weeks</div><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>'+
+      '<div class="bc tgt"><span class="bl">Finish · wk 12</span><img src="'+IMG_TGT+'" alt=""><div class="bv">18%</div><div class="bk">body fat</div></div>'+
+    '</div>';}
+
+  // A — THE CHANGE
+  document.getElementById('A').innerHTML=hero()+
+    '<div class="sl">What changes</div><div class="chg">'+
+    [['Body fat','22%','18%','−4%'],['Lean mass','58kg','60kg','+2kg'],['Est. strength','—','+12%','']].map(function(r){
+      return '<div class="r"><span class="cl">'+r[0]+'</span><span class="c1">'+r[1]+'</span><span class="ar">→</span><span class="c2">'+r[2]+'</span><span class="cd">'+r[3]+'</span></div>';}).join('')+'</div>'+
+    '<div class="sl">In three phases</div><div class="pbar">'+
+    [['WK 1–4','Foundation',true],['WK 5–8','Build',false],['WK 9–12','Peak',false]].map(function(p){
+      return '<div class="pseg'+(p[2]?' cur':'')+'"><div class="pw">'+p[0]+'</div><div class="pt">'+p[1]+'</div></div>';}).join('')+'</div>'+
+    '<button class="cta">Build my program →</button>';
+
+  // B — THE PATH
+  document.getElementById('B').innerHTML=hero()+
+    '<div class="sl">The path</div><div class="path">'+
+    [['WK 0','Where you are','22% body fat · Tier 2 · left knee flagged','','on'],
+     ['WK 1–4','Foundation','Groove the patterns, build work capacity.','−1.5% fat','on'],
+     ['WK 5–8','Build','Add load and volume — drive the muscle.','−1.5% · +1kg lean',''],
+     ['WK 9–12','Peak','Intensify, express strength, then deload.','−1% · +1kg lean',''],
+     ['WK 12','Where it takes you','18% body fat · +2kg lean · stronger.','','']].map(function(s){
+      return '<div class="step'+(s[4]?' on':'')+'"><div class="sw">'+s[0]+'</div><div class="st">'+s[1]+'</div><div class="sd">'+s[2]+'</div>'+(s[3]?'<div class="sdelta">'+s[3]+'</div>':'')+'</div>';}).join('')+'</div>'+
+    '<button class="cta">Build my program →</button>';
+
+  // C — WHY IT FITS
+  document.getElementById('C').innerHTML=hero()+
+    '<div class="sl">Why this plan fits you</div><div class="spec">'+
+    [['recomp','Goal','<b>Recomp</b> — strip fat, build lean mass'],
+     ['tier','Level','SMM 42% → <b>Tier 2</b>, moderate volume'],
+     ['knee','Protect','Left knee — <b>knee-safe</b> substitutions'],
+     ['gym','Time','<b>4 days</b> a week · full gym']].map(function(r){
+      return '<div class="r"><svg viewBox="0 0 24 24">'+IC[r[0]]+'</svg><span class="sk">'+r[1]+'</span><span class="sv">'+r[2]+'</span></div>';}).join('')+'</div>'+
+    '<div class="outcome"><div class="ok">What to expect</div><div class="ot"><b>By week 12:</b> ~18% body fat, +2kg lean, +12% on your main lifts — re-checked at every phase.</div></div>'+
+    '<button class="cta">Build my program →</button>';
+})();
+</script>
+</body>
+</html>
