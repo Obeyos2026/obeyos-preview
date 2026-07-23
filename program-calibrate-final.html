@@ -29,8 +29,12 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .zone{position:absolute;top:12%;left:0;right:0;height:34%;z-index:2;}
 .hold{position:absolute;inset:0;}
 .hold model-viewer{position:absolute;inset:0;width:100%;height:100%;background:transparent;--poster-color:transparent;outline:none;filter:brightness(.46) contrast(1.12) saturate(.72);}
-/* scan line — neutral white light, sized to the body only (soft glow from box-shadow, no box) */
-.scanline{position:absolute;left:29%;right:29%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 16%,rgba(255,255,255,.9) 84%,transparent);box-shadow:0 0 22px 4px rgba(255,255,255,.32);z-index:5;pointer-events:none;opacity:0;}
+/* the match-light: a soft glow that illuminates the body into view at the scan edge */
+.sweep{position:absolute;left:18%;right:18%;height:130px;pointer-events:none;z-index:4;opacity:0;
+  background:radial-gradient(58% 60% at 50% 50%,rgba(255,255,255,.26),rgba(255,255,255,0) 72%);
+  mix-blend-mode:screen;filter:blur(2px);}
+/* the leading scan line — thin, warm-white, soft */
+.scanline{position:absolute;left:29%;right:29%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(255,252,240,.95) 18%,rgba(255,252,240,.95) 82%,transparent);box-shadow:0 0 18px 3px rgba(255,250,235,.4);z-index:5;pointer-events:none;opacity:0;}
 
 /* V5 — region pins (light up as the scan crosses each) */
 .ro{position:absolute;z-index:7;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);opacity:0;white-space:nowrap;transition:opacity .45s var(--ease);}
@@ -65,6 +69,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="hold" id="hold">
       <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="10deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
     </div>
+    <div class="sweep" id="sweep"></div>
     <div class="scanline" id="line"></div>
   </div>
 
@@ -85,7 +90,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <script>
 (function(){
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var screen=document.getElementById('screen'),zone=document.getElementById('zone'),hold=document.getElementById('hold'),line=document.getElementById('line'),st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
+  var screen=document.getElementById('screen'),zone=document.getElementById('zone'),hold=document.getElementById('hold'),line=document.getElementById('line'),sweep=document.getElementById('sweep'),st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
 
   /* the record */
   var LOG=[['read body composition','22% <b>BF</b>'],
@@ -105,9 +110,10 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     ln.classList.add('in');lead.textContent=new Array(26).join('.');T(function(){v.innerHTML=LOG[i][1];ln.classList.add('done');},240);}
 
   function setReveal(fracFromTopPx){
-    // the scan reveals the body from the top down to fracFromTopPx (px within the zone)
+    // the body MATERIALIZES through the scan line — solid above, feathering in across the line
     var h=zone.clientHeight, revPct=Math.max(0,Math.min(100,(fracFromTopPx/h)*100));
-    var mask='linear-gradient(180deg,#000 '+revPct+'%,transparent '+Math.min(100,revPct+3)+'%)';
+    var a=Math.max(0,revPct-5), b=Math.min(100,revPct+5);
+    var mask='linear-gradient(180deg,#000 '+a+'%,rgba(0,0,0,0) '+b+'%)';
     hold.style.webkitMaskImage=mask;hold.style.maskImage=mask;
   }
 
@@ -117,7 +123,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     clr();
     LOG.forEach(function(r,i){var ln=document.getElementById('ln'+i);ln.className='ln';document.getElementById('lv'+i).innerHTML='';ln.querySelector('.lead').textContent='';});
     PINS.forEach(function(p){p.classList.remove('show');});
-    line.style.opacity='0';line.style.transition='';
+    line.style.opacity='0';sweep.style.opacity='0';line.style.transition='';sweep.style.transition='';
     st.textContent='Powering the engine';pf.style.transition='none';pf.style.width='0';
     setReveal(0);
 
@@ -126,7 +132,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
     // ONE animation drives the scan line AND the body/data reveal — perfectly synced
     T(function(){
-      line.style.opacity='1';
+      line.style.opacity='1';sweep.style.opacity='1';
       var start=null, zoneTop=zone.getBoundingClientRect().top-screen.getBoundingClientRect().top;
       function step(ts){
         if(!start)start=ts;var t=Math.min(1,(ts-start)/SCAN);
@@ -134,12 +140,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
         var yPx=zone.clientHeight*e;              // reveal boundary in zone px
         setReveal(yPx);
         line.style.top=(zoneTop+yPx)+'px';
+        sweep.style.top=(zoneTop+yPx-65)+'px';
         // V5 pins light up as the scan crosses each region
         var boundaryPct=((zoneTop+yPx)/screen.clientHeight)*100;
         PINS.forEach(function(p){if(boundaryPct> +p.dataset.y)p.classList.add('show');});
         st.textContent = t<0.5?'Scanning upper body':'Scanning lower body';
         if(t<1)raf(step);
-        else{ setReveal(zone.clientHeight+8); line.style.transition='opacity .5s';line.style.opacity='0';st.textContent='Reading your signals'; }
+        else{ setReveal(zone.clientHeight+8); line.style.transition='opacity .6s';sweep.style.transition='opacity .6s';line.style.opacity='0';sweep.style.opacity='0';st.textContent='Reading your signals'; }
       }
       raf(step);
     },240);
