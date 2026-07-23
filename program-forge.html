@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/obeyos-cookie-storage.js"></script>
+<script src="js/forge-data.js"></script>
 <style>
 :root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
   --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--cyan:#00D4FF;--sig:var(--lime);
@@ -176,43 +179,54 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var IC={fat:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/><path d="M9 15l6-4"/>',lean:'<path d="M4 16h16M7 11h10M10 6h4"/>',str:'<path d="M4 18l6-9 4 5 6-9"/>'};
 
-  /* ---- sex-aware figures (mock until Supabase: ?sex=female|male overrides + persists) ---- */
-  var SEX='male';
-  try{
-    var q=new URLSearchParams(location.search).get('sex');
-    if(q==='male'||q==='female')localStorage.setItem('obeyos_sex',q);
-    SEX=localStorage.getItem('obeyos_sex')||'male';
-  }catch(e){}
-  document.querySelectorAll('#zone model-viewer').forEach(function(m){m.src='brand-assets/body-model/3d/obeyos-model-'+SEX+'-3d.glb';});
-  document.querySelector('.bc.now img').src='brand-assets/body-model/grid-clean/obeyos-model-'+SEX+'-f2m1.webp';
-  document.querySelector('.bc.tgt img').src='brand-assets/body-model/grid-clean/obeyos-model-'+SEX+'-f1m2.webp';
+  /* ---- DATA — ForgeData (Supabase profile when authed, mock/demo otherwise) ---- */
+  var D=ForgeData.DEFAULTS, LOG=[];
+  function applyData(d){
+    D=d;
+    // figures — sex + body-state aware (GLB + grid-clean webps)
+    document.querySelectorAll('#zone model-viewer').forEach(function(m){m.src='brand-assets/body-model/3d/'+d.glb;});
+    document.querySelector('.bc.now img').src='brand-assets/body-model/grid-clean/'+d.figNow;
+    document.querySelector('.bc.tgt img').src='brand-assets/body-model/grid-clean/'+d.figTarget;
+    document.querySelector('.bc.now .bv').textContent=Math.round(d.bodyFatPct)+'%';
+    document.querySelector('.bc.tgt .bv').textContent=d.targetBfPct+'%';
 
-  /* ---- RECAP · path + tiles ---- */
-  var STEPS=[
-    ['WK 0','Where you are','22% body fat · Tier 2 · left knee flagged','','on'],
-    ['WK 1–4','Foundation','Groove the patterns, build work capacity.','−1.5% fat','on'],
-    ['WK 5–8','Build','Add load and volume — drive the muscle.','−1.5% · +1kg lean',''],
-    ['WK 9–12','Peak','Intensify, express strength, then deload.','−1% · +1kg lean',''],
-    ['WK 12','Where it takes you','18% body fat · +2kg lean · stronger.','','']
-  ];
-  document.getElementById('path').innerHTML=STEPS.map(function(s){
-    return '<div class="step'+(s[4]?' on':'')+'"><div class="sw">'+s[0]+'</div><div class="st">'+s[1]+'</div><div class="sd">'+s[2]+'</div>'+(s[3]?'<span class="sdelta">'+s[3]+'</span>':'')+'</div>';
-  }).join('');
-  var EXP=[['fat','−4%','Body fat'],['lean','+2kg','Lean mass'],['str','+12%','Est. strength']];
-  document.getElementById('exp').innerHTML=EXP.map(function(e){
-    return '<div class="et"><svg viewBox="0 0 24 24">'+IC[e[0]]+'</svg><div class="ev">'+e[1]+'</div><div class="ek">'+e[2]+'</div></div>';
-  }).join('');
+    /* recap · path + tiles */
+    var cut=(d.goal==='fat_loss'||d.goal==='recomp'), drop=Math.max(0,Math.round(d.bodyFatPct)-d.targetBfPct);
+    var injBit=d.injuryLabel?(' · '+d.injuryLabel.toLowerCase()+' flagged'):'';
+    var STEPS=[
+      ['WK 0','Where you are',Math.round(d.bodyFatPct)+'% body fat · Tier '+d.tierNum+injBit,'','on'],
+      ['WK 1–4','Foundation','Groove the patterns, build work capacity.',cut?'−1.5% fat':'+0.5kg lean','on'],
+      ['WK 5–8','Build','Add load and volume — drive the muscle.',cut?'−1.5% · +1kg lean':'+1kg lean',''],
+      ['WK 9–12','Peak','Intensify, express strength, then deload.',cut?'−1% · +1kg lean':'+0.5kg lean',''],
+      ['WK 12','Where it takes you',d.targetBfPct+'% body fat · +2kg lean · stronger.','','']
+    ];
+    document.getElementById('path').innerHTML=STEPS.map(function(s){
+      return '<div class="step'+(s[4]?' on':'')+'"><div class="sw">'+s[0]+'</div><div class="st">'+s[1]+'</div><div class="sd">'+s[2]+'</div>'+(s[3]?'<span class="sdelta">'+s[3]+'</span>':'')+'</div>';
+    }).join('');
+    var EXP=[['fat',cut?('−'+drop+'%'):'held','Body fat'],['lean','+2kg','Lean mass'],['str','+12%','Est. strength']];
+    document.getElementById('exp').innerHTML=EXP.map(function(e){
+      return '<div class="et"><svg viewBox="0 0 24 24">'+IC[e[0]]+'</svg><div class="ev">'+e[1]+'</div><div class="ek">'+e[2]+'</div></div>';
+    }).join('');
 
-  /* ---- CALIBRATION (B5 Construct — the record) ---- */
-  var LOG=[['read body composition','22% <b>BF</b>'],
-    ['estimate skeletal muscle','42% <b>SMM</b>'],
-    ['pull overnight recovery','68 · 8.1H'],
-    ['map injury history','<b>L-KNEE</b>'],
-    ['match program library','31 → <b>1</b>'],
-    ['lock training tier','TIER <b>2</b>']];
-  var logEl=document.getElementById('log');
-  LOG.forEach(function(r,i){var d=document.createElement('div');d.className='ln';d.id='ln'+i;
-    d.innerHTML='<span class="k">'+r[0]+'</span><span class="lead"></span><span class="v" id="lv'+i+'"></span>';logEl.appendChild(d);});
+    /* calibration — the record + pins */
+    LOG=[['read body composition',Math.round(d.bodyFatPct)+'% <b>BF</b>'],
+      ['estimate skeletal muscle',Math.round(d.smmPct)+'% <b>SMM</b>'],
+      ['pull overnight recovery',d.hrv+' · '+d.sleepH+'H']]
+      .concat(d.injuryLabel?[['map injury history','<b>'+d.injuryLabel.toUpperCase()+'</b>']]:[['map injury history','<b>CLEAR</b>']])
+      .concat([['match program library','31 → <b>1</b>'],
+      ['lock training tier','TIER <b>'+d.tierNum+'</b>']]);
+    var logEl=document.getElementById('log');
+    logEl.querySelectorAll('.ln').forEach(function(n){n.remove();});
+    LOG.forEach(function(r,i){var el=document.createElement('div');el.className='ln';el.id='ln'+i;
+      el.innerHTML='<span class="k">'+r[0]+'</span><span class="lead"></span><span class="v" id="lv'+i+'"></span>';logEl.appendChild(el);});
+    document.querySelector('#ro-muscle b').textContent=Math.round(d.smmPct)+'%';
+    document.querySelector('#ro-fat b').textContent=Math.round(d.bodyFatPct)+'%';
+    var knee=document.getElementById('ro-knee');
+    if(d.injuryLabel){knee.querySelector('.rl').textContent=d.injuryLabel;knee.querySelector('b').textContent='Flagged';}
+    else{knee.style.display='none';}
+  }
+  applyData(D);                                   // instant paint with defaults
+  ForgeData.load().then(applyData);               // then the real profile (if any)
   var timers=[];
   function T(fn,ms){var id=setTimeout(fn,ms);timers.push(id);return id;}
   function printLine(i){var ln=document.getElementById('ln'+i),lead=ln.querySelector('.lead'),v=document.getElementById('lv'+i);
