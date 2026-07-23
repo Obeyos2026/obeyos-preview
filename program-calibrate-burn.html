@@ -62,6 +62,15 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 <script>
 (function(){
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* sex-aware model (mock until Supabase: ?sex=female|male overrides + persists) */
+  try{
+    var _q=new URLSearchParams(location.search).get('sex');
+    if(_q==='male'||_q==='female')localStorage.setItem('obeyos_sex',_q);
+    var SEX=localStorage.getItem('obeyos_sex')||'male';
+    document.querySelectorAll('#zone model-viewer').forEach(function(m){m.src='brand-assets/body-model/3d/obeyos-model-'+SEX+'-3d.glb';});
+  }catch(e){}
+
   var zone=document.getElementById('zone'),hold=document.getElementById('hold'),holdglow=document.getElementById('holdglow'),
       fx=document.getElementById('fx'),vn=document.getElementById('vn'),tabsEl=document.getElementById('tabs');
 
@@ -73,7 +82,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     {tn:'P2', tk:'Reduced',   name:'B5 · REDUCED',      embers:{rate:1.2}},
     {tn:'P3', tk:'Full',      name:'B5 · FULL',         embers:{rate:3.2}}
   ];
-  var cur=VARS[2]; // reduced — the wired default
+  var cur=VARS[0]; // P0 none — founder pick 2026-07-23, the wired default
 
   tabsEl.innerHTML=VARS.map(function(v,i){return '<button class="tab'+(VARS[i]===cur?' on':'')+'" data-i="'+i+'"><div class="tn">'+v.tn+'</div><div class="tk">'+v.tk+'</div></button>';}).join('');
   vn.textContent=cur.name;
