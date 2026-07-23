@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/obeyos-cookie-storage.js"></script>
+<script src="js/forge-data.js"></script>
 <style>
 :root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
   --lime:#C8FF00;--sig:var(--lime);--head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
@@ -93,27 +96,31 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 (function(){
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- sex-aware model (mock until Supabase: ?sex=female|male overrides + persists) ---- */
-  try{
-    var _q=new URLSearchParams(location.search).get('sex');
-    if(_q==='male'||_q==='female')localStorage.setItem('obeyos_sex',_q);
-    var SEX=localStorage.getItem('obeyos_sex')||'male';
-    document.querySelectorAll('#zone model-viewer').forEach(function(m){m.src='brand-assets/body-model/3d/obeyos-model-'+SEX+'-3d.glb';});
-  }catch(e){}
-
   var screen=document.getElementById('screen'),zone=document.getElementById('zone'),hold=document.getElementById('hold'),
       holdglow=document.getElementById('holdglow'),fx=document.getElementById('fx'),
       st=document.getElementById('st'),pf=document.getElementById('pf'),log=document.getElementById('log');
 
-  /* the record */
-  var LOG=[['read body composition','22% <b>BF</b>'],
-    ['estimate skeletal muscle','42% <b>SMM</b>'],
-    ['pull overnight recovery','68 · 8.1H'],
-    ['map injury history','<b>L-KNEE</b>'],
-    ['match program library','31 → <b>1</b>'],
-    ['lock training tier','TIER <b>2</b>']];
-  LOG.forEach(function(r,i){var d=document.createElement('div');d.className='ln';d.id='ln'+i;
-    d.innerHTML='<span class="k">'+r[0]+'</span><span class="lead"></span><span class="v" id="lv'+i+'"></span>';log.appendChild(d);});
+  /* ---- DATA — ForgeData (Supabase profile when authed, mock/demo otherwise) ---- */
+  var LOG=[];
+  function applyData(d){
+    document.querySelectorAll('#zone model-viewer').forEach(function(m){m.src='brand-assets/body-model/3d/'+d.glb;});
+    LOG=[['read body composition',Math.round(d.bodyFatPct)+'% <b>BF</b>'],
+      ['estimate skeletal muscle',Math.round(d.smmPct)+'% <b>SMM</b>'],
+      ['pull overnight recovery',d.hrv+' · '+d.sleepH+'H']]
+      .concat(d.injuryLabel?[['map injury history','<b>'+d.injuryLabel.toUpperCase()+'</b>']]:[['map injury history','<b>CLEAR</b>']])
+      .concat([['match program library','31 → <b>1</b>'],
+      ['lock training tier','TIER <b>'+d.tierNum+'</b>']]);
+    log.querySelectorAll('.ln').forEach(function(n){n.remove();});
+    LOG.forEach(function(r,i){var el=document.createElement('div');el.className='ln';el.id='ln'+i;
+      el.innerHTML='<span class="k">'+r[0]+'</span><span class="lead"></span><span class="v" id="lv'+i+'"></span>';log.appendChild(el);});
+    document.querySelector('#ro-muscle b').textContent=Math.round(d.smmPct)+'%';
+    document.querySelector('#ro-fat b').textContent=Math.round(d.bodyFatPct)+'%';
+    var knee=document.getElementById('ro-knee');
+    if(d.injuryLabel){knee.querySelector('.rl').textContent=d.injuryLabel;knee.querySelector('b').textContent='Flagged';knee.style.display='';}
+    else{knee.style.display='none';}
+  }
+  applyData(ForgeData.DEFAULTS);
+  ForgeData.load().then(applyData);
 
   var timers=[];
   function T(f,m){var id=setTimeout(f,m);timers.push(id);return id;}
