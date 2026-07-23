@@ -8,6 +8,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+/* FIRST-RUN GATE — no program locked yet → the Forge fires (mock until Supabase).
+   ?reset=1 re-arms the gate for demos · ?sex=female|male sets the flow's body model. */
+try{
+  var _qs=new URLSearchParams(location.search);
+  if(_qs.get('reset')==='1')localStorage.removeItem('obeyos_program_locked');
+  var _sx=_qs.get('sex');if(_sx==='male'||_sx==='female')localStorage.setItem('obeyos_sex',_sx);
+  if(!localStorage.getItem('obeyos_program_locked'))location.replace('program-forge.html');
+}catch(e){}
+</script>
 <style>
 :root{
   --bg:#0A0D12; --white:#F9FAFB; --muted:#8A93A6; --mid:#747E8C; --dim:#5C6679; --hair:rgba(255,255,255,.08);
