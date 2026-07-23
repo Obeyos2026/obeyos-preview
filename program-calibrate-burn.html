@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Burn Reveal Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#000;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{position:relative;width:100%;max-width:430px;height:100dvh;min-height:760px;overflow:hidden;
+  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.02) 1px,transparent 1px);background-size:28px 28px;}
+.screen::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;background:radial-gradient(120% 55% at 50% 6%,rgba(200,255,0,.05),transparent 52%);}
+
+.chead{position:absolute;top:5%;left:0;right:0;text-align:center;z-index:8;}
+.chead .k{font-family:var(--mono);font-size:9px;letter-spacing:.32em;color:var(--lime);text-transform:uppercase;}
+.chead .vn{font-family:var(--head);font-size:22px;letter-spacing:.04em;color:var(--white);margin-top:8px;}
+.chead .st{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:7px;}
+
+/* construct zone */
+.zone{position:absolute;top:15%;left:0;right:0;height:52%;z-index:2;}
+.hold{position:absolute;inset:0;}
+.hold model-viewer{position:absolute;inset:0;width:100%;height:100%;background:transparent;--poster-color:transparent;outline:none;filter:brightness(.46) contrast(1.12) saturate(.72);}
+/* afterglow band (CINDER — hot metal cooling above the edge) */
+.after{position:absolute;left:22%;right:22%;height:96px;pointer-events:none;z-index:3;opacity:0;
+  background:linear-gradient(180deg,rgba(255,140,50,0),rgba(255,150,60,.16) 78%,rgba(255,170,80,.22));
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 26%,#000 74%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 26%,#000 74%,transparent);
+  mix-blend-mode:screen;filter:blur(3px);}
+/* the burn glow riding the edge */
+.sweep{position:absolute;left:18%;right:18%;height:120px;pointer-events:none;z-index:4;opacity:0;mix-blend-mode:screen;filter:blur(2px);}
+/* the leading edge line */
+.scanline{position:absolute;left:29%;right:29%;height:1.5px;z-index:5;pointer-events:none;opacity:0;}
+/* fx canvas — embers / ragged flame fringe */
+.fx{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;} /* canvas is replaced — inset alone does not stretch it */
+
+.tabs{position:absolute;left:18px;right:18px;bottom:9%;z-index:8;display:flex;gap:6px;}
+.tab{flex:1;background:none;border:1px solid var(--hair);border-radius:9px;padding:9px 2px 8px;cursor:pointer;text-align:center;transition:border-color .25s,background .25s;}
+.tab .tn{font-family:var(--head);font-size:14px;letter-spacing:.05em;color:var(--dim);line-height:1;transition:color .25s;}
+.tab .tk{font-family:var(--mono);font-size:6.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px;opacity:.7;}
+.tab.on{border-color:color-mix(in srgb,var(--lime) 45%,transparent);background:color-mix(in srgb,var(--lime) 5%,transparent);}
+.tab.on .tn{color:var(--lime);}
+.note{position:absolute;left:0;right:0;bottom:4.5%;z-index:8;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;}
+@media(prefers-reduced-motion:reduce){.hold model-viewer{filter:brightness(.5) contrast(1.1) saturate(.72);}}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="chead"><div class="k">ZEAL · Calibration</div><div class="vn" id="vn">B1 · EMBER EDGE</div><div class="st" id="st">Burn reveal exploration</div></div>
+  <div class="zone" id="zone">
+    <div class="hold" id="hold">
+      <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="10deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
+    </div>
+    <div class="after" id="after"></div>
+    <div class="sweep" id="sweep"></div>
+    <div class="scanline" id="line"></div>
+    <canvas class="fx" id="fx"></canvas>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="note">Tap a variant · each loops</div>
+</div>
+
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var zone=document.getElementById('zone'),hold=document.getElementById('hold'),line=document.getElementById('line'),
+      sweep=document.getElementById('sweep'),after=document.getElementById('after'),fx=document.getElementById('fx'),
+      vn=document.getElementById('vn'),tabsEl=document.getElementById('tabs');
+
+  /* ---- the 5 burn treatments ---- */
+  var VARS=[
+    {id:'ember', tn:'B1', tk:'Ember edge', name:'B1 · EMBER EDGE',
+      // hot white core, orange halo, embers rising off the edge
+      core:'255,244,214', glow:'255,150,45',
+      shadow:'0 0 16px 3px rgba(255,150,45,.45), 0 0 42px 9px rgba(255,120,30,.18)',
+      sweepBg:'radial-gradient(58% 60% at 50% 50%,rgba(255,170,70,.22),rgba(255,170,70,0) 72%)',
+      embers:{rate:2.4,cols:['255,190,90','245,158,11','255,235,180'],up:1.0}, ragged:0, after:0},
+    {id:'film', tn:'B2', tk:'Film burn', name:'B2 · FILM BURN',
+      // ragged flame fringe eating downward, heavier bloom
+      core:'255,238,200', glow:'255,130,35',
+      shadow:'0 0 20px 5px rgba(255,130,35,.5), 0 0 60px 14px rgba(255,100,20,.22)',
+      sweepBg:'radial-gradient(62% 64% at 50% 50%,rgba(255,150,50,.28),rgba(255,150,50,0) 74%)',
+      embers:{rate:1.2,cols:['255,180,80','245,158,11'],up:.8}, ragged:1, after:0},
+    {id:'sear', tn:'B3', tk:'Sear line', name:'B3 · SEAR LINE',
+      // no embers — one intense searing edge, huge soft bloom. precision instrument.
+      core:'255,250,235', glow:'255,160,60',
+      shadow:'0 0 14px 2px rgba(255,250,235,.55), 0 0 34px 8px rgba(255,160,60,.5), 0 0 90px 26px rgba(255,130,40,.2)',
+      sweepBg:'radial-gradient(46% 50% at 50% 50%,rgba(255,190,90,.3),rgba(255,190,90,0) 68%)',
+      embers:null, ragged:0, after:0},
+    {id:'cinder', tn:'B4', tk:'Cinder cool', name:'B4 · CINDER COOL',
+      // the revealed body glows warm near the edge, then cools — forge metal
+      core:'255,240,215', glow:'255,140,50',
+      shadow:'0 0 15px 3px rgba(255,140,50,.4), 0 0 40px 9px rgba(255,110,30,.16)',
+      sweepBg:'radial-gradient(56% 58% at 50% 50%,rgba(255,160,60,.18),rgba(255,160,60,0) 72%)',
+      embers:{rate:.9,cols:['255,180,90','245,158,11'],up:.7}, ragged:0, after:1},
+    {id:'signal', tn:'B5', tk:'Signal burn', name:'B5 · SIGNAL BURN',
+      // the burn in the brand signal — white-hot core, lime bloom, lime embers
+      core:'246,255,220', glow:'200,255,0',
+      shadow:'0 0 15px 3px rgba(200,255,0,.4), 0 0 44px 10px rgba(200,255,0,.16)',
+      sweepBg:'radial-gradient(58% 60% at 50% 50%,rgba(210,255,60,.2),rgba(210,255,60,0) 72%)',
+      embers:{rate:2.2,cols:['210,255,60','200,255,0','240,255,190'],up:1.0}, ragged:0, after:0}
+  ];
+  var cur=VARS[0];
+
+  tabsEl.innerHTML=VARS.map(function(v,i){return '<button class="tab'+(i===0?' on':'')+'" data-i="'+i+'"><div class="tn">'+v.tn+'</div><div class="tk">'+v.tk+'</div></button>';}).join('');
+  tabsEl.addEventListener('click',function(e){
+    var b=e.target.closest('.tab');if(!b)return;
+    tabsEl.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});b.classList.add('on');
+    cur=VARS[+b.dataset.i];vn.textContent=cur.name;play();
+  });
+
+  function applyStyle(v){
+    line.style.background='linear-gradient(90deg,transparent,rgba('+v.core+',.95) 18%,rgba('+v.core+',.95) 82%,transparent)';
+    line.style.boxShadow=v.shadow;
+    sweep.style.background=v.sweepBg;
+  }
+
+  /* ---- fx canvas (embers + ragged fringe) ---- */
+  var ctx=fx.getContext('2d'),FW=0,FH=0;
+  function sizeFx(){var d=window.devicePixelRatio||1,r=fx.getBoundingClientRect();fx.width=r.width*d;fx.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);FW=r.width;FH=r.height;}
+  sizeFx();addEventListener('resize',sizeFx);
+  var sparks=[];
+  function spawnEmbers(edgeY,cfg,n){
+    var x0=FW*.31,x1=FW*.69;
+    for(var i=0;i<n;i++){
+      sparks.push({x:x0+Math.random()*(x1-x0),y:edgeY+(Math.random()-.5)*3,
+        vx:(Math.random()-.5)*.5, vy:-(.25+Math.random()*.95)*cfg.up,
+        life:1, decay:.008+Math.random()*.014, sz:.8+Math.random()*1.7,
+        col:cfg.cols[Math.floor(Math.random()*cfg.cols.length)]});
+    }
+  }
+  function drawSparks(){
+    sparks=sparks.filter(function(s){
+      s.x+=s.vx;s.y+=s.vy;s.vy*=.995;s.life-=s.decay;
+      if(s.life<=0)return false;
+      ctx.globalAlpha=Math.min(1,s.life*1.2)*.85;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.sz*Math.max(.3,s.life),0,Math.PI*2);
+      ctx.fillStyle='rgba('+s.col+',1)';ctx.shadowColor='rgb('+s.col+')';ctx.shadowBlur=6;
+      ctx.fill();ctx.shadowBlur=0;
+      return true;
+    });
+    ctx.globalAlpha=1;
+  }
+  function drawFringe(edgeY,tms){
+    // ragged flame licks eating downward along the edge (FILM BURN)
+    var x0=FW*.30,x1=FW*.70;
+    for(var x=x0;x<=x1;x+=5){
+      var n1=Math.sin(x*.11+tms*.006)*Math.sin(x*.047-tms*.0038);
+      var n2=Math.sin(x*.23+tms*.011)*.5+.5;
+      var y=edgeY+n1*3;
+      var len=4+n2*11;
+      var g=ctx.createLinearGradient(0,y,0,y+len);
+      g.addColorStop(0,'rgba(255,170,60,'+(.28+n2*.2)+')');
+      g.addColorStop(1,'rgba(255,110,20,0)');
+      ctx.fillStyle=g;ctx.fillRect(x-2,y,4,len);
+    }
+  }
+
+  /* ---- reveal driver (same yPx sync as the final calibration) ---- */
+  function setReveal(px){
+    var h=zone.clientHeight, p=h?Math.max(0,Math.min(100,(px/h)*100)):0;
+    var a=Math.max(0,p-5), b=Math.min(100,p+5);
+    var mask='linear-gradient(180deg,#000 '+a+'%,rgba(0,0,0,0) '+b+'%)';
+    hold.style.webkitMaskImage=mask;hold.style.maskImage=mask;
+  }
+
+  var runId=0;
+  function play(){
+    var my=++runId;
+    sparks=[];ctx.clearRect(0,0,FW,FH);
+    line.style.transition='';sweep.style.transition='';after.style.transition='';
+    line.style.opacity='0';sweep.style.opacity='0';after.style.opacity='0';
+    applyStyle(cur);
+    setReveal(0);
+    if(rm){setReveal(zone.clientHeight+8);return;}
+    var SCAN=5600;
+    setTimeout(function(){
+      if(my!==runId)return;
+      line.style.opacity='1';sweep.style.opacity='1';if(cur.after)after.style.opacity='1';
+      var start=null;
+      function step(ts){
+        if(my!==runId)return;
+        if(!start)start=ts;var t=Math.min(1,(ts-start)/SCAN);
+        var e=t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+        var yPx=zone.clientHeight*e;
+        setReveal(yPx);
+        line.style.top=yPx+'px';
+        sweep.style.top=(yPx-60)+'px';
+        if(cur.after)after.style.top=(yPx-94)+'px';
+        ctx.clearRect(0,0,FW,FH);
+        if(t<1){
+          if(cur.embers){var r=cur.embers.rate,n=Math.floor(r)+(Math.random()<r%1?1:0);spawnEmbers(yPx,cur.embers,n);}
+          if(cur.ragged)drawFringe(yPx,ts);
+        }
+        drawSparks();
+        if(t<1){requestAnimationFrame(step);}
+        else{
+          setReveal(zone.clientHeight+8);
+          line.style.transition='opacity .6s';sweep.style.transition='opacity .6s';after.style.transition='opacity .8s';
+          line.style.opacity='0';sweep.style.opacity='0';after.style.opacity='0';
+          // let remaining embers die out, then loop
+          (function tail(){ if(my!==runId)return;
+            ctx.clearRect(0,0,FW,FH);drawSparks();
+            if(sparks.length){requestAnimationFrame(tail);}else{setTimeout(function(){if(my===runId)play();},1000);}
+          })();
+        }
+      }
+      requestAnimationFrame(step);
+    },240);
+  }
+
+  var mv=document.getElementById('mv');
+  if(mv.updateComplete){mv.updateComplete.then(function(){setTimeout(play,200);});}else{setTimeout(play,700);}
+})();
+</script>
+</body>
+</html>
