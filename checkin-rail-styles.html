@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A0D12">
-<title>OBEY OS · Check-in Rail · Measurement Styles</title>
+<title>OBEY OS · Daily Check-in</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -19,46 +19,61 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .screen{position:relative;width:100%;max-width:430px;height:100dvh;min-height:780px;overflow:hidden;
   background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.024) 1px,transparent 1px);background-size:28px 28px;}
 .screen::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(120% 50% at 50% 0%,rgba(200,255,0,.045),transparent 55%);}
-/* optional atmosphere — judged live via the BG toggle */
-.bgimg{position:absolute;inset:0;z-index:0;background:url('brand-assets/atmospheres/atm-void-light-01.jpg') center 20%/cover no-repeat;opacity:0;transition:opacity .6s;}
-.bgimg::after{content:"";position:absolute;inset:0;background:rgba(10,13,18,.78);}
-.screen.hasbg .bgimg{opacity:1;}
 
 .hd{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:baseline;justify-content:space-between;padding:20px 22px 0;}
 .hd .k{font-family:var(--mono);font-size:9px;letter-spacing:.28em;color:var(--lime);text-transform:uppercase;}
 .hd .d{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;}
-.vname{position:absolute;top:42px;left:0;right:0;z-index:20;text-align:center;font-family:var(--head);font-size:20px;letter-spacing:.04em;}
-.toggles{position:absolute;top:70px;left:0;right:0;z-index:20;display:flex;justify-content:center;gap:8px;}
-.tg{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
-  background:none;border:1px solid var(--hair);border-radius:14px;padding:5px 12px;cursor:pointer;transition:all .25s;}
-.tg.on{color:var(--lime);border-color:color-mix(in srgb,var(--lime) 40%,transparent);background:color-mix(in srgb,var(--lime) 5%,transparent);}
+.sub{position:absolute;top:44px;left:0;right:0;z-index:20;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;}
 
-.stage{position:absolute;top:104px;bottom:12.5%;left:0;right:0;z-index:5;padding:0 24px;overflow-y:auto;}
-.tabs{position:absolute;left:14px;right:14px;bottom:3.2%;z-index:20;display:flex;gap:5px;}
-.tab{flex:1;background:none;border:1px solid var(--hair);border-radius:9px;padding:8px 2px 7px;cursor:pointer;text-align:center;transition:all .25s;}
-.tab .tn{font-family:var(--head);font-size:13px;letter-spacing:.04em;color:var(--dim);line-height:1;transition:color .25s;}
-.tab .tk{font-family:var(--mono);font-size:5.8px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;margin-top:3px;opacity:.7;}
-.tab.on{border-color:color-mix(in srgb,var(--lime) 45%,transparent);background:color-mix(in srgb,var(--lime) 5%,transparent);}
-.tab.on .tn{color:var(--lime);}
+.stage{position:absolute;top:74px;bottom:2.5%;left:0;right:0;z-index:5;padding:0 24px;overflow-y:auto;}
 
-/* row chrome shared by every style */
-.row{padding:14px 0;border-top:1px solid var(--hair);}
+/* row chrome */
+.row{padding:15px 0 6px;border-top:1px solid var(--hair);}
 .row:first-child{border-top:none;}
 .rtop{display:flex;align-items:center;gap:12px;}
 .ring{position:relative;width:54px;height:54px;flex-shrink:0;border-radius:50%;border:1px solid var(--hair);background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .3s,box-shadow .3s;}
 .ring img{width:40px;height:40px;object-fit:contain;mix-blend-mode:screen;
-  -webkit-mask:radial-gradient(72% 76% at 50% 50%,#000 58%,transparent 92%);mask:radial-gradient(72% 76% at 50% 50%,#000 58%,transparent 92%);}
-.ring.lit{border-color:color-mix(in srgb,var(--rc) 55%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--rc) 30%,transparent);}
-.ring img{animation:icoFloat 5.4s ease-in-out infinite;}
+  -webkit-mask:radial-gradient(72% 76% at 50% 50%,#000 58%,transparent 92%);mask:radial-gradient(72% 76% at 50% 50%,#000 58%,transparent 92%);
+  animation:icoFloat 5.4s ease-in-out infinite;}
 @keyframes icoFloat{0%,100%{transform:translateY(-1.5px) rotate(-2deg)}50%{transform:translateY(2px) rotate(2deg)}}
+.ring.lit{border-color:color-mix(in srgb,var(--rc) 55%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--rc) 30%,transparent);}
 .rmid{flex:1;min-width:0;}
 .rnm{font-family:var(--head);font-size:20px;letter-spacing:.03em;}
 .rq{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);margin-top:1px;}
 .rword{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--rc,var(--dim));text-transform:uppercase;text-align:right;min-width:60px;transition:color .3s;}
-.meter{margin-top:12px;}
 
-.note{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:14px;}
-.cta{display:block;width:100%;height:46px;margin-top:14px;border:none;border-radius:23px;background:var(--lime);color:#0A0D12;
+/* THE SLIDER — unset reads unset; thumb follows the finger; settles on release */
+.sl{position:relative;height:64px;margin-top:4px;touch-action:none;cursor:pointer;}
+.sl .trk{position:absolute;left:13px;right:13px;top:24px;height:1.5px;background:rgba(255,255,255,.13);border-radius:1px;}
+.sl .fill{position:absolute;left:13px;top:24px;height:1.5px;width:0;background:var(--rc,transparent);
+  box-shadow:0 0 8px color-mix(in srgb,var(--rc,transparent) 60%,transparent);}
+.sl .stop{position:absolute;top:24px;width:1.5px;height:7px;transform:translate(-50%,-50%);background:rgba(255,255,255,.22);}
+.sl .lb{position:absolute;top:40px;transform:translateX(-50%);font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;transition:color .25s;white-space:nowrap;}
+.sl .lb:first-of-type{transform:none;}
+.sl .lb.last{transform:translateX(-100%);}
+.sl .lb.on{color:var(--rc);}
+.sl .th{position:absolute;top:24px;left:13px;width:26px;height:26px;transform:translate(-50%,-50%);border-radius:50%;
+  background:#0A0D12;border:2px solid var(--rc,rgba(255,255,255,.22));
+  box-shadow:0 0 10px color-mix(in srgb,var(--rc,transparent) 45%,transparent);
+  display:flex;align-items:center;justify-content:center;z-index:2;}
+.sl .th svg{width:12px;height:12px;opacity:.45;transition:opacity .25s;filter:drop-shadow(0 0 5px rgba(200,255,0,.5));}
+.sl.set .th svg{opacity:1;}
+.sl.settle .th,.sl.settle .fill{transition:left .28s var(--ease),width .28s var(--ease);}
+
+/* ACCUMULATIVE SCORE — assembles before send */
+.score{margin-top:12px;padding:15px 18px 13px;border-radius:16px;border:1px solid var(--hair);background:var(--glass);
+  display:flex;align-items:center;gap:14px;transition:border-color .4s,box-shadow .4s;}
+.score.live{border-color:color-mix(in srgb,var(--sc) 40%,transparent);box-shadow:0 0 22px color-mix(in srgb,var(--sc) 12%,transparent);}
+.score .num{font-family:var(--head);font-size:44px;line-height:.85;min-width:64px;color:var(--sc,var(--dim));text-shadow:0 0 18px color-mix(in srgb,var(--sc,transparent) 35%,transparent);}
+.score .mid2{flex:1;}
+.score .k2{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.score .band{font-family:var(--head);font-size:17px;letter-spacing:.04em;color:var(--sc,var(--mid));margin-top:3px;}
+.score .hint{font-family:var(--body);font-weight:300;font-size:10.5px;color:var(--mid);margin-top:2px;}
+.score .mini{display:flex;flex-direction:column;gap:5px;}
+.score .mini i{width:26px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);transition:background .3s,box-shadow .3s;}
+.score .mini i.on{background:var(--mc);box-shadow:0 0 6px var(--mc);}
+
+.cta{display:block;width:100%;height:46px;margin-top:12px;border:none;border-radius:23px;background:var(--lime);color:#0A0D12;
   font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:opacity .3s;}
 .cta:disabled{opacity:.32;cursor:not-allowed;}
 .skip{display:block;width:100%;background:none;border:none;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;cursor:pointer;padding:12px 0 4px;text-align:center;}
@@ -70,60 +85,14 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .skipped p{font-family:var(--body);font-weight:300;font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;}
 .skipped .m{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:14px;}
 
-/* M1 · SEGMENTS — horizontal cells, meter-fill */
-.m1{display:flex;gap:6px;}
-.m1 .sg{flex:1;height:32px;border-radius:9px;border:1px solid var(--hair);background:rgba(255,255,255,.02);cursor:pointer;position:relative;transition:all .25s;}
-.m1 .sg.lit{border-color:color-mix(in srgb,var(--uc) 55%,transparent);background:color-mix(in srgb,var(--uc) 11%,transparent);box-shadow:0 0 var(--gl,0px) color-mix(in srgb,var(--uc) 30%,transparent);}
-
-/* M2 · LADDER — ascending vertical bars (the tier-ladder vocabulary) */
-.m2{display:flex;align-items:flex-end;gap:7px;height:46px;}
-.m2 .br{flex:1;border-radius:6px 6px 3px 3px;border:1px solid var(--hair);background:rgba(255,255,255,.02);cursor:pointer;transition:all .25s;}
-.m2 .br:nth-child(1){height:34%;}.m2 .br:nth-child(2){height:56%;}.m2 .br:nth-child(3){height:78%;}.m2 .br:nth-child(4){height:100%;}
-.m2 .br.lit{border-color:color-mix(in srgb,var(--uc) 55%,transparent);background:color-mix(in srgb,var(--uc) 16%,transparent);box-shadow:0 0 var(--gl,0px) color-mix(in srgb,var(--uc) 32%,transparent);}
-
-/* M3 · SLIDER — hairline track + ring-and-bolt thumb (the unified dragger) */
-.m3{position:relative;height:34px;cursor:pointer;}
-.m3 .trk{position:absolute;left:0;right:0;top:50%;height:1.5px;transform:translateY(-50%);
-  background:linear-gradient(90deg,rgba(200,255,0,.10),rgba(200,255,0,.55));border-radius:1px;}
-.m3 .fill{position:absolute;left:0;top:50%;height:1.5px;transform:translateY(-50%);width:0;background:var(--rc,var(--lime));box-shadow:0 0 8px color-mix(in srgb,var(--rc,var(--lime)) 60%,transparent);transition:width .3s var(--ease);}
-.m3 .th{position:absolute;top:50%;left:0;width:26px;height:26px;margin-left:-13px;transform:translateY(-50%);border-radius:50%;
-  background:#0A0D12;border:2px solid var(--rc,var(--dim));box-shadow:0 0 10px color-mix(in srgb,var(--rc,var(--dim)) 45%,transparent);
-  display:flex;align-items:center;justify-content:center;transition:left .3s var(--ease),border-color .3s;}
-.m3 .th svg{width:12px;height:12px;}
-.m3 .stops{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;pointer-events:none;}
-.m3 .stops i{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.18);}
-
-/* M4 · TICKS — the §25 VU meter, 24 thin ticks */
-.m4{display:flex;gap:3px;height:26px;align-items:center;cursor:pointer;}
-.m4 i{flex:1;height:16px;border-radius:1px;background:rgba(255,255,255,.09);transition:background .2s,box-shadow .2s,height .2s;}
-.m4 i.lit{background:var(--tc);height:24px;}
-.m4 i.tip{box-shadow:0 0 7px var(--tc);}
-
-/* M5 · CORES — four orbs that charge (dim ember → full glow) */
-.m5{display:flex;gap:10px;justify-content:space-between;padding:0 4px;}
-.m5 .core{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;padding:4px 0;}
-.m5 .orb{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.02);position:relative;transition:all .25s;}
-.m5 .orb::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--uc,transparent);opacity:0;transition:opacity .25s;}
-.m5 .core.lit .orb{border-color:color-mix(in srgb,var(--uc) 60%,transparent);box-shadow:0 0 var(--gl,0px) color-mix(in srgb,var(--uc) 40%,transparent);}
-.m5 .core.lit .orb::after{opacity:1;box-shadow:0 0 8px var(--uc);}
-.m5 .lb{font-family:var(--mono);font-size:6.5px;letter-spacing:.07em;color:var(--dim);text-transform:uppercase;transition:color .25s;}
-.m5 .core.sel .lb{color:var(--rc);}
-
-@media(prefers-reduced-motion:reduce){.ring img{animation:none;}}
+@media(prefers-reduced-motion:reduce){.ring img{animation:none;}.sl.settle .th,.sl.settle .fill{transition:none;}}
 </style>
 </head>
 <body>
 <div class="screen" id="screen">
-  <div class="bgimg"></div>
   <div class="hd"><span class="k">Daily check-in</span><span class="d">Thu 23 Jul</span></div>
-  <div class="vname" id="vname"></div>
-  <div class="toggles">
-    <button class="tg on" id="tgRamp">Ramp · lime builds</button>
-    <button class="tg" id="tgGrade">Grade · verdict colors</button>
-    <button class="tg" id="tgBg">BG · off</button>
-  </div>
+  <div class="sub">The one signal you give ZEAL · everything else is read</div>
   <div class="stage" id="stage"></div>
-  <div class="tabs" id="tabs"></div>
 </div>
 
 <script>
@@ -138,145 +107,105 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     {id:'soreness',name:'SORENESS', q:'How your muscles carry yesterday', img:ICON+'soreness.png',
       levels:['WRECKED','SORE','MILD','FRESH']}
   ];
-  var GRADE=['#EF4444','#F59E0B','#00E5A0','#C8FF00'];
-  var colorMode='ramp', hasBg=false;
+  var GRADE=['#EF4444','#F59E0B','#00E5A0','#C8FF00'];       // founder pick: verdict-colour grade
+  var VALS=[25,50,75,100];                                    // each level's contribution
+  var BANDS=[[85,'STRONG SIGNAL','#C8FF00'],[65,'SOLID','#00E5A0'],[45,'MIXED','#F59E0B'],[0,'ROUGH','#EF4444']];
+  var picks=[null,null,null], shownScore=0, scoreRaf=null;
   function hap(ms){if(navigator.vibrate)navigator.vibrate(ms||8);}
-  // the founder's ask: colour dimmed → strengthening. ramp = ONE lime whose alpha+glow build with level.
-  function lc(j){ return colorMode==='ramp' ? 'rgba(200,255,0,'+(0.34+j*0.22)+')' : GRADE[j]; }
-  function glowPx(j){ return (2+j*4)+'px'; }
 
-  var VARS=[
-    {tn:'M1',tk:'Segments', name:'M1 · SEGMENTS',  meter:m1},
-    {tn:'M2',tk:'Ladder',   name:'M2 · LADDER',    meter:m2},
-    {tn:'M3',tk:'Slider',   name:'M3 · SLIDER',    meter:m3},
-    {tn:'M4',tk:'Ticks',    name:'M4 · TICKS',     meter:m4},
-    {tn:'M5',tk:'Cores',    name:'M5 · CORES',     meter:m5}
-  ];
-  var stage=document.getElementById('stage'),tabsEl=document.getElementById('tabs'),vname=document.getElementById('vname');
-  var cur=0,picks;
-  tabsEl.innerHTML=VARS.map(function(v,i){return '<button class="tab'+(i===0?' on':'')+'" data-i="'+i+'"><div class="tn">'+v.tn+'</div><div class="tk">'+v.tk+'</div></button>';}).join('');
-  tabsEl.addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;
-    cur=+b.dataset.i;tabsEl.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});b.classList.add('on');mount();});
+  var stage=document.getElementById('stage');
+  stage.innerHTML=CATS.map(function(c,i){
+    return '<div class="row" data-i="'+i+'">'+
+      '<div class="rtop"><div class="ring" id="rg'+i+'"><img src="'+c.img+'" alt=""></div>'+
+      '<div class="rmid"><div class="rnm">'+c.name+'</div><div class="rq">'+c.q+'</div></div>'+
+      '<div class="rword" id="rw'+i+'">—</div></div>'+
+      '<div class="sl" id="sl'+i+'"><div class="trk"></div><div class="fill"></div>'+
+        [0,1,2,3].map(function(j){var p=j/3*100;return '<div class="stop" style="left:calc(13px + (100% - 26px)*'+(j/3)+')"></div>';}).join('')+
+        c.levels.map(function(l,j){var pos='calc(13px + (100% - 26px)*'+(j/3)+')';
+          return '<div class="lb'+(j===3?' last':'')+'" data-j="'+j+'" style="left:'+pos+'">'+l+'</div>';}).join('')+
+        '<div class="th"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#C8FF00"/></svg></div>'+
+      '</div>'+
+    '</div>';}).join('')+
+    '<div class="score" id="score">'+
+      '<div class="num" id="scnum">—</div>'+
+      '<div class="mid2"><div class="k2">Check-in score</div><div class="band" id="scband">Set all three</div>'+
+      '<div class="hint" id="schint">Sharpens the readiness ZEAL reads from your wearables</div></div>'+
+      '<div class="mini">'+CATS.map(function(c,i){return '<i id="mn'+i+'"></i>';}).join('')+'</div>'+
+    '</div>'+
+    '<button class="cta" id="cta" disabled>Send signal →</button>'+
+    '<button class="skip" id="skip">Skip today — ZEAL reads without you →</button>'+
+    '<div class="skipped" id="skipped"><div class="b"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" fill="#C8FF00" d="M13 2 L3 14 L12 14 L11 22 L21 10 L12 10 Z M11.5 7.5 L12.15 11.5 L12.4 16 L11.95 11.5 Z"/></svg></div>'+
+      '<h3>ZEAL READS ON</h3><p>Readiness comes from your wearables — HRV, sleep, recovery.<br>The check-in only sharpens it. Nothing breaks when you skip.</p>'+
+      '<div class="m">Passive signals only · today</div></div>';
 
-  document.getElementById('tgRamp').addEventListener('click',function(){colorMode='ramp';syncTg();mount();});
-  document.getElementById('tgGrade').addEventListener('click',function(){colorMode='grade';syncTg();mount();});
-  document.getElementById('tgBg').addEventListener('click',function(){hasBg=!hasBg;
-    document.getElementById('screen').classList.toggle('hasbg',hasBg);
-    this.textContent='BG · '+(hasBg?'on':'off');this.classList.toggle('on',hasBg);});
-  function syncTg(){
-    document.getElementById('tgRamp').classList.toggle('on',colorMode==='ramp');
-    document.getElementById('tgGrade').classList.toggle('on',colorMode==='grade');
-  }
-
-  function mount(){
-    vname.textContent=VARS[cur].name;
-    picks=[null,null,null];
-    stage.innerHTML=CATS.map(function(c,i){
-      return '<div class="row" data-i="'+i+'">'+
-        '<div class="rtop"><div class="ring" id="rg'+i+'"><img src="'+c.img+'" alt=""></div>'+
-        '<div class="rmid"><div class="rnm">'+c.name+'</div><div class="rq">'+c.q+'</div></div>'+
-        '<div class="rword" id="rw'+i+'">—</div></div>'+
-        '<div class="meter" id="mt'+i+'"></div>'+
-      '</div>';}).join('')+
-      '<div class="note">One read each · the one signal you give ZEAL</div>'+
-      '<button class="cta" id="cta" disabled>Send signal →</button>'+
-      '<button class="skip" id="skip">Skip today — ZEAL reads without you →</button>'+
-      '<div class="skipped" id="skipped"><div class="b"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" fill="#C8FF00" d="M13 2 L3 14 L12 14 L11 22 L21 10 L12 10 Z M11.5 7.5 L12.15 11.5 L12.4 16 L11.95 11.5 Z"/></svg></div>'+
-        '<h3>ZEAL READS ON</h3><p>Readiness comes from your wearables — HRV, sleep, recovery.<br>The check-in only sharpens it. Nothing breaks when you skip.</p>'+
-        '<div class="m">Passive signals only · today</div></div>';
-    CATS.forEach(function(c,i){VARS[cur].meter(document.getElementById('mt'+i),i);});
-    document.getElementById('cta').addEventListener('click',function(){this.textContent='SIGNAL SENT';this.disabled=true;hap(16);});
-    document.getElementById('skip').addEventListener('click',function(){
-      stage.querySelectorAll('.row,.note,.cta,.skip').forEach(function(n){n.style.display='none';});
-      document.getElementById('skipped').classList.add('show');hap(10);
-    });
-  }
-  function setRow(i,j){
-    picks[i]=j;hap(8);
-    var w=document.getElementById('rw'+i);w.textContent=CATS[i].levels[j];w.style.setProperty('--rc',lc(j));
-    var rg=document.getElementById('rg'+i);rg.classList.add('lit');rg.style.setProperty('--rc',lc(j));
-    if(picks.indexOf(null)===-1)document.getElementById('cta').disabled=false;
-  }
-
-  /* M1 — horizontal segment cells, meter-fill (cells up to the pick light, dimmer below the tip) */
-  function m1(el,i){
-    el.innerHTML='<div class="m1">'+[0,1,2,3].map(function(j){return '<div class="sg" data-j="'+j+'"></div>';}).join('')+'</div>';
-    el.querySelectorAll('.sg').forEach(function(sg){
-      sg.addEventListener('click',function(){
-        var j=+sg.dataset.j;setRow(i,j);
-        el.querySelectorAll('.sg').forEach(function(x,k){
-          x.classList.toggle('lit',k<=j);
-          x.style.setProperty('--uc',lc(colorMode==='ramp'?Math.min(k,j):j));
-          x.style.setProperty('--gl',k===j?glowPx(j):'0px');
-        });
-      });
-    });
-  }
-  /* M2 — ascending ladder bars (tier vocabulary), fill to the pick */
-  function m2(el,i){
-    el.innerHTML='<div class="m2">'+[0,1,2,3].map(function(j){return '<div class="br" data-j="'+j+'"></div>';}).join('')+'</div>';
-    el.querySelectorAll('.br').forEach(function(br){
-      br.addEventListener('click',function(){
-        var j=+br.dataset.j;setRow(i,j);
-        el.querySelectorAll('.br').forEach(function(x,k){
-          x.classList.toggle('lit',k<=j);
-          x.style.setProperty('--uc',lc(colorMode==='ramp'?Math.min(k,j):j));
-          x.style.setProperty('--gl',k===j?glowPx(j):'0px');
-        });
-      });
-    });
-  }
-  /* M3 — continuous hairline + ring-and-bolt thumb (unified dragger, absolute tap) */
-  function m3(el,i){
-    el.innerHTML='<div class="m3"><div class="trk"></div><div class="fill"></div>'+
-      '<div class="stops"><i></i><i></i><i></i><i></i></div>'+
-      '<div class="th"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#C8FF00"/></svg></div></div>';
-    var m=el.querySelector('.m3');
-    function setP(clientX){
-      var r=m.getBoundingClientRect(),f=Math.max(0,Math.min(1,(clientX-r.left)/r.width));
-      var j=Math.min(3,Math.floor(f*4));
-      var px=(j/3)*100;
-      m.querySelector('.th').style.left=px+'%';
-      m.querySelector('.fill').style.width=px+'%';
-      m.style.setProperty('--rc',lc(j));
-      setRow(i,j);
+  function band(s){for(var b=0;b<BANDS.length;b++){if(s>=BANDS[b][0])return BANDS[b];}return BANDS[3];}
+  function updateScore(){
+    var set=picks.filter(function(p){return p!=null;});
+    picks.forEach(function(p,i){var m=document.getElementById('mn'+i);
+      if(p!=null){m.classList.add('on');m.style.setProperty('--mc',GRADE[p]);}else{m.classList.remove('on');}});
+    var sc=document.getElementById('score');
+    if(set.length<3){
+      document.getElementById('scband').textContent=set.length+' of 3 set';
+      return;
     }
-    m.addEventListener('click',function(e){setP(e.clientX);});
-    m.addEventListener('touchmove',function(e){setP(e.touches[0].clientX);e.preventDefault();},{passive:false});
-  }
-  /* M4 — 24 thin VU ticks, light up to the tap point */
-  function m4(el,i){
-    var N=24;
-    el.innerHTML='<div class="m4">'+Array(N).fill(0).map(function(){return '<i></i>';}).join('')+'</div>';
-    var m=el.querySelector('.m4');
-    m.addEventListener('click',function(e){
-      var r=m.getBoundingClientRect(),f=Math.max(0,Math.min(.999,(e.clientX-r.left)/r.width));
-      var lit=Math.max(1,Math.round(f*N)),j=Math.min(3,Math.floor(f*4));
-      m.querySelectorAll('i').forEach(function(t,k){
-        t.classList.toggle('lit',k<lit);t.classList.toggle('tip',k===lit-1);
-        t.style.setProperty('--tc',lc(colorMode==='ramp'?Math.min(3,Math.floor((k/N)*4)):j));
-      });
-      setRow(i,j);
-    });
-  }
-  /* M5 — four charging cores, the pick glows brightest */
-  function m5(el,i){
-    el.innerHTML='<div class="m5">'+CATS[i].levels.map(function(l,j){
-      return '<div class="core" data-j="'+j+'"><div class="orb"></div><div class="lb">'+l+'</div></div>';}).join('')+'</div>';
-    el.querySelectorAll('.core').forEach(function(cr){
-      cr.addEventListener('click',function(){
-        var j=+cr.dataset.j;setRow(i,j);
-        el.querySelectorAll('.core').forEach(function(x,k){
-          x.classList.toggle('lit',k<=j);x.classList.toggle('sel',k===j);
-          x.style.setProperty('--uc',lc(colorMode==='ramp'?Math.min(k,j):j));
-          x.style.setProperty('--gl',k===j?glowPx(j):'0px');
-          x.style.setProperty('--rc',lc(j));
-        });
-      });
-    });
+    var target=Math.round(picks.reduce(function(a,p){return a+VALS[p];},0)/3);
+    var b=band(target);
+    sc.classList.add('live');sc.style.setProperty('--sc',b[2]);
+    document.getElementById('scband').textContent=b[1];
+    document.getElementById('cta').disabled=false;
+    // count-up — the calculating pulse
+    if(scoreRaf)cancelAnimationFrame(scoreRaf);
+    var from=shownScore||0,t0=null,el=document.getElementById('scnum');
+    if(rm){el.textContent=target;shownScore=target;return;}
+    (function step(ts){
+      if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/650),e=1-Math.pow(1-p,3);
+      var v=Math.round(from+(target-from)*e);el.textContent=v;
+      if(p<1)scoreRaf=requestAnimationFrame(step);else shownScore=target;
+    })(performance.now());
   }
 
-  mount();
+  /* slider — thumb FOLLOWS the finger; snaps to the nearest stop on release */
+  CATS.forEach(function(c,i){
+    var sl=document.getElementById('sl'+i),th=sl.querySelector('.th'),fill=sl.querySelector('.fill');
+    var dragging=false;
+    function fracFrom(clientX){
+      var r=sl.getBoundingClientRect();
+      return Math.max(0,Math.min(1,(clientX-r.left-13)/(r.width-26)));
+    }
+    function paint(f,j){
+      var pos='calc(13px + (100% - 26px)*'+f+')';
+      th.style.left=pos;
+      fill.style.width='calc((100% - 26px)*'+f+')';
+      sl.style.setProperty('--rc',GRADE[j]);sl.classList.add('set');
+      sl.querySelectorAll('.lb').forEach(function(lb){lb.classList.toggle('on',+lb.dataset.j===j);});
+      var w=document.getElementById('rw'+i);w.textContent=c.levels[j];w.style.setProperty('--rc',GRADE[j]);
+      var rg=document.getElementById('rg'+i);rg.classList.add('lit');rg.style.setProperty('--rc',GRADE[j]);
+    }
+    function move(clientX){
+      var f=fracFrom(clientX),j=Math.round(f*3);
+      sl.classList.remove('settle');            // free — follows the finger exactly
+      paint(f,j);
+      if(picks[i]!==j){picks[i]=j;hap(6);updateScore();}
+    }
+    function release(clientX){
+      dragging=false;
+      var f=fracFrom(clientX),j=Math.round(f*3);
+      sl.classList.add('settle');               // ease into the stop — a measurement settling
+      paint(j/3,j);
+      if(picks[i]!==j){picks[i]=j;updateScore();}
+      hap(9);
+    }
+    sl.addEventListener('pointerdown',function(e){dragging=true;sl.setPointerCapture(e.pointerId);move(e.clientX);});
+    sl.addEventListener('pointermove',function(e){if(dragging)move(e.clientX);});
+    sl.addEventListener('pointerup',function(e){if(dragging)release(e.clientX);});
+    sl.addEventListener('pointercancel',function(e){if(dragging)release(e.clientX);});
+  });
+
+  document.getElementById('cta').addEventListener('click',function(){this.textContent='SIGNAL SENT · '+shownScore;this.disabled=true;hap(16);});
+  document.getElementById('skip').addEventListener('click',function(){
+    stage.querySelectorAll('.row,.score,.cta,.skip').forEach(function(n){n.style.display='none';});
+    document.getElementById('skipped').classList.add('show');hap(10);
+  });
 })();
 </script>
 </body>
