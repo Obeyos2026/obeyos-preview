@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
 :root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
   --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--cyan:#00D4FF;--sig:var(--lime);
@@ -61,24 +62,54 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 /* ===== BEAT 2 · FORGE / CALIBRATION (full-screen fixed overlay) ===== */
 .forge{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:none;background:#000;z-index:50;overflow:hidden;}
 .forge.show{display:block;}
-.bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;}
+.bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .9s var(--ease);}
+.forge.lit .bgv{opacity:0;}
 .fscrim{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 46%,transparent,rgba(10,13,18,.55) 66%,rgba(10,13,18,.92));}
 .sparks{position:absolute;inset:0;z-index:6;pointer-events:none;}
-.calib{position:absolute;inset:0;padding:0 30px;display:flex;flex-direction:column;justify-content:center;z-index:5;opacity:0;transition:opacity .6s var(--ease);}
+
+/* ===== CALIBRATION (B5 Construct — body materializes through the match-light) ===== */
+.calib{position:absolute;inset:0;z-index:5;opacity:0;transition:opacity .6s var(--ease);
+  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.02) 1px,transparent 1px);background-size:28px 28px;}
+.calib::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;background:radial-gradient(120% 55% at 50% 6%,rgba(200,255,0,.05),transparent 52%);}
 .forge.lit .calib{opacity:1;}
-.chead{position:absolute;top:12%;left:30px;right:30px;text-align:center;}
-.chead .k{font-family:var(--mono);font-size:9px;letter-spacing:.3em;color:var(--sig);text-transform:uppercase;}
-.chead .st{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:12px;height:13px;transition:opacity .3s;}
-.pbar{width:150px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);margin:16px auto 0;overflow:hidden;}
-.pbar .pf{height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);}
-.crow{display:flex;align-items:baseline;justify-content:space-between;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.06);opacity:0;transform:translateY(8px);}
-.crow.in{opacity:1;transform:none;transition:opacity .45s var(--ease),transform .45s var(--ease);}
-.crow .cl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
-.crow .cright{display:flex;align-items:center;gap:10px;}
-.crow .cv{font-family:var(--head);font-size:22px;letter-spacing:.02em;color:var(--mid);min-width:20px;text-align:right;}
-.crow .cv.locked{color:var(--white);}
-.crow .cdot{width:7px;height:7px;border-radius:50%;background:var(--dim);transition:background .3s,box-shadow .3s;}
-.crow .cv.locked + .cdot{background:var(--sig);box-shadow:0 0 8px var(--sig);}
+.chead{position:absolute;top:5.5%;left:0;right:0;text-align:center;z-index:8;}
+.chead .k{font-family:var(--mono);font-size:9px;letter-spacing:.32em;color:var(--sig);text-transform:uppercase;}
+.chead .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:9px;height:12px;}
+.pbar{width:126px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);margin:13px auto 0;overflow:hidden;}
+.pbar .pf{display:block;height:100%;width:0;background:var(--sig);box-shadow:0 0 8px var(--sig);}
+/* construct zone (body + data share the same top-down reveal) */
+.zone{position:absolute;top:12%;left:0;right:0;height:34%;z-index:2;}
+.hold{position:absolute;inset:0;}
+.hold model-viewer{position:absolute;inset:0;width:100%;height:100%;background:transparent;--poster-color:transparent;outline:none;filter:brightness(.46) contrast(1.12) saturate(.72);}
+/* the match-light: a soft glow that illuminates the body into view at the scan edge */
+.sweep{position:absolute;left:18%;right:18%;height:130px;pointer-events:none;z-index:4;opacity:0;
+  background:radial-gradient(58% 60% at 50% 50%,rgba(255,255,255,.26),rgba(255,255,255,0) 72%);
+  mix-blend-mode:screen;filter:blur(2px);}
+/* the leading scan line — thin, warm-white, soft */
+.scanline{position:absolute;left:29%;right:29%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(255,252,240,.95) 18%,rgba(255,252,240,.95) 82%,transparent);box-shadow:0 0 18px 3px rgba(255,250,235,.4);z-index:5;pointer-events:none;opacity:0;}
+/* region pins (light up as the scan crosses each) */
+.ro{position:absolute;z-index:7;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);opacity:0;white-space:nowrap;transition:opacity .45s var(--ease);}
+.ro.show{opacity:1;}
+.ro .rl{color:var(--dim);}
+.ro b{color:var(--sig);font-family:var(--head);font-size:15px;letter-spacing:.02em;margin-left:5px;}
+.ro::before{content:"";position:absolute;top:50%;width:22px;height:1px;background:var(--sig);opacity:.5;}
+.ro.l::before{right:100%;margin-right:7px;}
+.ro.r::before{left:100%;margin-left:7px;}
+/* the record */
+.log{position:absolute;left:26px;right:26px;top:50%;z-index:7;font-family:var(--mono);}
+.log .hdln{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--hair);}
+.ln{display:flex;align-items:baseline;font-size:11.5px;line-height:2.05;opacity:0;transform:translateX(-5px);}
+.ln.in{opacity:1;transform:none;transition:opacity .3s var(--ease),transform .3s var(--ease);}
+.ln .k{color:var(--mid);white-space:nowrap;}
+.ln .lead{flex:1;overflow:hidden;color:var(--dim);letter-spacing:2px;margin:0 8px;height:1em;}
+.ln .v{color:var(--dim);white-space:nowrap;transition:color .2s;}
+.ln.done .k{color:var(--muted);}.ln.done .v{color:var(--white);}
+.ln .v b{color:var(--sig);font-weight:500;}
+.cfoot{position:absolute;left:0;right:0;bottom:5%;z-index:7;text-align:center;}
+.cfoot .b{width:16px;height:16px;margin:0 auto 8px;filter:drop-shadow(0 0 6px rgba(200,255,0,.6));}
+.cfoot .b svg{width:100%;height:100%;}
+.cfoot .t{font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase;}
+@media(prefers-reduced-motion:reduce){.hold model-viewer{filter:brightness(.5) contrast(1.1) saturate(.72);}}
 
 /* transition flash */
 .flash{position:fixed;inset:0;background:#000;z-index:90;opacity:0;pointer-events:none;transition:opacity .45s var(--ease);}
@@ -115,8 +146,22 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     <div class="fscrim"></div>
     <canvas class="sparks" id="sparks"></canvas>
     <div class="calib" id="calib">
-      <div class="chead"><div class="k">ZEAL · Calibrating</div><div class="st" id="cst">Waking the engine</div><div class="pbar"><div class="pf" id="pf"></div></div></div>
-      <div class="rows" id="rows"></div>
+      <div class="zone" id="zone">
+        <div class="hold" id="hold">
+          <model-viewer id="mv" src="brand-assets/body-model/3d/obeyos-model-male-3d.glb" auto-rotate auto-rotate-delay="0" rotation-per-second="10deg" camera-orbit="0deg 90deg 100%" camera-target="0m 0m 0m" field-of-view="26deg" exposure="0.72" environment-image="neutral" shadow-intensity="0" disable-zoom disable-pan interaction-prompt="none" loading="eager"></model-viewer>
+        </div>
+        <div class="sweep" id="sweep"></div>
+        <div class="scanline" id="line"></div>
+      </div>
+      <div class="ro r" id="ro-muscle" data-y="22" style="left:64%;top:21%"><span class="rl">Muscle</span><b>42%</b></div>
+      <div class="ro l" id="ro-fat" data-y="30" style="right:64%;top:29%"><span class="rl">Body fat</span><b>22%</b></div>
+      <div class="ro r" id="ro-knee" data-y="38" style="left:62%;top:37%"><span class="rl">L-knee</span><b>Flagged</b></div>
+      <div class="chead"><div class="k">ZEAL · Calibration</div><div class="st" id="cst">Powering the engine</div><div class="pbar"><i class="pf" id="pf"></i></div></div>
+      <div class="log" id="log"><div class="hdln">Read · your signals</div></div>
+      <div class="cfoot">
+        <div class="b"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#C8FF00"/></svg></div>
+        <div class="t">ZEAL engine · do not close</div>
+      </div>
     </div>
   </section>
 
@@ -144,25 +189,32 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     return '<div class="et"><svg viewBox="0 0 24 24">'+IC[e[0]]+'</svg><div class="ev">'+e[1]+'</div><div class="ek">'+e[2]+'</div></div>';
   }).join('');
 
-  /* ---- CALIBRATION rows ---- */
-  var ROWS=[
-    ['Reading body composition','Body fat','22%'],
-    ['Estimating skeletal muscle','Muscle mass','42%'],
-    ['Pulling overnight recovery','HRV · sleep','68 · 8.1h'],
-    ['Mapping your injury history','Left knee','Flagged'],
-    ['Matching the program library','Programs','31 → 1'],
-    ['Locking your training tier','Tier','2']
-  ];
-  var STEP=1500,HOLD=750,START=600,TOTAL=START+ROWS.length*STEP+400;
-  var rowsEl=document.getElementById('rows');
-  rowsEl.innerHTML=ROWS.map(function(r,i){return '<div class="crow" id="cr'+i+'"><span class="cl">'+r[1]+'</span><span class="cright"><span class="cv" id="cv'+i+'"></span><span class="cdot"></span></span></div>';}).join('');
-  var CH='0123456789%·HMSFLAGEDKNRThkm',timers=[];
+  /* ---- CALIBRATION (B5 Construct — the record) ---- */
+  var LOG=[['read body composition','22% <b>BF</b>'],
+    ['estimate skeletal muscle','42% <b>SMM</b>'],
+    ['pull overnight recovery','68 · 8.1H'],
+    ['map injury history','<b>L-KNEE</b>'],
+    ['match program library','31 → <b>1</b>'],
+    ['lock training tier','TIER <b>2</b>']];
+  var logEl=document.getElementById('log');
+  LOG.forEach(function(r,i){var d=document.createElement('div');d.className='ln';d.id='ln'+i;
+    d.innerHTML='<span class="k">'+r[0]+'</span><span class="lead"></span><span class="v" id="lv'+i+'"></span>';logEl.appendChild(d);});
+  var timers=[];
   function T(fn,ms){var id=setTimeout(fn,ms);timers.push(id);return id;}
-  function scramble(el,val,dur){
-    var iv=setInterval(function(){var s='';for(var i=0;i<val.length;i++){s+=val[i]===' '?' ':CH[Math.floor(Math.random()*CH.length)];}el.textContent=s;},55);
-    timers.push(iv);
-    T(function(){clearInterval(iv);el.textContent=val;el.classList.add('locked');},dur);
+  function printLine(i){var ln=document.getElementById('ln'+i),lead=ln.querySelector('.lead'),v=document.getElementById('lv'+i);
+    ln.classList.add('in');lead.textContent=new Array(26).join('.');T(function(){v.innerHTML=LOG[i][1];ln.classList.add('done');},240);}
+
+  var calib=document.getElementById('calib'),zone=document.getElementById('zone'),hold=document.getElementById('hold'),
+      line=document.getElementById('line'),sweep=document.getElementById('sweep');
+  function setReveal(fracFromTopPx){
+    // the body MATERIALIZES through the scan line — solid above, feathering in across the line
+    var h=zone.clientHeight, revPct=h?Math.max(0,Math.min(100,(fracFromTopPx/h)*100)):0;
+    var a=Math.max(0,revPct-5), b=Math.min(100,revPct+5);
+    var mask='linear-gradient(180deg,#000 '+a+'%,rgba(0,0,0,0) '+b+'%)';
+    hold.style.webkitMaskImage=mask;hold.style.maskImage=mask;
   }
+  var PINS=[document.getElementById('ro-muscle'),document.getElementById('ro-fat'),document.getElementById('ro-knee')];
+  setReveal(0); // body hidden until the scan lights it
 
   /* ---- CONVERGENCE SPARKS (system coming online) ---- */
   var cv=document.getElementById('sparks'),cx2=cv.getContext('2d'),raf=null;
@@ -196,17 +248,41 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     raf=requestAnimationFrame(frame);
   }
 
-  /* ---- CALIBRATION run ---- */
+  /* ---- CALIBRATION run (one pass: scan reveals the body, the record builds, then hand-off) ---- */
   function runCalibration(){
     var pf=document.getElementById('pf'),st=document.getElementById('cst');
-    st.textContent='Waking the engine';pf.style.transition='none';pf.style.width='0';
-    T(function(){pf.style.transition='width '+(TOTAL/1000)+'s linear';pf.style.width='100%';},80);
-    ROWS.forEach(function(r,i){
-      T(function(){st.textContent=r[0];document.getElementById('cr'+i).classList.add('in');scramble(document.getElementById('cv'+i),r[2],HOLD);},START+i*STEP);
-    });
-    T(function(){st.textContent='Locked';},START+ROWS.length*STEP);
+    st.textContent='Powering the engine';pf.style.transition='none';pf.style.width='0';
+    setReveal(0);
+    var SCAN=5600, LOGSTART=2100, GAP=920, TOTAL=Math.max(SCAN+600, LOGSTART+LOG.length*GAP+400);
+    T(function(){pf.style.transition='width '+(TOTAL/1000)+'s linear';pf.style.width='100%';},60);
+
+    // ONE animation drives the scan line AND the body/data reveal — perfectly synced
+    T(function(){
+      line.style.opacity='1';sweep.style.opacity='1';
+      var start=null, zoneTop=zone.getBoundingClientRect().top-calib.getBoundingClientRect().top;
+      function step(ts){
+        if(!start)start=ts;var t=Math.min(1,(ts-start)/SCAN);
+        var e=t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2; // ease-in-out — cinematic
+        var yPx=zone.clientHeight*e;              // reveal boundary in zone px
+        setReveal(yPx);
+        // line + sweep are ZONE children — zone-relative top, so the match rides the reveal edge
+        line.style.top=yPx+'px';
+        sweep.style.top=(yPx-65)+'px';
+        // pins light up as the scan crosses each region
+        var boundaryPct=((zoneTop+yPx)/calib.clientHeight)*100;
+        PINS.forEach(function(p){if(boundaryPct> +p.dataset.y)p.classList.add('show');});
+        st.textContent = t<0.5?'Scanning upper body':'Scanning lower body';
+        if(t<1)requestAnimationFrame(step);
+        else{ setReveal(zone.clientHeight+8); line.style.transition='opacity .6s';sweep.style.transition='opacity .6s';line.style.opacity='0';sweep.style.opacity='0';st.textContent='Reading your signals'; }
+      }
+      requestAnimationFrame(step);
+    },240);
+
+    // the record builds
+    LOG.forEach(function(r,i){T(function(){printLine(i);},LOGSTART+i*GAP);});
+    T(function(){st.textContent='Calibration locked';},LOGSTART+LOG.length*GAP);
     // end → fade to black → the program page (separate, rich)
-    T(function(){ toProgram(); },TOTAL+650);
+    T(function(){ toProgram(); },TOTAL+1400);
   }
 
   var recap=document.getElementById('recap'),forge=document.getElementById('forge'),vid=document.getElementById('bgv'),flash=document.getElementById('flash');
@@ -220,7 +296,12 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
       forge.classList.add('show');
       try{vid.currentTime=0;var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){});}catch(e){}
       flash.classList.remove('on');            // reveal black forge + sparks
-      if(rm){ forge.classList.add('lit'); ROWS.forEach(function(r,i){document.getElementById('cr'+i).classList.add('in');var c=document.getElementById('cv'+i);c.textContent=r[2];c.classList.add('locked');}); setTimeout(toProgram,1400); return; }
+      if(rm){ // static final state — no scan, content preserved
+        forge.classList.add('lit'); setReveal(zone.clientHeight+8);
+        PINS.forEach(function(p){p.classList.add('show');});
+        LOG.forEach(function(r,i){var ln=document.getElementById('ln'+i);ln.classList.add('in');document.getElementById('lv'+i).innerHTML=r[1];ln.classList.add('done');ln.querySelector('.lead').textContent=new Array(26).join('.');});
+        document.getElementById('cst').textContent='Calibration locked';document.getElementById('pf').style.width='100%';
+        setTimeout(toProgram,2200); return; }
       // sparks converge → the engine lights → calibration boots
       convergeSparks(function(){ forge.classList.add('lit'); runCalibration(); });
     },470);
