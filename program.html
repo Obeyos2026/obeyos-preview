@@ -226,7 +226,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 </div>
 
 <div class="dock">
-  <button class="lock" onclick="location.href='dash-live.html'">Lock it in →</button>
+  <button class="lock" onclick="try{localStorage.setItem('obeyos_program_locked','1')}catch(e){};location.href='dash-live.html'">Lock it in →</button>
   <button class="adj" onclick="location.href='program-forge.html'">Adjust the build</button>
 </div>
 
