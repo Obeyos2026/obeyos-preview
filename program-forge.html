@@ -179,6 +179,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var IC={fat:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/><path d="M9 15l6-4"/>',lean:'<path d="M4 16h16M7 11h10M10 6h4"/>',str:'<path d="M4 18l6-9 4 5 6-9"/>'};
 
+  /* return target — prod dashboard gate arrives with ?return=dashboard.html;
+     program.html's "Lock it in" reads it back (default: dash-live preview) */
+  try{
+    var _ret=new URLSearchParams(location.search).get('return');
+    if(_ret==='dashboard.html'||_ret==='dash-live.html')localStorage.setItem('obeyos_forge_return',_ret);
+  }catch(e){}
+
   /* ---- DATA — ForgeData (Supabase profile when authed, mock/demo otherwise) ---- */
   var D=ForgeData.DEFAULTS, LOG=[];
   function applyData(d){
