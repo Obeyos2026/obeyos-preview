@@ -176,6 +176,17 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var IC={fat:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/><path d="M9 15l6-4"/>',lean:'<path d="M4 16h16M7 11h10M10 6h4"/>',str:'<path d="M4 18l6-9 4 5 6-9"/>'};
 
+  /* ---- sex-aware figures (mock until Supabase: ?sex=female|male overrides + persists) ---- */
+  var SEX='male';
+  try{
+    var q=new URLSearchParams(location.search).get('sex');
+    if(q==='male'||q==='female')localStorage.setItem('obeyos_sex',q);
+    SEX=localStorage.getItem('obeyos_sex')||'male';
+  }catch(e){}
+  document.querySelectorAll('#zone model-viewer').forEach(function(m){m.src='brand-assets/body-model/3d/obeyos-model-'+SEX+'-3d.glb';});
+  document.querySelector('.bc.now img').src='brand-assets/body-model/grid-clean/obeyos-model-'+SEX+'-f2m1.webp';
+  document.querySelector('.bc.tgt img').src='brand-assets/body-model/grid-clean/obeyos-model-'+SEX+'-f1m2.webp';
+
   /* ---- RECAP · path + tiles ---- */
   var STEPS=[
     ['WK 0','Where you are','22% body fat · Tier 2 · left knee flagged','','on'],
@@ -230,8 +241,8 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     }
     return PROF[PROF.length-1][1];
   }
-  /* embers — P2 · REDUCED (founder default); tune EMBER_RATE only */
-  var EMBER_RATE=1.2, ECOLS=['210,255,60','200,255,0','240,255,190'];
+  /* embers — P0 · NONE (founder pick 2026-07-23); raise EMBER_RATE to bring them back */
+  var EMBER_RATE=0, ECOLS=['210,255,60','200,255,0','240,255,190'];
   var ectx=cfx.getContext('2d'),EW=0,EH=0;
   function sizeEfx(){var d=window.devicePixelRatio||1,r=cfx.getBoundingClientRect();cfx.width=r.width*d;cfx.height=r.height*d;ectx.setTransform(d,0,0,d,0,0);EW=r.width;EH=r.height;}
   var sparksE=[];
