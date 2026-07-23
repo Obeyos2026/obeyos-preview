@@ -312,10 +312,13 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
   applyData(D);
   ForgeData.load().then(applyData);
 
-  // LOCK IT IN — the real write: active custom_programs row (localStorage fallback when unauthed)
+  // LOCK IT IN — the real write: active custom_programs row (localStorage fallback when
+  // unauthed). Returns to whoever gated us in (prod dashboard.html or the dash-live preview).
   document.getElementById('lockBtn').addEventListener('click',function(){
     var b=this; b.disabled=true; b.textContent='Locking…';
-    ForgeData.lockProgram(D).then(function(){ location.href='dash-live.html'; });
+    var ret='dash-live.html';
+    try{var r=localStorage.getItem('obeyos_forge_return');if(r==='dashboard.html'||r==='dash-live.html')ret=r;}catch(e){}
+    ForgeData.lockProgram(D).then(function(){ location.href=ret; });
   });
 
   // fade in from black + play the reveal
