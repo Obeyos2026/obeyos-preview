@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/obeyos-cookie-storage.js"></script>
+<script src="js/forge-data.js"></script>
 <style>
 :root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
   --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;--sig:var(--lime);
@@ -226,7 +229,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 </div>
 
 <div class="dock">
-  <button class="lock" onclick="try{localStorage.setItem('obeyos_program_locked','1')}catch(e){};location.href='dash-live.html'">Lock it in →</button>
+  <button class="lock" id="lockBtn">Lock it in →</button>
   <button class="adj" onclick="location.href='program-forge.html'">Adjust the build</button>
 </div>
 
@@ -239,11 +242,40 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     upper:'<path d="M4 16h16M7 11h10M10 6h4"/>',lower:'<path d="M4 8h16M7 13h10M10 18h4"/>'};
   function sv(n){return '<svg viewBox="0 0 24 24">'+IC[n]+'</svg>';}
 
-  document.getElementById('why').innerHTML=[
-    ['recomp','<b>Recomp goal</b> — at 22% body fat you can build muscle and lose fat together, so ZEAL set a strength base with short metabolic finishers at a slight deficit.'],
-    ['days','<b>4 days, Upper / Lower</b> — you gave 4 training days, so each muscle gets hit twice a week: the growth sweet spot for your level.'],
-    ['knee','<b>Left knee protected</b> — you flagged it, so back-squats and deep lunges are swapped for leg-press and hip-hinge work.']
-  ].map(function(w){return '<div class="wy">'+sv(w[0])+'<span class="wt">'+w[1]+'</span></div>';}).join('');
+  /* ---- DATA — ForgeData (Supabase profile when authed, mock/demo otherwise) ---- */
+  var D=ForgeData.DEFAULTS;
+  var GOAL_WORD={recomp:'Recomp goal',fat_loss:'Fat-loss goal',lean_bulk:'Muscle goal',performance:'Performance goal'};
+  function applyData(d){
+    D=d;
+    // hero name — 'UPPER / LOWER' → two lines
+    var parts=String(d.programName).split(/\s*\/\s*/);
+    document.querySelector('.pname .ptxt').innerHTML=parts.length>1?(parts[0]+'<br>/ '+parts.slice(1).join(' / ')):d.programName;
+    // essence + why — real readings, injury-aware
+    var injEss=d.injuryLabel?(' Matched to your signals, tuned to your '+d.injuryLabel.toLowerCase().replace(/^l-|^r-/,'')+'.'):' Matched to your signals.';
+    var GOAL_ESS={recomp:'build muscle and strip fat at once',fat_loss:'strip fat while holding your muscle',lean_bulk:'add muscle with minimal fat',performance:'build strength and output'};
+    document.querySelector('.essence').innerHTML='A <b>'+(GOAL_WORD[d.goal]||'training').replace(' goal','').toLowerCase()+' block</b> — '+(GOAL_ESS[d.goal]||GOAL_ESS.recomp)+'.'+injEss;
+    var whys=[
+      ['recomp','<b>'+(GOAL_WORD[d.goal]||'Your goal')+'</b> — at '+Math.round(d.bodyFatPct)+'% body fat you can build muscle and lose fat together, so ZEAL set a strength base with short metabolic finishers at a slight deficit.'],
+      ['days','<b>'+d.trainingDays+' days, '+d.programName+'</b> — you gave '+d.trainingDays+' training days, so each muscle gets hit twice a week: the growth sweet spot for your level.']
+    ];
+    if(d.injuryLabel)whys.push(['knee','<b>'+d.injuryLabel+' protected</b> — you flagged it, so back-squats and deep lunges are swapped for leg-press and hip-hinge work.']);
+    document.getElementById('why').innerHTML=whys.map(function(w){return '<div class="wy">'+sv(w[0])+'<span class="wt">'+w[1]+'</span></div>';}).join('');
+    // spec — frequency dots + days + tier ladder
+    var dots=document.querySelectorAll('.wkdots i');
+    dots.forEach(function(el,i){el.className=i<d.trainingDays?'on':'';});
+    document.querySelectorAll('.sc .scv em').forEach(function(em){
+      var t=em.parentElement.textContent;
+      if(/days \/ week/.test(t))em.textContent=d.trainingDays;
+      if(/min/.test(t)&&em.parentElement.textContent.indexOf('≈')>-1)em.textContent=d.sessionDuration;
+    });
+    var lad=document.querySelectorAll('.ladder i');
+    lad.forEach(function(el,i){el.className=(i+1)===d.tierNum?'on':'';});
+    var tierV=document.querySelector('.ladder').parentElement.querySelector('.scv em'); if(tierV)tierV.textContent=d.tierNum;
+    document.querySelector('.tiermean b').textContent='Tier '+d.tierNum;
+    // expected tiles
+    var cut=(d.goal==='fat_loss'||d.goal==='recomp'), drop=Math.max(0,Math.round(d.bodyFatPct)-d.targetBfPct);
+    var evs=document.querySelectorAll('#exp .ev'); if(evs.length)evs[0].textContent=cut?('−'+drop+'%'):'held';
+  }
 
   var PH=[['1','FOUNDATION','Groove the patterns, build work capacity.','WK 1–4','Moderate',true],
           ['2','BUILD','Add load and volume, drive hypertrophy.','WK 5–8','High',false],
@@ -275,6 +307,16 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
            ['4','BODY-PART SPLIT','Too much isolation, too little frequency for recomp.','71%']];
   document.getElementById('alts').innerHTML=ALT.map(function(a){
     return '<div class="alt"><span class="ar">'+a[0]+'</span><div class="am"><div class="an">'+a[1]+'</div><div class="ay">'+a[2]+'</div></div><span class="af">'+a[3]+'</span></div>';}).join('');
+
+  // data skin — instant with defaults, then the real profile (if authed)
+  applyData(D);
+  ForgeData.load().then(applyData);
+
+  // LOCK IT IN — the real write: active custom_programs row (localStorage fallback when unauthed)
+  document.getElementById('lockBtn').addEventListener('click',function(){
+    var b=this; b.disabled=true; b.textContent='Locking…';
+    ForgeData.lockProgram(D).then(function(){ location.href='dash-live.html'; });
+  });
 
   // fade in from black + play the reveal
   requestAnimationFrame(function(){requestAnimationFrame(function(){
