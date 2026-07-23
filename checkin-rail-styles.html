@@ -45,7 +45,9 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 
 .sl{position:relative;height:58px;margin-top:2px;touch-action:none;cursor:pointer;}
 .sl .trk{position:absolute;left:13px;right:13px;top:22px;height:1.5px;background:rgba(255,255,255,.13);border-radius:1px;}
-.sl .fill{position:absolute;left:13px;top:22px;height:1.5px;width:0;background:var(--rc,transparent);box-shadow:0 0 8px color-mix(in srgb,var(--rc,transparent) 60%,transparent);}
+/* fill FADES: dim at the low end, full strength only at the thumb */
+.sl .fill{position:absolute;left:13px;top:22px;height:1.5px;width:0;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--rc,transparent) 14%,transparent),color-mix(in srgb,var(--rc,transparent) 45%,transparent) 55%,var(--rc,transparent));}
 .sl .stop{position:absolute;top:22px;width:1.5px;height:7px;transform:translate(-50%,-50%);background:rgba(255,255,255,.22);}
 .sl .lb{position:absolute;top:37px;transform:translateX(-50%);font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;transition:color .25s;white-space:nowrap;}
 .sl .lb:first-of-type{transform:none;}
@@ -73,17 +75,47 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .sf .bar i.lit{background:var(--tc);}
 .sf .bar i.tip{height:15px;box-shadow:0 0 7px var(--tc);}
 
-.cta-out{position:relative;display:block;width:100%;height:46px;margin-top:14px;border-radius:23px;background:rgba(200,255,0,.045);
-  border:1px solid color-mix(in srgb,var(--lime) 45%,transparent);color:var(--lime);
+/* CTA — de-greened: neutral chrome, the lime lives ONLY in the moving sweep */
+.cta-out{position:relative;display:block;width:100%;height:46px;margin-top:14px;border-radius:23px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.22);color:var(--white);
   font-family:var(--head);font-size:17px;letter-spacing:.09em;cursor:pointer;overflow:hidden;transition:opacity .3s,box-shadow .3s;}
 .cta-out:disabled{opacity:.3;cursor:not-allowed;}
-.cta-out:not(:disabled){box-shadow:0 0 18px rgba(200,255,0,.14),inset 0 0 14px rgba(200,255,0,.05);}
+.cta-out:not(:disabled){box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
 .cta-out:not(:disabled)::after{content:"";position:absolute;top:0;bottom:0;width:46px;
-  background:linear-gradient(100deg,transparent,rgba(200,255,0,.28),transparent);animation:ctaSweep 2.6s var(--ease) infinite;}
+  background:linear-gradient(100deg,transparent,rgba(200,255,0,.30),transparent);animation:ctaSweep 2.6s var(--ease) infinite;}
 @keyframes ctaSweep{0%{left:-25%}55%{left:105%}100%{left:105%}}
-.cta-out:not(:disabled):active{background:var(--lime);color:#0A0D12;}
+.cta-out:not(:disabled):active{background:var(--lime);color:#0A0D12;border-color:var(--lime);}
 
 .skip{display:block;width:100%;background:none;border:none;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;cursor:pointer;padding:11px 0 4px;text-align:center;}
+
+/* "?" — how the score is calculated */
+.qbtn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-left:7px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.22);background:none;color:var(--mid);font-family:var(--mono);font-size:10px;cursor:pointer;vertical-align:-3px;}
+.hscrim{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .4s;z-index:30;}
+.hscrim.open{opacity:1;pointer-events:auto;}
+.hsheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(102%);width:100%;max-width:430px;
+  background:#0C0F15;border-top:1px solid var(--hair);border-radius:22px 22px 0 0;z-index:31;transition:transform .5s var(--ease);
+  padding:20px 24px 34px;}
+.hsheet.open{transform:translateX(-50%) translateY(0);}
+.hsheet .grab{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);margin:0 auto 16px;}
+.hsheet h3{font-family:var(--head);font-size:24px;letter-spacing:.03em;}
+.hsheet .hsub{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.hrow{display:flex;align-items:center;gap:12px;margin-top:16px;}
+.hrow .hn{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;width:72px;flex-shrink:0;}
+.hrow .htrk{flex:1;position:relative;height:3px;border-radius:2px;background:rgba(255,255,255,.09);overflow:hidden;}
+.hrow .hfill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--hc) 15%,transparent),var(--hc));transition:width .7s var(--ease);}
+.hrow .hv{font-family:var(--head);font-size:19px;color:var(--hc,var(--dim));width:38px;text-align:right;flex-shrink:0;}
+.heq{margin-top:20px;padding-top:15px;border-top:1px solid var(--hair);display:flex;align-items:baseline;justify-content:center;gap:8px;
+  font-family:var(--mono);font-size:12px;color:var(--mid);opacity:0;transition:opacity .5s;}
+.heq.show{opacity:1;}
+.heq b{font-family:var(--head);font-size:15px;font-weight:400;color:var(--white);letter-spacing:.03em;}
+.hres{text-align:center;margin-top:12px;opacity:0;transition:opacity .5s;}
+.hres.show{opacity:1;}
+.hres .n{font-family:var(--head);font-size:46px;line-height:.9;color:var(--sc,var(--dim));text-shadow:0 0 20px color-mix(in srgb,var(--sc,transparent) 35%,transparent);}
+.hres .w{font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;color:var(--sc,var(--mid));text-transform:uppercase;margin-top:4px;}
+.hnote{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);text-align:center;margin-top:14px;line-height:1.5;opacity:0;transition:opacity .5s;}
+.hnote.show{opacity:1;}
 .skipped{display:none;text-align:center;padding-top:7vh;}
 .skipped.show{display:block;}
 .skipped .b{width:52px;height:52px;margin:0 auto 14px;filter:drop-shadow(0 0 10px rgba(200,255,0,.5));}
@@ -146,7 +178,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     '<div class="sf" id="sf">'+
       '<div class="top">'+
         '<div class="rg"><canvas id="sfcv"></canvas><div class="cnum" id="scnum">—</div></div>'+
-        '<div><div class="k2">Check-in score</div><div class="band" id="scband">Set all three</div>'+
+        '<div><div class="k2">Check-in score<button class="qbtn" id="qbtn" aria-label="How it is calculated">?</button></div><div class="band" id="scband">Set all three</div>'+
         '<div class="hint">Sharpens the readiness ZEAL reads from your wearables — three reads, one number.</div></div>'+
       '</div>'+
       '<div class="bar" id="sfbar">'+Array(TICKS).fill('<i></i>').join('')+'</div>'+
@@ -161,6 +193,68 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
     stage.querySelectorAll('.row,.sf,.cta-out,.skip').forEach(function(n){n.style.display='none';});
     document.getElementById('skipped').classList.add('show');hap(10);
   });
+
+  /* ── "?" — the calculation, ANIMATED: sliders replay → values → the math → the score ── */
+  var hs=document.createElement('div');hs.innerHTML=
+    '<div class="hscrim" id="hscrim"></div>'+
+    '<div class="hsheet" id="hsheet"><div class="grab"></div>'+
+      '<h3>HOW YOUR SCORE IS BUILT</h3><div class="hsub">Three reads · one number · no model</div>'+
+      CATS.map(function(c,i){return '<div class="hrow"><span class="hn">'+c.name+'</span>'+
+        '<span class="htrk"><span class="hfill" id="hf'+i+'"></span></span><span class="hv" id="hv'+i+'">—</span></div>';}).join('')+
+      '<div class="heq" id="heq"></div>'+
+      '<div class="hres" id="hres"><div class="n" id="hnum">0</div><div class="w" id="hband"></div></div>'+
+      '<div class="hnote" id="hnote">Each read maps to 25 · 50 · 75 · 100. Your score is their average — same inputs, same number, every time. It sharpens the readiness ZEAL reads from your wearables; the verdict itself always comes from the engine.</div>'+
+    '</div>';
+  document.body.appendChild(hs);
+  var hTimers=[];
+  function hT(f,ms){hTimers.push(setTimeout(f,ms));}
+  function openHow(){
+    document.getElementById('hscrim').classList.add('open');
+    document.getElementById('hsheet').classList.add('open');
+    hTimers.forEach(clearTimeout);hTimers=[];
+    var t=allSet()?total():null,b=t!=null?band(t):null;
+    // reset
+    CATS.forEach(function(c,i){
+      var f=document.getElementById('hf'+i),v=document.getElementById('hv'+i);
+      f.style.transition='none';f.style.width='0';v.textContent='—';v.style.removeProperty('--hc');f.style.removeProperty('--hc');
+    });
+    document.getElementById('heq').classList.remove('show');
+    document.getElementById('hres').classList.remove('show');
+    document.getElementById('hnote').classList.remove('show');
+    // beat 1 — the three sliders replay, staggered
+    CATS.forEach(function(c,i){
+      hT(function(){
+        var p=picks[i],f=document.getElementById('hf'+i),v=document.getElementById('hv'+i);
+        if(p==null){v.textContent='—';return;}
+        f.style.setProperty('--hc',GRADE[p]);v.style.setProperty('--hc',GRADE[p]);
+        f.style.transition=rm?'none':'width .7s var(--ease)';
+        f.style.width=(VALS[p])+'%';
+        countUp(v,VALS[p],650);hap(6);
+      },500+i*750);
+    });
+    // beat 2 — the math
+    hT(function(){
+      var eq=document.getElementById('heq');
+      eq.innerHTML='<span>(</span>'+picks.map(function(p){return '<b>'+(p!=null?VALS[p]:'—')+'</b>';}).join('<span>+</span>')+
+        '<span>)</span><span>÷ 3</span>';
+      eq.classList.add('show');
+    },500+3*750+200);
+    // beat 3 — the score lands
+    hT(function(){
+      var r=document.getElementById('hres');
+      if(t!=null){r.style.setProperty('--sc',b[2]);document.getElementById('hband').textContent=b[1];
+        r.classList.add('show');countUp(document.getElementById('hnum'),t,700);hap(10);}
+      else{document.getElementById('hband').textContent='SET ALL THREE FIRST';r.classList.add('show');}
+      document.getElementById('hnote').classList.add('show');
+    },500+3*750+900);
+  }
+  function closeHow(){
+    document.getElementById('hscrim').classList.remove('open');
+    document.getElementById('hsheet').classList.remove('open');
+    hTimers.forEach(clearTimeout);hTimers=[];
+  }
+  document.getElementById('qbtn').addEventListener('click',openHow);
+  document.getElementById('hscrim').addEventListener('click',closeHow);
   document.getElementById('cta').addEventListener('click',function(){
     sent=true;this.textContent='SIGNAL SENT · '+total();this.disabled=true;hap(16);});
 
