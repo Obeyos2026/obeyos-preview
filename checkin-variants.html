@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>OBEY OS · Check-in Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0D12;--white:#F9FAFB;--muted:#8A93A6;--mid:#747E8C;--dim:#5C6679;--hair:rgba(255,255,255,.08);
+  --lime:#C8FF00;--mint:#00E5A0;--amber:#F59E0B;--red:#EF4444;--cyan:#00D4FF;
+  --glass:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  --head:'Bebas Neue',sans-serif;--body:'Inter',sans-serif;--mono:'DM Mono',monospace;--ease:cubic-bezier(.23,1,.32,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#000;height:100%;}
+body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;}
+.screen{position:relative;width:100%;max-width:430px;height:100dvh;min-height:760px;overflow:hidden;
+  background:var(--bg);background-image:radial-gradient(rgba(200,255,0,.024) 1px,transparent 1px);background-size:28px 28px;}
+.screen::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(120% 50% at 50% 0%,rgba(200,255,0,.045),transparent 55%);}
+
+/* chrome */
+.hd{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:baseline;justify-content:space-between;padding:20px 22px 0;}
+.hd .k{font-family:var(--mono);font-size:9px;letter-spacing:.28em;color:var(--lime);text-transform:uppercase;}
+.hd .d{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;}
+.vname{position:absolute;top:44px;left:0;right:0;z-index:20;text-align:center;font-family:var(--head);font-size:21px;letter-spacing:.04em;}
+.vsub{position:absolute;top:72px;left:0;right:0;z-index:20;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;}
+.tabs{position:absolute;left:16px;right:16px;bottom:3.5%;z-index:20;display:flex;gap:6px;}
+.tab{flex:1;background:none;border:1px solid var(--hair);border-radius:9px;padding:8px 2px 7px;cursor:pointer;text-align:center;transition:border-color .25s,background .25s;}
+.tab .tn{font-family:var(--head);font-size:13px;letter-spacing:.05em;color:var(--dim);line-height:1;transition:color .25s;}
+.tab .tk{font-family:var(--mono);font-size:6px;letter-spacing:.09em;color:var(--dim);text-transform:uppercase;margin-top:3px;opacity:.7;}
+.tab.on{border-color:color-mix(in srgb,var(--lime) 45%,transparent);background:color-mix(in srgb,var(--lime) 5%,transparent);}
+.tab.on .tn{color:var(--lime);}
+
+.stage{position:absolute;top:96px;bottom:11%;left:0;right:0;z-index:5;}
+.vwrap{position:absolute;inset:0;display:none;}
+.vwrap.on{display:block;}
+
+/* the 3D icon — float + tilt (the S6/calc vocabulary) */
+.ico3{position:relative;pointer-events:none;}
+.ico3 img{width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;
+  -webkit-mask:radial-gradient(72% 76% at 50% 50%,#000 58%,transparent 92%);
+  mask:radial-gradient(72% 76% at 50% 50%,#000 58%,transparent 92%);} /* screen-blend + radial fade — the render square melts into our ground */
+.ico3.live{animation:icoFloat 5.2s ease-in-out infinite;}
+.ico3.live img{animation:icoTilt 8.5s ease-in-out infinite;}
+@keyframes icoFloat{0%,100%{transform:translateY(-5px)}50%{transform:translateY(6px)}}
+@keyframes icoTilt{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+.ico3 .halo{position:absolute;inset:-18%;z-index:-1;border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(200,255,0,.14),transparent 70%);filter:blur(6px);}
+
+/* shared level colors: 1 red → 2 amber → 3 mint → 4 lime */
+/* CTA */
+.cta{position:absolute;left:24px;right:24px;bottom:0;height:46px;border:none;border-radius:23px;background:var(--lime);color:#0A0D12;
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:opacity .3s;}
+.cta:disabled{opacity:.32;cursor:not-allowed;}
+
+/* ══ V1 · CEREMONY — one category per screen, cinematic slide ══ */
+.c1-track{position:absolute;inset:0;overflow:hidden;}
+.c1-step{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding-top:2%;
+  opacity:0;transform:translateX(70px);transition:opacity .55s var(--ease),transform .55s var(--ease),filter .55s var(--ease);pointer-events:none;filter:blur(4px);}
+.c1-step.cur{opacity:1;transform:none;filter:none;pointer-events:auto;}
+.c1-step.gone{transform:translateX(-70px);}
+.c1-idx{font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase;}
+.c1-ico{width:172px;height:172px;margin-top:10px;}
+.c1-name{font-family:var(--head);font-size:40px;letter-spacing:.03em;margin-top:6px;}
+.c1-q{font-family:var(--body);font-weight:300;font-size:13px;color:var(--muted);margin-top:4px;}
+.c1-levels{width:calc(100% - 56px);margin-top:22px;display:flex;flex-direction:column;}
+.c1-lv{display:flex;align-items:center;gap:12px;padding:13px 6px;border-top:1px solid var(--hair);cursor:pointer;transition:background .2s;}
+.c1-lv:first-child{border-top:none;}
+.c1-lv .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--dim);transition:all .2s;}
+.c1-lv .nm{flex:1;font-family:var(--head);font-size:19px;letter-spacing:.03em;color:var(--mid);transition:color .2s;}
+.c1-lv .ds{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;}
+.c1-lv.sel .dot{background:var(--lc);border-color:var(--lc);box-shadow:0 0 9px var(--lc);}
+.c1-lv.sel .nm{color:var(--lc);}
+.c1-done{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  opacity:0;pointer-events:none;transition:opacity .5s var(--ease);}
+.c1-done.show{opacity:1;pointer-events:auto;}
+.c1-sum{display:flex;gap:22px;margin:6px 0 12px;}
+.c1-sum .s{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.c1-sum .s img{width:52px;height:52px;object-fit:contain;}
+.c1-sum .s b{font-family:var(--head);font-size:15px;color:var(--sc);letter-spacing:.03em;font-weight:400;}
+.c1-sum .s span{font-family:var(--mono);font-size:7px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.c1-done .big{font-family:var(--head);font-size:34px;letter-spacing:.03em;}
+.c1-done .note{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;}
+
+/* ══ V2 · DIAL — one instrument, icon in the middle, arc = the reading ══ */
+.c2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;}
+.c2-cats{display:flex;gap:10px;margin-top:1%;}
+.c2-cat{width:76px;padding:10px 4px 8px;border-radius:13px;border:1px solid var(--hair);background:var(--glass);cursor:pointer;text-align:center;transition:border-color .3s,box-shadow .3s;}
+.c2-cat img{width:44px;height:44px;object-fit:contain;filter:grayscale(.7) brightness(.7);transition:filter .3s;}
+.c2-cat .n{font-family:var(--mono);font-size:7px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+.c2-cat .st{font-family:var(--mono);font-size:6.5px;letter-spacing:.06em;color:var(--lc,var(--dim));text-transform:uppercase;margin-top:3px;height:8px;}
+.c2-cat.act{border-color:color-mix(in srgb,var(--lime) 40%,transparent);box-shadow:0 0 16px rgba(200,255,0,.1);}
+.c2-cat.act img{filter:none;}
+.c2-dial{position:relative;width:250px;height:250px;margin-top:22px;}
+.c2-dial canvas{position:absolute;inset:0;width:100%;height:100%;}
+.c2-ico{position:absolute;left:50%;top:50%;width:108px;height:108px;transform:translate(-50%,-54%);}
+.c2-word{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:var(--head);font-size:23px;letter-spacing:.04em;color:var(--lc,var(--mid));}
+.c2-hint{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-top:12px;opacity:.7;}
+
+/* ══ V3 · DECK — glass cards, one flies off per answer ══ */
+.c3{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;}
+.c3-stack{position:relative;width:calc(100% - 52px);height:64%;margin-top:3%;}
+.c3-card{position:absolute;inset:0;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:var(--glass);
+  backdrop-filter:blur(14px) saturate(115%);-webkit-backdrop-filter:blur(14px) saturate(115%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 24px 50px -22px rgba(0,0,0,.85);
+  display:flex;flex-direction:column;align-items:center;padding:26px 20px;
+  transition:transform .55s var(--ease),opacity .55s var(--ease);}
+.c3-card[data-pos="1"]{transform:translateY(14px) scale(.955);opacity:.55;}
+.c3-card[data-pos="2"]{transform:translateY(28px) scale(.91);opacity:.28;}
+/* back cards read as shells — their content never bleeds through the front glass */
+.c3-card:not([data-pos="0"]) > *{visibility:hidden;}
+.c3-card.fly{transform:translateY(-120%) rotate(-5deg);opacity:0;pointer-events:none;}
+.c3-card .idx{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.c3-ico{width:150px;height:150px;margin-top:8px;}
+.c3-name{font-family:var(--head);font-size:32px;letter-spacing:.03em;margin-top:2px;}
+.c3-q{font-family:var(--body);font-weight:300;font-size:12px;color:var(--muted);margin-top:2px;}
+.c3-pills{display:flex;gap:7px;margin-top:auto;width:100%;}
+.c3-pill{flex:1;padding:13px 2px;border-radius:11px;border:1px solid var(--hair);background:rgba(255,255,255,.02);
+  font-family:var(--head);font-size:14px;letter-spacing:.03em;color:var(--mid);text-align:center;cursor:pointer;transition:all .2s;}
+.c3-pill:active{transform:scale(.96);}
+.c3-pill.sel{color:var(--lc);border-color:var(--lc);background:color-mix(in srgb,var(--lc) 9%,transparent);box-shadow:0 0 12px color-mix(in srgb,var(--lc) 25%,transparent);}
+.c3-done{margin-top:4%;text-align:center;opacity:0;transition:opacity .5s;pointer-events:none;}
+.c3-done.show{opacity:1;}
+.c3-done .big{font-family:var(--head);font-size:30px;}
+.c3-done .note{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+
+/* ══ V4 · RAIL — everything on one screen, fastest path ══ */
+.c4{position:absolute;inset:0;padding:1% 24px 0;}
+.c4-row{padding:15px 0;border-top:1px solid var(--hair);}
+.c4-row:first-child{border-top:none;}
+.c4-top{display:flex;align-items:center;gap:13px;}
+.c4-ring{position:relative;width:58px;height:58px;flex-shrink:0;border-radius:50%;border:1px solid var(--hair);background:var(--glass);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.c4-ring img{width:42px;height:42px;object-fit:contain;}
+.c4-ring::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--lc,transparent);opacity:.6;box-shadow:0 0 12px color-mix(in srgb,var(--lc,transparent) 35%,transparent);transition:border-color .3s;}
+.c4-mid{flex:1;}
+.c4-nm{font-family:var(--head);font-size:21px;letter-spacing:.03em;}
+.c4-q{font-family:var(--body);font-weight:300;font-size:11px;color:var(--mid);margin-top:1px;}
+.c4-word{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--lc,var(--dim));text-transform:uppercase;text-align:right;min-width:58px;}
+.c4-segs{display:flex;gap:6px;margin-top:12px;}
+.c4-seg{flex:1;height:34px;border-radius:9px;border:1px solid var(--hair);background:rgba(255,255,255,.02);cursor:pointer;position:relative;transition:all .2s;}
+.c4-seg i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:var(--dim);opacity:.5;transition:all .2s;}
+.c4-seg.sel{border-color:var(--sc);background:color-mix(in srgb,var(--sc) 10%,transparent);}
+.c4-seg.sel i{background:var(--sc);opacity:1;box-shadow:0 0 8px var(--sc);}
+.c4-note{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;text-align:center;margin-top:16px;}
+
+@media(prefers-reduced-motion:reduce){
+  .ico3.live,.ico3.live img{animation:none;}
+  .c1-step,.c3-card{transition:none;}
+}
+</style>
+</head>
+<body>
+<div class="screen" id="screen">
+  <div class="hd"><span class="k">Daily check-in</span><span class="d">Thu 23 Jul</span></div>
+  <div class="vname" id="vname"></div>
+  <div class="vsub">The one signal you give ZEAL · everything else is read</div>
+  <div class="stage" id="stage"></div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ICON='brand-assets/checkin-icons/';
+  var CATS=[
+    {id:'energy',  name:'ENERGY',   q:'How alert and ready your body feels', img:ICON+'energy.png',
+      levels:[['DRAINED','running on empty'],['LOW','below your line'],['GOOD','ready to work'],['CHARGED','full send']]},
+    {id:'sleep',   name:'SLEEP',    q:'How last night actually felt', img:ICON+'sleep.png',
+      levels:[['ROUGH','broken · short'],['LIGHT','not enough deep'],['SOLID','woke up clear'],['DEEP','best-case night']]},
+    {id:'soreness',name:'SORENESS', q:'How your muscles carry yesterday', img:ICON+'soreness.png',
+      levels:[['WRECKED','everything aches'],['SORE','noticeable load'],['MILD','a whisper'],['FRESH','nothing at all']]}
+  ];
+  var LC=['var(--red)','var(--amber)','var(--mint)','var(--lime)'];
+  function hap(ms){if(navigator.vibrate)navigator.vibrate(ms||8);}
+
+  var VARS=[
+    {tn:'V1',tk:'Ceremony',name:'V1 · CEREMONY',build:buildV1},
+    {tn:'V2',tk:'Dial',    name:'V2 · DIAL',    build:buildV2},
+    {tn:'V3',tk:'Deck',    name:'V3 · DECK',    build:buildV3},
+    {tn:'V4',tk:'Rail',    name:'V4 · RAIL',    build:buildV4}
+  ];
+  var stage=document.getElementById('stage'),tabsEl=document.getElementById('tabs'),vname=document.getElementById('vname');
+  var cur=0;
+  tabsEl.innerHTML=VARS.map(function(v,i){return '<button class="tab'+(i===0?' on':'')+'" data-i="'+i+'"><div class="tn">'+v.tn+'</div><div class="tk">'+v.tk+'</div></button>';}).join('');
+  tabsEl.addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;
+    cur=+b.dataset.i;tabsEl.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});b.classList.add('on');mount();});
+  function mount(){vname.textContent=VARS[cur].name;stage.innerHTML='';VARS[cur].build(stage);}
+
+  function ico(src,cls){return '<div class="ico3 '+(rm?'':'live')+' '+(cls||'')+'"><span class="halo"></span><img src="'+src+'" alt=""></div>';}
+
+  /* ══ V1 · CEREMONY ══ */
+  function buildV1(root){
+    var picks=[null,null,null];
+    var el=document.createElement('div');el.className='c1-track';
+    el.innerHTML=CATS.map(function(c,i){
+      return '<div class="c1-step'+(i===0?' cur':'')+'" data-i="'+i+'">'+
+        '<div class="c1-idx">Signal '+(i+1)+' of 3</div>'+
+        '<div class="c1-ico">'+ico(c.img)+'</div>'+
+        '<div class="c1-name">'+c.name+'</div>'+
+        '<div class="c1-q">'+c.q+'</div>'+
+        '<div class="c1-levels">'+c.levels.map(function(l,j){
+          return '<div class="c1-lv" data-j="'+j+'" style="--lc:'+LC[j]+'"><span class="dot"></span><span class="nm">'+l[0]+'</span><span class="ds">'+l[1]+'</span></div>';}).join('')+'</div>'+
+      '</div>';}).join('')+
+      '<div class="c1-done" id="c1done"></div>';
+    root.appendChild(el);
+    el.querySelectorAll('.c1-lv').forEach(function(lv){
+      lv.addEventListener('click',function(){
+        var step=lv.closest('.c1-step'),i=+step.dataset.i,j=+lv.dataset.j;
+        picks[i]=j;hap(8);
+        step.querySelectorAll('.c1-lv').forEach(function(x){x.classList.remove('sel');});lv.classList.add('sel');
+        setTimeout(function(){
+          step.classList.remove('cur');step.classList.add('gone');
+          var nxt=el.querySelector('.c1-step[data-i="'+(i+1)+'"]');
+          if(nxt){nxt.classList.add('cur');}
+          else{
+            var dn=document.getElementById('c1done');
+            dn.innerHTML='<div class="c1-sum">'+CATS.map(function(c,k){
+              return '<div class="s" style="--sc:'+LC[picks[k]]+'"><img src="'+c.img+'"><b>'+c.levels[picks[k]][0]+'</b><span>'+c.name+'</span></div>';}).join('')+'</div>'+
+              '<div class="big">SIGNAL SENT</div><div class="note">ZEAL folds this into tomorrow’s verdict</div>';
+            dn.classList.add('show');hap(16);
+          }
+        },420);
+      });
+    });
+  }
+
+  /* ══ V2 · DIAL ══ */
+  function buildV2(root){
+    var picks=[null,null,null],act=0;
+    var el=document.createElement('div');el.className='c2';
+    el.innerHTML='<div class="c2-cats">'+CATS.map(function(c,i){
+        return '<div class="c2-cat'+(i===0?' act':'')+'" data-i="'+i+'"><img src="'+c.img+'"><div class="n">'+c.name+'</div><div class="st"></div></div>';}).join('')+'</div>'+
+      '<div class="c2-dial"><canvas id="c2cv"></canvas><div class="c2-ico" id="c2ico">'+ico(CATS[0].img)+'</div><div class="c2-word" id="c2word">SET THE READING</div></div>'+
+      '<div class="c2-hint">Tap the arc · the reading locks where you touch</div>'+
+      '<button class="cta" id="c2cta" disabled>Send signal →</button>';
+    root.appendChild(el);
+    var cv=el.querySelector('#c2cv'),ctx=cv.getContext('2d'),W=250,H=250,dpr=devicePixelRatio||1;
+    cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    var A0=135*Math.PI/180,SW=270*Math.PI/180;
+    function lvCol(j){return ['#EF4444','#F59E0B','#00E5A0','#C8FF00'][j];}
+    function draw(frac,col){
+      ctx.clearRect(0,0,W,H);
+      var cx=W/2,cy=H/2,R=112,T=44;
+      for(var i=0;i<T;i++){
+        var t=i/(T-1),a=A0+t*SW;
+        var x1=cx+(R-13)*Math.cos(a),y1=cy+(R-13)*Math.sin(a),x2=cx+R*Math.cos(a),y2=cy+R*Math.sin(a);
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=3;ctx.lineCap='round';
+        if(frac!=null&&t<=frac){ctx.strokeStyle=col;ctx.shadowColor=col;ctx.shadowBlur=5;}
+        else{ctx.strokeStyle='rgba(255,255,255,.09)';ctx.shadowBlur=0;}
+        ctx.stroke();
+      }
+      ctx.shadowBlur=0;
+    }
+    draw(null);
+    function setCat(i){act=i;
+      el.querySelectorAll('.c2-cat').forEach(function(c,k){c.classList.toggle('act',k===i);});
+      el.querySelector('#c2ico').innerHTML=ico(CATS[i].img);
+      var w=el.querySelector('#c2word');
+      if(picks[i]!=null){w.textContent=CATS[i].levels[picks[i]][0];w.style.setProperty('--lc',LC[picks[i]]);draw((picks[i]+1)/4-0.02,lvCol(picks[i]));}
+      else{w.textContent='SET THE READING';w.style.removeProperty('--lc');draw(null);}
+    }
+    el.querySelectorAll('.c2-cat').forEach(function(c){c.addEventListener('click',function(){setCat(+c.dataset.i);});});
+    cv.parentElement.addEventListener('click',function(e){
+      var r=cv.getBoundingClientRect(),x=e.clientX-r.left-W/2,y=e.clientY-r.top-H/2;
+      var d=Math.hypot(x,y); if(d<62||d>132)return;               // the arc band only
+      var a=Math.atan2(y,x); var rel=(a-A0+Math.PI*4)%(Math.PI*2); if(rel>SW)return;
+      var j=Math.min(3,Math.floor(rel/SW*4)); picks[act]=j;hap(8);
+      var cat=el.querySelector('.c2-cat[data-i="'+act+'"] .st');
+      cat.textContent=CATS[act].levels[j][0];cat.style.setProperty('--lc',LC[j]);
+      setCat(act);
+      var nxt=picks.indexOf(null);
+      if(nxt>-1){setTimeout(function(){setCat(nxt);},650);}
+      else{el.querySelector('#c2cta').disabled=false;}
+    });
+    el.querySelector('#c2cta').addEventListener('click',function(){this.textContent='SIGNAL SENT';this.disabled=true;hap(16);});
+  }
+
+  /* ══ V3 · DECK ══ */
+  function buildV3(root){
+    var picks=[null,null,null];
+    var el=document.createElement('div');el.className='c3';
+    el.innerHTML='<div class="c3-stack">'+CATS.slice().reverse().map(function(c,ri){
+        var i=CATS.length-1-ri;
+        return '<div class="c3-card" data-i="'+i+'" data-pos="'+i+'" style="z-index:'+(10-i)+'">'+
+          '<div class="idx">'+(i+1)+' / 3 · '+c.q+'</div>'+
+          '<div class="c3-ico">'+ico(c.img)+'</div>'+
+          '<div class="c3-name">'+c.name+'</div>'+
+          '<div class="c3-pills">'+c.levels.map(function(l,j){
+            return '<div class="c3-pill" data-j="'+j+'" style="--lc:'+LC[j]+'">'+l[0]+'</div>';}).join('')+'</div>'+
+        '</div>';}).join('')+'</div>'+
+      '<div class="c3-done" id="c3done"><div class="big">SIGNAL SENT</div><div class="note">Three reads · folded into the verdict</div></div>';
+    root.appendChild(el);
+    el.querySelectorAll('.c3-pill').forEach(function(p){
+      p.addEventListener('click',function(){
+        var card=p.closest('.c3-card'),i=+card.dataset.i,j=+p.dataset.j;
+        picks[i]=j;hap(8);
+        card.querySelectorAll('.c3-pill').forEach(function(x){x.classList.remove('sel');});p.classList.add('sel');
+        setTimeout(function(){
+          card.classList.add('fly');
+          el.querySelectorAll('.c3-card:not(.fly)').forEach(function(cd){
+            cd.dataset.pos=Math.max(0,+cd.dataset.pos-1);});
+          if(picks.indexOf(null)===-1){document.getElementById('c3done').classList.add('show');hap(16);}
+        },380);
+      });
+    });
+  }
+
+  /* ══ V4 · RAIL ══ */
+  function buildV4(root){
+    var picks=[null,null,null];
+    var el=document.createElement('div');el.className='c4';
+    el.innerHTML=CATS.map(function(c,i){
+      return '<div class="c4-row" data-i="'+i+'">'+
+        '<div class="c4-top"><div class="c4-ring">'+ico(c.img)+'</div>'+
+        '<div class="c4-mid"><div class="c4-nm">'+c.name+'</div><div class="c4-q">'+c.q+'</div></div>'+
+        '<div class="c4-word">—</div></div>'+
+        '<div class="c4-segs">'+c.levels.map(function(l,j){
+          return '<div class="c4-seg" data-j="'+j+'" style="--sc:'+LC[j]+'"><i></i></div>';}).join('')+'</div>'+
+      '</div>';}).join('')+
+      '<div class="c4-note">One tap each · under ten seconds</div>'+
+      '<button class="cta" id="c4cta" style="bottom:auto;position:relative;margin-top:18px;left:0;right:0;width:100%;" disabled>Send signal →</button>';
+    root.appendChild(el);
+    el.querySelectorAll('.c4-seg').forEach(function(sg){
+      sg.addEventListener('click',function(){
+        var row=sg.closest('.c4-row'),i=+row.dataset.i,j=+sg.dataset.j;
+        picks[i]=j;hap(8);
+        row.querySelectorAll('.c4-seg').forEach(function(x){x.classList.remove('sel');});sg.classList.add('sel');
+        var w=row.querySelector('.c4-word');w.textContent=CATS[i].levels[j][0];w.style.setProperty('--lc',LC[j]);
+        row.querySelector('.c4-ring').style.setProperty('--lc',LC[j]);
+        if(picks.indexOf(null)===-1)el.querySelector('#c4cta').disabled=false;
+      });
+    });
+    el.querySelector('#c4cta').addEventListener('click',function(){this.textContent='SIGNAL SENT';this.disabled=true;hap(16);});
+  }
+
+  mount();
+})();
+</script>
+</body>
+</html>
