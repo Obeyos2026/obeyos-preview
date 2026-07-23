@@ -65,7 +65,7 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
 .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .9s var(--ease);}
 .forge.lit .bgv{opacity:0;}
 .fscrim{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 46%,transparent,rgba(10,13,18,.55) 66%,rgba(10,13,18,.92));}
-.sparks{position:absolute;inset:0;z-index:6;pointer-events:none;}
+.sparks{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;} /* canvas is replaced — inset alone does not stretch it */
 
 /* ===== CALIBRATION (B5 Construct — body materializes through the match-light) ===== */
 .calib{position:absolute;inset:0;z-index:5;opacity:0;transition:opacity .6s var(--ease);
