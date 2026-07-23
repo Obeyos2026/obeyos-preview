@@ -139,8 +139,9 @@ body{font-family:var(--body);color:var(--white);-webkit-font-smoothing:antialias
         var e=t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2; // ease-in-out — cinematic
         var yPx=zone.clientHeight*e;              // reveal boundary in zone px
         setReveal(yPx);
-        line.style.top=(zoneTop+yPx)+'px';
-        sweep.style.top=(zoneTop+yPx-65)+'px';
+        // line + sweep are ZONE children — zone-relative top, so the match rides the reveal edge
+        line.style.top=yPx+'px';
+        sweep.style.top=(yPx-65)+'px';
         // V5 pins light up as the scan crosses each region
         var boundaryPct=((zoneTop+yPx)/screen.clientHeight)*100;
         PINS.forEach(function(p){if(boundaryPct> +p.dataset.y)p.classList.add('show');});
